@@ -1,15 +1,14 @@
+fresh-methods:
+ forArgs()do
 modules:
- io
  sys
+ io
 fresh:forArgs()do:
  option()shortHand()do
  flag()shortHand()do
  doubleValue()do
  option()do
  flag()do
-fresh-methods:
- forArgs()do
- bundle
 path:
  PackageManager
 classes:
@@ -22,6 +21,8 @@ public:
  verbose:=
  global
  global:=
+ bundlePath
+ bundlePath:=
  curFile
  curFile:=
  parseArgs
@@ -34,6 +35,7 @@ public:
  findExisting
  validateFile
  write
+ getBuildPath
  compile
  createDirectory
  parseFile
@@ -45,10 +47,8 @@ public:
  bundle
  setImportDest
  parseAndPrefix
+ removeExistingUrls
+ removeContainingDir
+ getContainingDirectory
 confidential:
  forArgs()do
-fresh:bundle:
- data:=
- data
- address:=
- address

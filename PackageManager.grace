@@ -6,6 +6,7 @@ var imported
 var toProcess
 var verbose := false
 var global := false
+var bundlePath := "";
 var curFile;
 
 parseArgs(sys.argv);
@@ -237,6 +238,11 @@ method findExisting(fileName){
     if(io.exists("{sys.execPath}/"++fileName))then{
         return io.open("{sys.execPath}/"++fileName,"r").read 
     }   
+    if (bundlePath != "")then{
+        return io.open("{bundlePath}/{fileName}","r").read;
+
+
+    }
     return false
 }
 
@@ -265,6 +271,23 @@ method write(file) -> Boolean{
     
  }
 
+method getBuildPath() -> String{
+    var paths := sys.environ["PATH"]
+    var buildPath := ""
+    for (1..paths.size) do { t->
+        if(paths.at(t) == ":")then{
+            if(io.exists(buildPath++"/minigrace"))then{
+               return buildPath; 
+            }
+            buildPath := ""
+        } 
+        else{
+            buildPath :=  buildPath++paths[t]
+        }
+    }
+    return buildPath;
+}
+
 method compile(file){
     var usrDir := ""
     if(global) then { 
@@ -275,18 +298,7 @@ method compile(file){
     }
     var paths := sys.environ["PATH"]
     print("PATHS = "++paths)
-    var buildPath := ""
-    for (1..paths.size) do { t->
-        if(paths.at(t) == ":")then{
-            if(io.exists(buildPath++"/minigrace"))then{
-                io.system(buildPath++"/minigrace "++usrDir++file.address)
-            }
-            buildPath := ""
-        } 
-        else{
-            buildPath :=  buildPath++paths[t]
-        }
-    }
+    var buildPath := getBuildPath();
     io.system(buildPath++"/minigrace "++usrDir++file.address)
     return true;
 
@@ -394,21 +406,18 @@ method printMessage(message){
 //Name is the name of the package passed into the compiler
 method bundle(toBundle,name){
     imported := []
+    bundlePath := getContainingDirectory(toBundle);
     var newDir := createDirectory("{name}/")
-    var toOpen := io.open(toBundle,"r");
+    var newFileName := removeContainingDir(toBundle);
+    var toOpen := io.open("{toBundle}","r");
     var openData := toOpen.read
-    print("{name}/{toBundle} is what I'm printing");
-    var toWrite := io.open("{name}/{toBundle}", "w")
+    var toWrite := io.open("{name}/{newFileName}", "w")
     toWrite.write(openData);
-    var file := object{
-        var address : String is public
-        var data : String is public  
-    }
     fetchImports(toBundle)
     print("Imported size = "++imported.size);
     while{imported.size > 0 }do{
         var curImport := imported.pop
-        toWrite := io.open("{name}/{curImport.address}","w")
+        toWrite := io.open("{name}/{removeContainingDir(curImport.address)}","w")
         toWrite.write(curImport.data)   
     }
 }
@@ -465,7 +474,8 @@ method parseAndPrefix (readFile: String, address : String,  prefix : String){
                     pos := pos+1
                 }
                 pos:= pos+1;
-                line := "import \""++prefix++"/"++line.substringFrom(pos+1)to(line.size);
+                var remainder := removeExistingUrls(line.substringFrom(pos+1)to(line.size));
+                line := "import \""++prefix++"/"++remainder;
                 print(line);
                 for (line) do{ d->
                     outFile.push(d);
@@ -486,4 +496,58 @@ method parseAndPrefix (readFile: String, address : String,  prefix : String){
 
 }
 
+method removeExistingUrls(importStatement : String) -> String{
+
+    if (importStatement.size < 7)then{
+        return importStatement;
+    }
+    if (importStatement.substringFrom(1)to(7) == "http://" )then{
+        var lastIndex := 7;
+        var curPos := 7;
+        while {curPos <= importStatement.size}do{
+            if (importStatement[curPos] == "/")then{
+                lastIndex := curPos;
+            }
+            curPos := curPos +1;
+        }
+        var res := importStatement.substringFrom(lastIndex+1)to(importStatement.size);
+        return res;
+    }
+    else{
+        return importStatement;
+    }
+
+
+}
+
+method removeContainingDir(st:String) -> String{
+    var count := 1;
+    var lastIndex := -1;
+    while{count <= st.size}do{
+        if (st[count] == "/") then{
+            lastIndex := count;
+        }
+        count := count+1;
+    }
+    if(lastIndex == -1)then{
+        return st;
+    }
+    return st.substringFrom(lastIndex+1)to(st.size); 
+}
+
+method getContainingDirectory(st : String) -> String{
+    var count := 1;
+    var last := -1;
+    while {count <= st.size}do{
+        if (st[count] == "/")then{
+            last := count;
+        }
+        count := count+1;
+    }
+    if (last == -1)then{
+        return getBuildPath()++"/";
+    }
+    return st.substringFrom(0)to(last-1);
+
+}
 

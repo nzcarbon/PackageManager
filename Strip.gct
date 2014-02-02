@@ -1,0 +1,8 @@
+path:
+ Strip
+classes:
+public:
+ stripLine
+confidential:
+fresh-methods:
+modules:
