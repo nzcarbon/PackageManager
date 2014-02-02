@@ -3,7 +3,7 @@ import "io" as io
 import "curl" as curl
 
 var imported
-var toProcess
+var toProcess := []
 var verbose := false
 var global := false
 var bundlePath := "";
@@ -19,28 +19,22 @@ method parseArgs(args : List<String>) {
         on.option "get" do { toGet->
             doGet(toGet);
         }
-
         on.flag "list" do { 
             listInstalled();
         }
-
         on.doubleValue "bundle" do { toBundle, name ->
             bundle(toBundle,name);
         }
-
         on.doubleValue "setAddress" do { address, prefix ->
             setImportDest(address,prefix);
         }
-
         on.flag "verbose" do { 
             verbose := true;
         }
-
         on.flag "global" do {
             global := true;
         }
     }
-
 } 
 
 method forArgs(args : List<String>) do(block) is confidential {
@@ -83,7 +77,6 @@ method forArgs(args : List<String>) do(block) is confidential {
 
         method flag(name : String) shortHand(sh : String) do(block') {
             def arg = args.at(i)
-            print("In flag 2: Sh = {sh}");
             if((arg == "--{name}") || (arg == "-{sh}")) then {
                 block'.apply
                 ran := true
@@ -91,17 +84,14 @@ method forArgs(args : List<String>) do(block) is confidential {
         }
 
         method flag(name : String) do(block') {
-            print("in flag 1");
             flag(name) shortHand("") do(block')
         }
     }
-    print("In forargs");
     while { i <= size } do {
         def arg = args.at(i)
         print(arg);
         ran := false
         block.apply(arg, on)
-
         if((arg.at(1) == "-") && ran.not) then {
             Exception.raise("Unrecognised argument {arg}")
         }
@@ -166,8 +156,8 @@ method fetchImports(fileAddress) -> Boolean{
             return false
         }
         if (validateFile(curFile))then{
+            print("Pushing {curFile.address} to imported")
             imported.push(curFile)
-            toProcess := []
             parseFile(curFile)
             while{toProcess.size > 0}do{ 
                 fetchImports(toProcess.pop)
@@ -238,11 +228,14 @@ method findExisting(fileName){
     if(io.exists("{sys.execPath}/"++fileName))then{
         return io.open("{sys.execPath}/"++fileName,"r").read 
     }   
-    if (bundlePath != "")then{
+    if(io.exists("{getBuildPath()}/{fileName}"))then{
+        print("YES IT DOES");
+        return io.open("{getBuildPath()}/{fileName}","r").read 
+    } 
+    if(bundlePath != "")then{
         return io.open("{bundlePath}/{fileName}","r").read;
-
-
     }
+
     return false
 }
 

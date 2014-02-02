@@ -70,6 +70,7 @@ static char *originalSourceLines[] = {
   "            buildPath :=  buildPath++paths[t]",
   "        }",
   "    }",
+  "    print({buildPath});",
   "    return buildPath;",
   "}",
   NULL
@@ -85,8 +86,8 @@ Object module_sys;
 Object module_sys_init();
 Object module_io;
 Object module_io_init();
-static Object strlit89;
 static Object strlit93;
+static Object strlit97;
 Object meth_ContPath__apply7(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
@@ -290,7 +291,7 @@ setclosureframe(closure7, stackframe);
 int argcv_meth_ContPath__apply7[] = {0};
 meth_meth_ContPath__apply7->type = alloc_MethodType(1, argcv_meth_ContPath__apply7);
   meth_meth_ContPath__apply7->definitionModule = modulename;
-  meth_meth_ContPath__apply7->definitionLine = 41;
+  meth_meth_ContPath__apply7->definitionLine = 42;
 // compilenode returning block6
   gc_frame_newslot(block6);
 // Begin line 20
@@ -569,6 +570,31 @@ Object meth_ContPath__apply64(Object realself, int nparts, int *argcv, Object *a
   gc_frame_end(frame);
   return if65;
 }
+Object meth_ContPath__apply89(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+  struct UserObject *uo = (struct UserObject*)realself;
+  Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
+  struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
+  pushclosure(closure);
+  pushstackframe(stackframe, "_apply");
+  int frame = gc_frame_new();
+  gc_frame_newslot((Object)stackframe);
+  Object methodInheritingObject = NULL;
+  Object params[1];
+  int partcv[1];
+  Object *var_buildPath = getfromclosure(closure, 0);
+  Object self = *(getfromclosure(closure, 1));
+  sourceObject = self;
+  int i;
+  int curarg = 0;
+  int pushcv[] = {1};
+  Object *selfslot = &(stackframe->slots[0]);
+  *selfslot = self;
+  setframeelementname(stackframe, 0, "self");
+  if (methodInheritingObject) curarg++;
+// compilenode returning *var_buildPath
+  gc_frame_end(frame);
+  return *var_buildPath;
+}
 Object meth_ContPath_getBuildPath50(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 2, (flags>>24)&0xff);
@@ -703,6 +729,28 @@ meth_meth_ContPath__apply64->type = alloc_MethodType(1, argcv_meth_ContPath__app
   setline(41);
   setmodule(modulename);
   setsource(originalSourceLines);
+  Object block88 = alloc_Block(NULL, NULL, "ContPath", 41);
+  gc_frame_newslot(block88);
+  block_savedest(block88);
+  Object closure89 = createclosure(2, "_apply");
+setclosureframe(closure89, stackframe);
+  addtoclosure(closure89, var_buildPath);
+  addtoclosure(closure89, selfslot);
+  struct UserObject *uo89 = (struct UserObject*)block88;
+  uo89->data[0] = (Object)closure89;
+  Method *meth_meth_ContPath__apply89 = addmethod2pos(block88, "_apply", &meth_ContPath__apply89, 0);
+int argcv_meth_ContPath__apply89[] = {0};
+meth_meth_ContPath__apply89->type = alloc_MethodType(1, argcv_meth_ContPath__apply89);
+  meth_meth_ContPath__apply89->definitionModule = modulename;
+  meth_meth_ContPath__apply89->definitionLine = 30;
+// compilenode returning block88
+  params[0] = block88;
+  Object call91 = gracelib_print(NULL, 1,  params);
+// compilenode returning call91
+// Begin line 42
+  setline(42);
+  setmodule(modulename);
+  setsource(originalSourceLines);
 // compilenode returning *var_buildPath
   return *var_buildPath;
 // compilenode returning undefined
@@ -818,28 +866,9 @@ meth_meth_ContPath_getBuildPath50->type = alloc_MethodType(1, argcv_meth_ContPat
   setline(4);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe88 = gc_frame_new();
-  if (strlit89 == NULL) {
-    strlit89 = alloc_String("wow/hello/good/morning.grace");
-    gc_root(strlit89);
-  }
-// compilenode returning strlit89
-  gc_frame_newslot(strlit89);
-  params[0] = strlit89;
-  partcv[0] = 1;
-  Object call90 = callmethodflags(self, "getContPath", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe88);
-// compilenode returning call90
-  params[0] = call90;
-  Object call91 = gracelib_print(NULL, 1,  params);
-// compilenode returning call91
-// Begin line 5
-  setline(5);
-  setmodule(modulename);
-  setsource(originalSourceLines);
   int callframe92 = gc_frame_new();
   if (strlit93 == NULL) {
-    strlit93 = alloc_String("wow");
+    strlit93 = alloc_String("wow/hello/good/morning.grace");
     gc_root(strlit93);
   }
 // compilenode returning strlit93
@@ -852,6 +881,25 @@ meth_meth_ContPath_getBuildPath50->type = alloc_MethodType(1, argcv_meth_ContPat
   params[0] = call94;
   Object call95 = gracelib_print(NULL, 1,  params);
 // compilenode returning call95
+// Begin line 5
+  setline(5);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe96 = gc_frame_new();
+  if (strlit97 == NULL) {
+    strlit97 = alloc_String("wow");
+    gc_root(strlit97);
+  }
+// compilenode returning strlit97
+  gc_frame_newslot(strlit97);
+  params[0] = strlit97;
+  partcv[0] = 1;
+  Object call98 = callmethodflags(self, "getContPath", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe96);
+// compilenode returning call98
+  params[0] = call98;
+  Object call99 = gracelib_print(NULL, 1,  params);
+// compilenode returning call99
 // Begin line 7
   setline(7);
   setmodule(modulename);

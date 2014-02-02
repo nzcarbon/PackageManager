@@ -35,7 +35,7 @@ static char *originalSourceLines[] = {
   "import \"curl\" as curl",
   "",
   "var imported",
-  "var toProcess",
+  "var toProcess := []",
   "var verbose := false",
   "var global := false",
   "var bundlePath := \"\";",
@@ -51,28 +51,22 @@ static char *originalSourceLines[] = {
   "        on.option \"get\" do { toGet->",
   "            doGet(toGet);",
   "        }",
-  "",
   "        on.flag \"list\" do { ",
   "            listInstalled();",
   "        }",
-  "",
   "        on.doubleValue \"bundle\" do { toBundle, name ->",
   "            bundle(toBundle,name);",
   "        }",
-  "",
   "        on.doubleValue \"setAddress\" do { address, prefix ->",
   "            setImportDest(address,prefix);",
   "        }",
-  "",
   "        on.flag \"verbose\" do { ",
   "            verbose := true;",
   "        }",
-  "",
   "        on.flag \"global\" do {",
   "            global := true;",
   "        }",
   "    }",
-  "",
   "} ",
   "",
   "method forArgs(args : List<String>) do(block) is confidential {",
@@ -115,7 +109,6 @@ static char *originalSourceLines[] = {
   "",
   "        method flag(name : String) shortHand(sh : String) do(block') {",
   "            def arg = args.at(i)",
-  "            print(\"In flag 2: Sh = {sh}\");",
   "            if((arg == \"--{name}\") || (arg == \"-{sh}\")) then {",
   "                block'.apply",
   "                ran := true",
@@ -123,17 +116,14 @@ static char *originalSourceLines[] = {
   "        }",
   "",
   "        method flag(name : String) do(block') {",
-  "            print(\"in flag 1\");",
   "            flag(name) shortHand(\"\") do(block')",
   "        }",
   "    }",
-  "    print(\"In forargs\");",
   "    while { i <= size } do {",
   "        def arg = args.at(i)",
   "        print(arg);",
   "        ran := false",
   "        block.apply(arg, on)",
-  "",
   "        if((arg.at(1) == \"-\") && ran.not) then {",
   "            Exception.raise(\"Unrecognised argument {arg}\")",
   "        }",
@@ -198,8 +188,8 @@ static char *originalSourceLines[] = {
   "            return false",
   "        }",
   "        if (validateFile(curFile))then{",
+  "            print(\"Pushing {curFile.address} to imported\")",
   "            imported.push(curFile)",
-  "            toProcess := []",
   "            parseFile(curFile)",
   "            while{toProcess.size > 0}do{ ",
   "                fetchImports(toProcess.pop)",
@@ -270,11 +260,14 @@ static char *originalSourceLines[] = {
   "    if(io.exists(\"{sys.execPath}/\"++fileName))then{",
   "        return io.open(\"{sys.execPath}/\"++fileName,\"r\").read ",
   "    }   ",
-  "    if (bundlePath != \"\")then{",
+  "    if(io.exists(\"{getBuildPath()}/{fileName}\"))then{",
+  "        print(\"YES IT DOES\");",
+  "        return io.open(\"{getBuildPath()}/{fileName}\",\"r\").read ",
+  "    } ",
+  "    if(bundlePath != \"\")then{",
   "        return io.open(\"{bundlePath}/{fileName}\",\"r\").read;",
-  "",
-  "",
   "    }",
+  "",
   "    return false",
   "}",
   "",
@@ -589,24 +582,24 @@ Object reader_PackageManager_outer_66(Object self, int nparams, int *argcv, Obje
   struct UserObject *uo = (struct UserObject*)self;
   return uo->data[0];
 }
-Object reader_PackageManager_outer_410(Object self, int nparams, int *argcv, Object* args, int flags) {
+Object reader_PackageManager_outer_397(Object self, int nparams, int *argcv, Object* args, int flags) {
   struct UserObject *uo = (struct UserObject*)self;
   return uo->data[0];
 }
-Object reader_PackageManager_address_411(Object self, int nparams, int *argcv, Object* args, int flags) {
+Object reader_PackageManager_address_398(Object self, int nparams, int *argcv, Object* args, int flags) {
   struct UserObject *uo = (struct UserObject *)self;
   return uo->data[1];
 }
-Object writer_PackageManager_address_411(Object self, int nparams, int *argcv, Object* args, int flags) {
+Object writer_PackageManager_address_398(Object self, int nparams, int *argcv, Object* args, int flags) {
   struct UserObject *uo = (struct UserObject *)self;
   uo->data[1] = args[0];
   return done;
 }
-Object reader_PackageManager_data_412(Object self, int nparams, int *argcv, Object* args, int flags) {
+Object reader_PackageManager_data_399(Object self, int nparams, int *argcv, Object* args, int flags) {
   struct UserObject *uo = (struct UserObject *)self;
   return uo->data[2];
 }
-Object writer_PackageManager_data_412(Object self, int nparams, int *argcv, Object* args, int flags) {
+Object writer_PackageManager_data_399(Object self, int nparams, int *argcv, Object* args, int flags) {
   struct UserObject *uo = (struct UserObject *)self;
   uo->data[2] = args[0];
   return done;
@@ -630,159 +623,165 @@ static Object strlit135;
 static Object strlit153;
 static Object strlit156;
 static Object strlit185;
-static Object strlit192;
 static Object strlit195;
-static Object strlit204;
-static Object strlit207;
-static Object strlit215;
-static Object strlit218;
-static Object strlit230;
-static Object strlit233;
-static Object strlit235;
+static Object strlit198;
+static Object strlit206;
+static Object strlit209;
+static Object strlit222;
+static Object strlit246;
+static Object strlit256;
 static Object strlit259;
-static Object strlit269;
-static Object strlit272;
-static Object strlit287;
+static Object strlit274;
+static Object strlit278;
+static Object strlit280;
+static Object strlit282;
+static Object strlit284;
 static Object strlit291;
 static Object strlit293;
-static Object strlit295;
-static Object strlit297;
-static Object strlit304;
+static Object strlit300;
+static Object strlit302;
 static Object strlit306;
-static Object strlit313;
-static Object strlit315;
-static Object strlit319;
-static Object strlit330;
-static Object strlit334;
+static Object strlit317;
+static Object strlit321;
+static Object strlit336;
 static Object strlit349;
-static Object strlit362;
-static Object strlit368;
-static Object strlit406;
-static ClassData objclass409;
-static Object strlit422;
-static Object strlit427;
+static Object strlit355;
+static Object strlit393;
+static ClassData objclass396;
+static Object strlit409;
+static Object strlit414;
+static Object strlit425;
+static Object strlit433;
 static Object strlit438;
-static Object strlit473;
-static Object strlit480;
-static Object strlit492;
-static Object strlit527;
-static Object strlit533;
+static Object strlit469;
+static Object strlit476;
+static Object strlit488;
+static Object strlit523;
+static Object strlit529;
+static Object strlit534;
 static Object strlit538;
-static Object strlit542;
-static Object strlit561;
-static Object strlit566;
-static Object strlit573;
-static Object strlit587;
-static Object strlit607;
-static Object strlit614;
-static Object strlit621;
-static Object strlit624;
-static Object strlit629;
-static Object strlit636;
-static Object strlit639;
-static Object strlit650;
-static Object strlit653;
-static Object strlit658;
-static Object strlit666;
-static Object strlit671;
-static Object strlit682;
-static Object strlit687;
-static Object strlit692;
-static Object strlit700;
-static Object strlit705;
-static Object strlit716;
-static Object strlit721;
-static Object strlit726;
+static Object strlit557;
+static Object strlit562;
+static Object strlit569;
+static Object strlit583;
+static Object strlit603;
+static Object strlit610;
+static Object strlit617;
+static Object strlit620;
+static Object strlit625;
+static Object strlit632;
+static Object strlit635;
+static Object strlit646;
+static Object strlit649;
+static Object strlit654;
+static Object strlit662;
+static Object strlit667;
+static Object strlit678;
+static Object strlit683;
+static Object strlit688;
+static Object strlit696;
+static Object strlit701;
+static Object strlit712;
+static Object strlit717;
+static Object strlit722;
 static Object strlit731;
-static Object strlit740;
-static Object strlit743;
-static Object strlit748;
-static Object strlit751;
+static Object strlit736;
+static Object strlit741;
+static Object strlit745;
+static Object strlit753;
+static Object strlit758;
+static Object strlit763;
+static Object strlit766;
 static Object strlit771;
-static Object strlit774;
-static Object strlit779;
-static Object strlit781;
-static Object strlit786;
+static Object strlit780;
+static Object strlit783;
 static Object strlit788;
-static Object strlit807;
-static Object strlit818;
-static Object strlit820;
-static Object strlit834;
-static Object strlit840;
-static Object strlit844;
-static Object strlit854;
-static Object strlit856;
-static Object strlit861;
-static Object strlit863;
-static Object strlit869;
-static Object strlit872;
-static Object strlit882;
-static Object strlit895;
+static Object strlit791;
+static Object strlit811;
+static Object strlit814;
+static Object strlit819;
+static Object strlit821;
+static Object strlit826;
+static Object strlit828;
+static Object strlit847;
+static Object strlit858;
+static Object strlit860;
+static Object strlit874;
+static Object strlit880;
+static Object strlit884;
+static Object strlit894;
 static Object strlit896;
-static Object strlit900;
+static Object strlit901;
 static Object strlit903;
-static Object strlit926;
-static Object strlit933;
+static Object strlit909;
+static Object strlit912;
+static Object strlit922;
+static Object strlit935;
+static Object strlit936;
+static Object strlit940;
 static Object strlit943;
-static Object strlit954;
-static Object strlit960;
-static Object strlit963;
-static Object strlit998;
-static Object strlit1043;
-static Object strlit1060;
-static Object strlit1079;
-static Object strlit1105;
-static Object strlit1114;
-static Object strlit1141;
-static Object strlit1150;
-static Object strlit1177;
-static Object strlit1195;
-static Object strlit1211;
-static Object strlit1213;
-static Object strlit1215;
-static Object strlit1229;
-static Object strlit1232;
-static Object strlit1241;
-static Object strlit1244;
-static Object strlit1247;
-static Object strlit1256;
-static Object strlit1259;
-static Object strlit1264;
-static Object strlit1267;
-static Object strlit1274;
+static Object strlit966;
+static Object strlit973;
+static Object strlit983;
+static Object strlit994;
+static Object strlit1000;
+static Object strlit1003;
+static Object strlit1038;
+static Object strlit1083;
+static Object strlit1100;
+static Object strlit1119;
+static Object strlit1145;
+static Object strlit1154;
+static Object strlit1181;
+static Object strlit1190;
+static Object strlit1217;
+static Object strlit1235;
+static Object strlit1251;
+static Object strlit1253;
+static Object strlit1255;
+static Object strlit1269;
+static Object strlit1272;
+static Object strlit1281;
+static Object strlit1284;
+static Object strlit1287;
+static Object strlit1296;
 static Object strlit1299;
-static Object strlit1302;
-static Object strlit1311;
+static Object strlit1304;
+static Object strlit1307;
 static Object strlit1314;
-static Object strlit1348;
+static Object strlit1339;
+static Object strlit1342;
+static Object strlit1351;
 static Object strlit1354;
-static Object strlit1359;
-static Object strlit1371;
-static Object strlit1374;
-static Object strlit1383;
 static Object strlit1388;
-static Object strlit1434;
-static Object strlit1455;
-static Object strlit1488;
-static Object strlit1494;
-static Object strlit1504;
-static Object strlit1521;
-static Object strlit1526;
-static Object strlit1562;
-static Object strlit1565;
-static Object strlit1596;
-static Object strlit1614;
-static Object strlit1633;
-static Object strlit1671;
-static Object strlit1716;
-static Object strlit1737;
+static Object strlit1394;
+static Object strlit1399;
+static Object strlit1411;
+static Object strlit1414;
+static Object strlit1423;
+static Object strlit1428;
+static Object strlit1474;
+static Object strlit1495;
+static Object strlit1528;
+static Object strlit1534;
+static Object strlit1544;
+static Object strlit1561;
+static Object strlit1566;
+static Object strlit1602;
+static Object strlit1605;
+static Object strlit1636;
+static Object strlit1654;
+static Object strlit1673;
+static Object strlit1711;
+static Object strlit1756;
+static Object strlit1777;
 Object module_sys;
 Object module_sys_init();
 Object module_io;
 Object module_io_init();
 Object module_curl;
 Object module_curl_init();
-static Object strlit1761;
+static Object strlit1802;
 Object meth_PackageManager__apply13(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
@@ -843,8 +842,8 @@ Object meth_PackageManager__apply21(Object realself, int nparts, int *argcv, Obj
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 24
-  setline(24);
+// Begin line 23
+  setline(23);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe22 = gc_frame_new();
@@ -883,8 +882,8 @@ Object meth_PackageManager__apply29(Object realself, int nparts, int *argcv, Obj
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 28
-  setline(28);
+// Begin line 26
+  setline(26);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe30 = gc_frame_new();
@@ -929,8 +928,8 @@ Object meth_PackageManager__apply37(Object realself, int nparts, int *argcv, Obj
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 32
-  setline(32);
+// Begin line 29
+  setline(29);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe38 = gc_frame_new();
@@ -968,8 +967,8 @@ Object meth_PackageManager__apply45(Object realself, int nparts, int *argcv, Obj
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 36
-  setline(36);
+// Begin line 32
+  setline(32);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object bool46 = alloc_Boolean(1);
@@ -1002,8 +1001,8 @@ Object meth_PackageManager__apply53(Object realself, int nparts, int *argcv, Obj
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 40
-  setline(40);
+// Begin line 35
+  setline(35);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object bool54 = alloc_Boolean(1);
@@ -1057,8 +1056,8 @@ Object meth_PackageManager__apply7(Object realself, int nparts, int *argcv, Obje
   params[0] = strlit8;
   Object call9 = gracelib_print(NULL, 1,  params);
 // compilenode returning call9
-// Begin line 23
-  setline(23);
+// Begin line 22
+  setline(22);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe10 = gc_frame_new();
@@ -1072,11 +1071,11 @@ Object meth_PackageManager__apply7(Object realself, int nparts, int *argcv, Obje
   }
 // compilenode returning strlit11
   gc_frame_newslot(strlit11);
-// Begin line 23
-  setline(23);
+// Begin line 22
+  setline(22);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block12 = alloc_Block(NULL, NULL, "PackageManager", 23);
+  Object block12 = alloc_Block(NULL, NULL, "PackageManager", 22);
   gc_frame_newslot(block12);
   block_savedest(block12);
   Object closure13 = createclosure(1, "_apply");
@@ -1104,13 +1103,13 @@ meth_meth_PackageManager__apply13->type = alloc_MethodType(1, argcv_meth_Package
     2, partcv, params);
   gc_frame_end(callframe10);
 // compilenode returning call17
-// Begin line 27
-  setline(27);
+// Begin line 25
+  setline(25);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe18 = gc_frame_new();
-// Begin line 23
-  setline(23);
+// Begin line 22
+  setline(22);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit19 == NULL) {
@@ -1119,11 +1118,11 @@ meth_meth_PackageManager__apply13->type = alloc_MethodType(1, argcv_meth_Package
   }
 // compilenode returning strlit19
   gc_frame_newslot(strlit19);
-// Begin line 27
-  setline(27);
+// Begin line 25
+  setline(25);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block20 = alloc_Block(NULL, NULL, "PackageManager", 27);
+  Object block20 = alloc_Block(NULL, NULL, "PackageManager", 25);
   gc_frame_newslot(block20);
   block_savedest(block20);
   Object closure21 = createclosure(1, "_apply");
@@ -1138,8 +1137,8 @@ meth_meth_PackageManager__apply21->type = alloc_MethodType(1, argcv_meth_Package
   meth_meth_PackageManager__apply21->definitionLine = 16;
 // compilenode returning block20
   gc_frame_newslot(block20);
-// Begin line 23
-  setline(23);
+// Begin line 22
+  setline(22);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_on
@@ -1151,13 +1150,13 @@ meth_meth_PackageManager__apply21->type = alloc_MethodType(1, argcv_meth_Package
     2, partcv, params);
   gc_frame_end(callframe18);
 // compilenode returning call25
-// Begin line 31
-  setline(31);
+// Begin line 28
+  setline(28);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe26 = gc_frame_new();
-// Begin line 27
-  setline(27);
+// Begin line 25
+  setline(25);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit27 == NULL) {
@@ -1166,11 +1165,11 @@ meth_meth_PackageManager__apply21->type = alloc_MethodType(1, argcv_meth_Package
   }
 // compilenode returning strlit27
   gc_frame_newslot(strlit27);
-// Begin line 31
-  setline(31);
+// Begin line 28
+  setline(28);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block28 = alloc_Block(NULL, NULL, "PackageManager", 31);
+  Object block28 = alloc_Block(NULL, NULL, "PackageManager", 28);
   gc_frame_newslot(block28);
   block_savedest(block28);
   Object closure29 = createclosure(1, "_apply");
@@ -1185,8 +1184,8 @@ meth_meth_PackageManager__apply29->type = alloc_MethodType(1, argcv_meth_Package
   meth_meth_PackageManager__apply29->definitionLine = 16;
 // compilenode returning block28
   gc_frame_newslot(block28);
-// Begin line 27
-  setline(27);
+// Begin line 25
+  setline(25);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_on
@@ -1198,13 +1197,13 @@ meth_meth_PackageManager__apply29->type = alloc_MethodType(1, argcv_meth_Package
     2, partcv, params);
   gc_frame_end(callframe26);
 // compilenode returning call33
-// Begin line 35
-  setline(35);
+// Begin line 31
+  setline(31);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe34 = gc_frame_new();
-// Begin line 31
-  setline(31);
+// Begin line 28
+  setline(28);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit35 == NULL) {
@@ -1213,11 +1212,11 @@ meth_meth_PackageManager__apply29->type = alloc_MethodType(1, argcv_meth_Package
   }
 // compilenode returning strlit35
   gc_frame_newslot(strlit35);
-// Begin line 35
-  setline(35);
+// Begin line 31
+  setline(31);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block36 = alloc_Block(NULL, NULL, "PackageManager", 35);
+  Object block36 = alloc_Block(NULL, NULL, "PackageManager", 31);
   gc_frame_newslot(block36);
   block_savedest(block36);
   Object closure37 = createclosure(1, "_apply");
@@ -1232,8 +1231,8 @@ meth_meth_PackageManager__apply37->type = alloc_MethodType(1, argcv_meth_Package
   meth_meth_PackageManager__apply37->definitionLine = 16;
 // compilenode returning block36
   gc_frame_newslot(block36);
-// Begin line 31
-  setline(31);
+// Begin line 28
+  setline(28);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_on
@@ -1245,13 +1244,13 @@ meth_meth_PackageManager__apply37->type = alloc_MethodType(1, argcv_meth_Package
     2, partcv, params);
   gc_frame_end(callframe34);
 // compilenode returning call41
-// Begin line 39
-  setline(39);
+// Begin line 34
+  setline(34);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe42 = gc_frame_new();
-// Begin line 35
-  setline(35);
+// Begin line 31
+  setline(31);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit43 == NULL) {
@@ -1260,11 +1259,11 @@ meth_meth_PackageManager__apply37->type = alloc_MethodType(1, argcv_meth_Package
   }
 // compilenode returning strlit43
   gc_frame_newslot(strlit43);
-// Begin line 39
-  setline(39);
+// Begin line 34
+  setline(34);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block44 = alloc_Block(NULL, NULL, "PackageManager", 39);
+  Object block44 = alloc_Block(NULL, NULL, "PackageManager", 34);
   gc_frame_newslot(block44);
   block_savedest(block44);
   Object closure45 = createclosure(2, "_apply");
@@ -1280,8 +1279,8 @@ meth_meth_PackageManager__apply45->type = alloc_MethodType(1, argcv_meth_Package
   meth_meth_PackageManager__apply45->definitionLine = 16;
 // compilenode returning block44
   gc_frame_newslot(block44);
-// Begin line 35
-  setline(35);
+// Begin line 31
+  setline(31);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_on
@@ -1293,13 +1292,13 @@ meth_meth_PackageManager__apply45->type = alloc_MethodType(1, argcv_meth_Package
     2, partcv, params);
   gc_frame_end(callframe42);
 // compilenode returning call49
-// Begin line 42
-  setline(42);
+// Begin line 37
+  setline(37);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe50 = gc_frame_new();
-// Begin line 39
-  setline(39);
+// Begin line 34
+  setline(34);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit51 == NULL) {
@@ -1308,11 +1307,11 @@ meth_meth_PackageManager__apply45->type = alloc_MethodType(1, argcv_meth_Package
   }
 // compilenode returning strlit51
   gc_frame_newslot(strlit51);
-// Begin line 42
-  setline(42);
+// Begin line 37
+  setline(37);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block52 = alloc_Block(NULL, NULL, "PackageManager", 42);
+  Object block52 = alloc_Block(NULL, NULL, "PackageManager", 37);
   gc_frame_newslot(block52);
   block_savedest(block52);
   Object closure53 = createclosure(2, "_apply");
@@ -1328,8 +1327,8 @@ meth_meth_PackageManager__apply53->type = alloc_MethodType(1, argcv_meth_Package
   meth_meth_PackageManager__apply53->definitionLine = 16;
 // compilenode returning block52
   gc_frame_newslot(block52);
-// Begin line 39
-  setline(39);
+// Begin line 34
+  setline(34);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_on
@@ -1400,8 +1399,8 @@ if (argcv && argcv[0] > 1)
   params[0] = call3;
   Object call4 = gracelib_print(NULL, 1,  params);
 // compilenode returning call4
-// Begin line 44
-  setline(44);
+// Begin line 38
+  setline(38);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe5 = gc_frame_new();
@@ -1411,11 +1410,11 @@ if (argcv && argcv[0] > 1)
   setsource(originalSourceLines);
 // compilenode returning *var_args
   gc_frame_newslot(*var_args);
-// Begin line 44
-  setline(44);
+// Begin line 38
+  setline(38);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block6 = alloc_Block(NULL, NULL, "PackageManager", 44);
+  Object block6 = alloc_Block(NULL, NULL, "PackageManager", 38);
   gc_frame_newslot(block6);
   block_savedest(block6);
   Object closure7 = createclosure(3, "_apply");
@@ -1488,13 +1487,13 @@ if (argcv && argcv[2] > 1)
   if (methodInheritingObject) curarg++;
   Object *var_arg = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "arg");
-// Begin line 54
-  setline(54);
+// Begin line 48
+  setline(48);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe68 = gc_frame_new();
-// Begin line 53
-  setline(53);
+// Begin line 47
+  setline(47);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -1510,12 +1509,12 @@ if (argcv && argcv[2] > 1)
   if (call69 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 63
-  setline(63);
+// Begin line 57
+  setline(57);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 54
-  setline(54);
+// Begin line 48
+  setline(48);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_arg
@@ -1586,12 +1585,12 @@ if (argcv && argcv[2] > 1)
 // compilenode returning opresult95
   Object if70 = done;
   if (istrue(opresult95)) {
-// Begin line 59
-  setline(59);
+// Begin line 53
+  setline(53);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 55
-  setline(55);
+// Begin line 49
+  setline(49);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe98 = gc_frame_new();
@@ -1611,13 +1610,13 @@ if (argcv && argcv[2] > 1)
 // compilenode returning opresult101
   Object if96 = done;
   if (istrue(opresult101)) {
-// Begin line 57
-  setline(57);
+// Begin line 51
+  setline(51);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe102 = gc_frame_new();
-// Begin line 56
-  setline(56);
+// Begin line 50
+  setline(50);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit105 == NULL) {
@@ -1660,12 +1659,12 @@ if (argcv && argcv[2] > 1)
   } else {
   }
 // compilenode returning if96
-// Begin line 60
-  setline(60);
+// Begin line 54
+  setline(54);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 59
-  setline(59);
+// Begin line 53
+  setline(53);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -1681,13 +1680,13 @@ if (argcv && argcv[2] > 1)
   if (sum117 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 61
-  setline(61);
+// Begin line 55
+  setline(55);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe119 = gc_frame_new();
-// Begin line 60
-  setline(60);
+// Begin line 54
+  setline(54);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe120 = gc_frame_new();
@@ -1708,12 +1707,12 @@ if (argcv && argcv[2] > 1)
     1, partcv, params);
   gc_frame_end(callframe119);
 // compilenode returning call122
-// Begin line 62
-  setline(62);
+// Begin line 56
+  setline(56);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 61
-  setline(61);
+// Begin line 55
+  setline(55);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object bool123 = alloc_Boolean(1);
@@ -1773,13 +1772,13 @@ if (argcv && argcv[1] > 1)
   setframeelementname(stackframe, 4, "arga");
   Object *var_argb = &(stackframe->slots[5]);
   setframeelementname(stackframe, 5, "argb");
-// Begin line 67
-  setline(67);
+// Begin line 61
+  setline(61);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe126 = gc_frame_new();
-// Begin line 66
-  setline(66);
+// Begin line 60
+  setline(60);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -1795,12 +1794,12 @@ if (argcv && argcv[1] > 1)
   if (call127 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 78
-  setline(78);
+// Begin line 72
+  setline(72);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 67
-  setline(67);
+// Begin line 61
+  setline(61);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_arg
@@ -1835,12 +1834,12 @@ if (argcv && argcv[1] > 1)
 // compilenode returning opresult139
   Object if128 = done;
   if (istrue(opresult139)) {
-// Begin line 71
-  setline(71);
+// Begin line 65
+  setline(65);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 68
-  setline(68);
+// Begin line 62
+  setline(62);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe142 = gc_frame_new();
@@ -1868,13 +1867,13 @@ if (argcv && argcv[1] > 1)
 // compilenode returning opresult149
   Object if140 = done;
   if (istrue(opresult149)) {
-// Begin line 70
-  setline(70);
+// Begin line 64
+  setline(64);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe150 = gc_frame_new();
-// Begin line 69
-  setline(69);
+// Begin line 63
+  setline(63);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit153 == NULL) {
@@ -1917,13 +1916,13 @@ if (argcv && argcv[1] > 1)
   } else {
   }
 // compilenode returning if140
-// Begin line 72
-  setline(72);
+// Begin line 66
+  setline(66);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe162 = gc_frame_new();
-// Begin line 71
-  setline(71);
+// Begin line 65
+  setline(65);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -1947,13 +1946,13 @@ if (argcv && argcv[1] > 1)
   if (call167 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 73
-  setline(73);
+// Begin line 67
+  setline(67);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe168 = gc_frame_new();
-// Begin line 72
-  setline(72);
+// Begin line 66
+  setline(66);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -1977,13 +1976,13 @@ if (argcv && argcv[1] > 1)
   if (call173 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 74
-  setline(74);
+// Begin line 68
+  setline(68);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe174 = gc_frame_new();
-// Begin line 73
-  setline(73);
+// Begin line 67
+  setline(67);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_arga
@@ -1998,12 +1997,12 @@ if (argcv && argcv[1] > 1)
     1, partcv, params);
   gc_frame_end(callframe174);
 // compilenode returning call175
-// Begin line 75
-  setline(75);
+// Begin line 69
+  setline(69);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 74
-  setline(74);
+// Begin line 68
+  setline(68);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -2019,12 +2018,12 @@ if (argcv && argcv[1] > 1)
   if (sum179 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 76
-  setline(76);
+// Begin line 70
+  setline(70);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 75
-  setline(75);
+// Begin line 69
+  setline(69);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object bool181 = alloc_Boolean(1);
@@ -2073,13 +2072,13 @@ if (argcv && argcv[1] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 82
-  setline(82);
+// Begin line 76
+  setline(76);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe184 = gc_frame_new();
-// Begin line 81
-  setline(81);
+// Begin line 75
+  setline(75);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_name
@@ -2150,13 +2149,13 @@ if (argcv && argcv[2] > 1)
   if (methodInheritingObject) curarg++;
   Object *var_arg = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "arg");
-// Begin line 86
-  setline(86);
+// Begin line 80
+  setline(80);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe188 = gc_frame_new();
-// Begin line 85
-  setline(85);
+// Begin line 79
+  setline(79);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -2172,147 +2171,117 @@ if (argcv && argcv[2] > 1)
   if (call189 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 86
-  setline(86);
+// Begin line 84
+  setline(84);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit192 == NULL) {
-    strlit192 = alloc_String("In flag 2: Sh = ");
-    gc_root(strlit192);
-  }
-// compilenode returning strlit192
-  int op_slot_left_191 = gc_frame_newslot(strlit192);
-// compilenode returning *var_sh
-  int op_slot_right_191 = gc_frame_newslot(*var_sh);
-  params[0] = *var_sh;
-  partcv[0] = 1;
-  Object opresult194 = callmethod(strlit192, "++", 1, partcv, params);
-// compilenode returning opresult194
-  int op_slot_left_190 = gc_frame_newslot(opresult194);
+// Begin line 80
+  setline(80);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_arg
+  int op_slot_left_192 = gc_frame_newslot(*var_arg);
   if (strlit195 == NULL) {
-    strlit195 = alloc_String("");
+    strlit195 = alloc_String("--");
     gc_root(strlit195);
   }
 // compilenode returning strlit195
-  int op_slot_right_190 = gc_frame_newslot(strlit195);
-  params[0] = strlit195;
-  partcv[0] = 1;
-  Object opresult197 = callmethod(opresult194, "++", 1, partcv, params);
-// compilenode returning opresult197
-  params[0] = opresult197;
-  Object call198 = gracelib_print(NULL, 1,  params);
-// compilenode returning call198
-// Begin line 91
-  setline(91);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 87
-  setline(87);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_arg
-  int op_slot_left_201 = gc_frame_newslot(*var_arg);
-  if (strlit204 == NULL) {
-    strlit204 = alloc_String("--");
-    gc_root(strlit204);
-  }
-// compilenode returning strlit204
-  int op_slot_left_203 = gc_frame_newslot(strlit204);
+  int op_slot_left_194 = gc_frame_newslot(strlit195);
 // compilenode returning *var_name
-  int op_slot_right_203 = gc_frame_newslot(*var_name);
+  int op_slot_right_194 = gc_frame_newslot(*var_name);
   params[0] = *var_name;
   partcv[0] = 1;
-  Object opresult206 = callmethod(strlit204, "++", 1, partcv, params);
-// compilenode returning opresult206
-  int op_slot_left_202 = gc_frame_newslot(opresult206);
-  if (strlit207 == NULL) {
-    strlit207 = alloc_String("");
-    gc_root(strlit207);
+  Object opresult197 = callmethod(strlit195, "++", 1, partcv, params);
+// compilenode returning opresult197
+  int op_slot_left_193 = gc_frame_newslot(opresult197);
+  if (strlit198 == NULL) {
+    strlit198 = alloc_String("");
+    gc_root(strlit198);
   }
-// compilenode returning strlit207
-  int op_slot_right_202 = gc_frame_newslot(strlit207);
-  params[0] = strlit207;
+// compilenode returning strlit198
+  int op_slot_right_193 = gc_frame_newslot(strlit198);
+  params[0] = strlit198;
   partcv[0] = 1;
-  Object opresult209 = callmethod(opresult206, "++", 1, partcv, params);
-// compilenode returning opresult209
-  int op_slot_right_201 = gc_frame_newslot(opresult209);
-  params[0] = opresult209;
+  Object opresult200 = callmethod(opresult197, "++", 1, partcv, params);
+// compilenode returning opresult200
+  int op_slot_right_192 = gc_frame_newslot(opresult200);
+  params[0] = opresult200;
   partcv[0] = 1;
-  Object opresult211 = callmethod(*var_arg, "==", 1, partcv, params);
-// compilenode returning opresult211
-  int op_slot_left_200 = gc_frame_newslot(opresult211);
+  Object opresult202 = callmethod(*var_arg, "==", 1, partcv, params);
+// compilenode returning opresult202
+  int op_slot_left_191 = gc_frame_newslot(opresult202);
 // compilenode returning *var_arg
-  int op_slot_left_212 = gc_frame_newslot(*var_arg);
-  if (strlit215 == NULL) {
-    strlit215 = alloc_String("-");
-    gc_root(strlit215);
+  int op_slot_left_203 = gc_frame_newslot(*var_arg);
+  if (strlit206 == NULL) {
+    strlit206 = alloc_String("-");
+    gc_root(strlit206);
   }
-// compilenode returning strlit215
-  int op_slot_left_214 = gc_frame_newslot(strlit215);
+// compilenode returning strlit206
+  int op_slot_left_205 = gc_frame_newslot(strlit206);
 // compilenode returning *var_sh
-  int op_slot_right_214 = gc_frame_newslot(*var_sh);
+  int op_slot_right_205 = gc_frame_newslot(*var_sh);
   params[0] = *var_sh;
   partcv[0] = 1;
-  Object opresult217 = callmethod(strlit215, "++", 1, partcv, params);
-// compilenode returning opresult217
-  int op_slot_left_213 = gc_frame_newslot(opresult217);
-  if (strlit218 == NULL) {
-    strlit218 = alloc_String("");
-    gc_root(strlit218);
+  Object opresult208 = callmethod(strlit206, "++", 1, partcv, params);
+// compilenode returning opresult208
+  int op_slot_left_204 = gc_frame_newslot(opresult208);
+  if (strlit209 == NULL) {
+    strlit209 = alloc_String("");
+    gc_root(strlit209);
   }
-// compilenode returning strlit218
-  int op_slot_right_213 = gc_frame_newslot(strlit218);
-  params[0] = strlit218;
+// compilenode returning strlit209
+  int op_slot_right_204 = gc_frame_newslot(strlit209);
+  params[0] = strlit209;
   partcv[0] = 1;
-  Object opresult220 = callmethod(opresult217, "++", 1, partcv, params);
-// compilenode returning opresult220
-  int op_slot_right_212 = gc_frame_newslot(opresult220);
-  params[0] = opresult220;
+  Object opresult211 = callmethod(opresult208, "++", 1, partcv, params);
+// compilenode returning opresult211
+  int op_slot_right_203 = gc_frame_newslot(opresult211);
+  params[0] = opresult211;
   partcv[0] = 1;
-  Object opresult222 = callmethod(*var_arg, "==", 1, partcv, params);
-// compilenode returning opresult222
-  int op_slot_right_200 = gc_frame_newslot(opresult222);
-  params[0] = opresult222;
+  Object opresult213 = callmethod(*var_arg, "==", 1, partcv, params);
+// compilenode returning opresult213
+  int op_slot_right_191 = gc_frame_newslot(opresult213);
+  params[0] = opresult213;
   partcv[0] = 1;
-  Object opresult224 = callmethod(opresult211, "||", 1, partcv, params);
-// compilenode returning opresult224
-  Object if199 = done;
-  if (istrue(opresult224)) {
-// Begin line 88
-  setline(88);
+  Object opresult215 = callmethod(opresult202, "||", 1, partcv, params);
+// compilenode returning opresult215
+  Object if190 = done;
+  if (istrue(opresult215)) {
+// Begin line 81
+  setline(81);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe225 = gc_frame_new();
+  int callframe216 = gc_frame_new();
 // compilenode returning *var_block_39_
   partcv[0] = 0;
-  Object call226 = callmethod(*var_block_39_, "apply",
+  Object call217 = callmethod(*var_block_39_, "apply",
     1, partcv, params);
-  gc_frame_end(callframe225);
-// compilenode returning call226
-// compilenode returning call226
-// Begin line 90
-  setline(90);
+  gc_frame_end(callframe216);
+// compilenode returning call217
+// compilenode returning call217
+// Begin line 83
+  setline(83);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 89
-  setline(89);
+// Begin line 82
+  setline(82);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool227 = alloc_Boolean(1);
-// compilenode returning bool227
-  *var_ran = bool227;
-  if (bool227 == undefined)
+  Object bool218 = alloc_Boolean(1);
+// compilenode returning bool218
+  *var_ran = bool218;
+  if (bool218 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if199 = done;
+    if190 = done;
   } else {
   }
-// compilenode returning if199
+// compilenode returning if190
   gc_frame_end(frame);
-  return if199;
+  return if190;
 }
-Object meth_PackageManager_flag_40__41_do229(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_flag_40__41_do220(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(3, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "flag()do");
@@ -2344,50 +2313,38 @@ if (argcv && argcv[1] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 94
-  setline(94);
+// Begin line 88
+  setline(88);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit230 == NULL) {
-    strlit230 = alloc_String("in flag 1");
-    gc_root(strlit230);
-  }
-// compilenode returning strlit230
-  params[0] = strlit230;
-  Object call231 = gracelib_print(NULL, 1,  params);
-// compilenode returning call231
-// Begin line 96
-  setline(96);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe232 = gc_frame_new();
-// Begin line 95
-  setline(95);
+  int callframe221 = gc_frame_new();
+// Begin line 87
+  setline(87);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_name
   gc_frame_newslot(*var_name);
-  if (strlit233 == NULL) {
-    strlit233 = alloc_String("");
-    gc_root(strlit233);
+  if (strlit222 == NULL) {
+    strlit222 = alloc_String("");
+    gc_root(strlit222);
   }
-// compilenode returning strlit233
-  gc_frame_newslot(strlit233);
+// compilenode returning strlit222
+  gc_frame_newslot(strlit222);
 // compilenode returning *var_block_39_
   gc_frame_newslot(*var_block_39_);
   params[0] = *var_name;
-  params[1] = strlit233;
+  params[1] = strlit222;
   params[2] = *var_block_39_;
   partcv[0] = 1;
   partcv[1] = 1;
   partcv[2] = 1;
-  Object call234 = callmethodflags(self, "flag()shortHand()do", 3, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe232);
-// compilenode returning call234
+  Object call223 = callmethodflags(self, "flag()shortHand()do", 3, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe221);
+// compilenode returning call223
   gc_frame_end(frame);
-  return call234;
+  return call223;
 }
-Object meth_PackageManager__apply239(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply226(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -2410,17 +2367,17 @@ Object meth_PackageManager__apply239(Object realself, int nparts, int *argcv, Ob
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_i
-  int op_slot_left_240 = gc_frame_newslot(*var_i);
+  int op_slot_left_227 = gc_frame_newslot(*var_i);
 // compilenode returning *var_size
-  int op_slot_right_240 = gc_frame_newslot(*var_size);
+  int op_slot_right_227 = gc_frame_newslot(*var_size);
   params[0] = *var_size;
   partcv[0] = 1;
-  Object opresult242 = callmethod(*var_i, "<=", 1, partcv, params);
-// compilenode returning opresult242
+  Object opresult229 = callmethod(*var_i, "<=", 1, partcv, params);
+// compilenode returning opresult229
   gc_frame_end(frame);
-  return opresult242;
+  return opresult229;
 }
-Object meth_PackageManager__apply245(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply232(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -2447,13 +2404,13 @@ Object meth_PackageManager__apply245(Object realself, int nparts, int *argcv, Ob
   if (methodInheritingObject) curarg++;
   Object *var_arg = &(stackframe->slots[1]);
   setframeelementname(stackframe, 1, "arg");
-// Begin line 101
-  setline(101);
+// Begin line 92
+  setline(92);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe246 = gc_frame_new();
-// Begin line 100
-  setline(100);
+  int callframe233 = gc_frame_new();
+// Begin line 91
+  setline(91);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
@@ -2461,43 +2418,43 @@ Object meth_PackageManager__apply245(Object realself, int nparts, int *argcv, Ob
 // compilenode returning *var_args
   params[0] = *var_i;
   partcv[0] = 1;
-  Object call247 = callmethod(*var_args, "at",
+  Object call234 = callmethod(*var_args, "at",
     1, partcv, params);
-  gc_frame_end(callframe246);
-// compilenode returning call247
-  *var_arg = call247;
-  if (call247 == undefined)
+  gc_frame_end(callframe233);
+// compilenode returning call234
+  *var_arg = call234;
+  if (call234 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 101
-  setline(101);
+// Begin line 92
+  setline(92);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_arg
   params[0] = *var_arg;
-  Object call248 = gracelib_print(NULL, 1,  params);
-// compilenode returning call248
-// Begin line 103
-  setline(103);
+  Object call235 = gracelib_print(NULL, 1,  params);
+// compilenode returning call235
+// Begin line 94
+  setline(94);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 102
-  setline(102);
+// Begin line 93
+  setline(93);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool249 = alloc_Boolean(0);
-// compilenode returning bool249
-  *var_ran = bool249;
-  if (bool249 == undefined)
+  Object bool236 = alloc_Boolean(0);
+// compilenode returning bool236
+  *var_ran = bool236;
+  if (bool236 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 105
-  setline(105);
+// Begin line 95
+  setline(95);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe251 = gc_frame_new();
-// Begin line 103
-  setline(103);
+  int callframe238 = gc_frame_new();
+// Begin line 94
+  setline(94);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_arg
@@ -2508,124 +2465,124 @@ Object meth_PackageManager__apply245(Object realself, int nparts, int *argcv, Ob
   params[0] = *var_arg;
   params[1] = *var_on;
   partcv[0] = 2;
-  Object call252 = callmethod(*var_block, "apply",
+  Object call239 = callmethod(*var_block, "apply",
     1, partcv, params);
-  gc_frame_end(callframe251);
-// compilenode returning call252
-// Begin line 109
-  setline(109);
+  gc_frame_end(callframe238);
+// compilenode returning call239
+// Begin line 99
+  setline(99);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 105
-  setline(105);
+// Begin line 95
+  setline(95);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe256 = gc_frame_new();
-  Object num257 = alloc_Float64(1);
-// compilenode returning num257
-  gc_frame_newslot(num257);
+  int callframe243 = gc_frame_new();
+  Object num244 = alloc_Float64(1);
+// compilenode returning num244
+  gc_frame_newslot(num244);
 // compilenode returning *var_arg
-  params[0] = num257;
+  params[0] = num244;
   partcv[0] = 1;
-  Object call258 = callmethod(*var_arg, "at",
+  Object call245 = callmethod(*var_arg, "at",
     1, partcv, params);
-  gc_frame_end(callframe256);
-// compilenode returning call258
-  int op_slot_left_255 = gc_frame_newslot(call258);
+  gc_frame_end(callframe243);
+// compilenode returning call245
+  int op_slot_left_242 = gc_frame_newslot(call245);
+  if (strlit246 == NULL) {
+    strlit246 = alloc_String("-");
+    gc_root(strlit246);
+  }
+// compilenode returning strlit246
+  int op_slot_right_242 = gc_frame_newslot(strlit246);
+  params[0] = strlit246;
+  partcv[0] = 1;
+  Object opresult248 = callmethod(call245, "==", 1, partcv, params);
+// compilenode returning opresult248
+  int op_slot_left_241 = gc_frame_newslot(opresult248);
+  int callframe249 = gc_frame_new();
+// compilenode returning *var_ran
+  partcv[0] = 0;
+  Object call250 = callmethod(*var_ran, "not",
+    1, partcv, params);
+  gc_frame_end(callframe249);
+// compilenode returning call250
+// compilenode returning call250
+  int op_slot_right_241 = gc_frame_newslot(call250);
+  params[0] = call250;
+  partcv[0] = 1;
+  Object opresult252 = callmethod(opresult248, "&&", 1, partcv, params);
+// compilenode returning opresult252
+  Object if240 = done;
+  if (istrue(opresult252)) {
+// Begin line 97
+  setline(97);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe253 = gc_frame_new();
+// Begin line 96
+  setline(96);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit256 == NULL) {
+    strlit256 = alloc_String("Unrecognised argument ");
+    gc_root(strlit256);
+  }
+// compilenode returning strlit256
+  int op_slot_left_255 = gc_frame_newslot(strlit256);
+// compilenode returning *var_arg
+  int op_slot_right_255 = gc_frame_newslot(*var_arg);
+  params[0] = *var_arg;
+  partcv[0] = 1;
+  Object opresult258 = callmethod(strlit256, "++", 1, partcv, params);
+// compilenode returning opresult258
+  int op_slot_left_254 = gc_frame_newslot(opresult258);
   if (strlit259 == NULL) {
-    strlit259 = alloc_String("-");
+    strlit259 = alloc_String("");
     gc_root(strlit259);
   }
 // compilenode returning strlit259
-  int op_slot_right_255 = gc_frame_newslot(strlit259);
+  int op_slot_right_254 = gc_frame_newslot(strlit259);
   params[0] = strlit259;
   partcv[0] = 1;
-  Object opresult261 = callmethod(call258, "==", 1, partcv, params);
+  Object opresult261 = callmethod(opresult258, "++", 1, partcv, params);
 // compilenode returning opresult261
-  int op_slot_left_254 = gc_frame_newslot(opresult261);
+  gc_frame_newslot(opresult261);
   int callframe262 = gc_frame_new();
-// compilenode returning *var_ran
   partcv[0] = 0;
-  Object call263 = callmethod(*var_ran, "not",
-    1, partcv, params);
+  Object call263 = callmethodflags(prelude, "Exception", 1, partcv, params, CFLAG_SELF);
   gc_frame_end(callframe262);
 // compilenode returning call263
-// compilenode returning call263
-  int op_slot_right_254 = gc_frame_newslot(call263);
-  params[0] = call263;
+  params[0] = opresult261;
   partcv[0] = 1;
-  Object opresult265 = callmethod(opresult261, "&&", 1, partcv, params);
-// compilenode returning opresult265
-  Object if253 = done;
-  if (istrue(opresult265)) {
-// Begin line 107
-  setline(107);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe266 = gc_frame_new();
-// Begin line 106
-  setline(106);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit269 == NULL) {
-    strlit269 = alloc_String("Unrecognised argument ");
-    gc_root(strlit269);
-  }
-// compilenode returning strlit269
-  int op_slot_left_268 = gc_frame_newslot(strlit269);
-// compilenode returning *var_arg
-  int op_slot_right_268 = gc_frame_newslot(*var_arg);
-  params[0] = *var_arg;
-  partcv[0] = 1;
-  Object opresult271 = callmethod(strlit269, "++", 1, partcv, params);
-// compilenode returning opresult271
-  int op_slot_left_267 = gc_frame_newslot(opresult271);
-  if (strlit272 == NULL) {
-    strlit272 = alloc_String("");
-    gc_root(strlit272);
-  }
-// compilenode returning strlit272
-  int op_slot_right_267 = gc_frame_newslot(strlit272);
-  params[0] = strlit272;
-  partcv[0] = 1;
-  Object opresult274 = callmethod(opresult271, "++", 1, partcv, params);
-// compilenode returning opresult274
-  gc_frame_newslot(opresult274);
-  int callframe275 = gc_frame_new();
-  partcv[0] = 0;
-  Object call276 = callmethodflags(prelude, "Exception", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe275);
-// compilenode returning call276
-  params[0] = opresult274;
-  partcv[0] = 1;
-  Object call277 = callmethod(call276, "raise",
+  Object call264 = callmethod(call263, "raise",
     1, partcv, params);
-  gc_frame_end(callframe266);
-// compilenode returning call277
-    gc_frame_newslot(call277);
-    if253 = call277;
+  gc_frame_end(callframe253);
+// compilenode returning call264
+    gc_frame_newslot(call264);
+    if240 = call264;
   } else {
   }
-// compilenode returning if253
-// Begin line 110
-  setline(110);
+// compilenode returning if240
+// Begin line 100
+  setline(100);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 109
-  setline(109);
+// Begin line 99
+  setline(99);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_i
-  int op_slot_left_278 = gc_frame_newslot(*var_i);
-  Object num279 = alloc_Float64(1);
-// compilenode returning num279
-  int op_slot_right_278 = gc_frame_newslot(num279);
-  params[0] = num279;
+  int op_slot_left_265 = gc_frame_newslot(*var_i);
+  Object num266 = alloc_Float64(1);
+// compilenode returning num266
+  int op_slot_right_265 = gc_frame_newslot(num266);
+  params[0] = num266;
   partcv[0] = 1;
-  Object sum281 = callmethod(*var_i, "+", 1, partcv, params);
-// compilenode returning sum281
-  *var_i = sum281;
-  if (sum281 == undefined)
+  Object sum268 = callmethod(*var_i, "+", 1, partcv, params);
+// compilenode returning sum268
+  *var_i = sum268;
+  if (sum268 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
@@ -2671,12 +2628,12 @@ if (argcv && argcv[1] > 1)
   setframeelementname(stackframe, 5, "size");
   Object *var_on = &(stackframe->slots[6]);
   setframeelementname(stackframe, 6, "on");
-// Begin line 48
-  setline(48);
+// Begin line 42
+  setline(42);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 47
-  setline(47);
+// Begin line 41
+  setline(41);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object num61 = alloc_Float64(2);
@@ -2685,12 +2642,12 @@ if (argcv && argcv[1] > 1)
   if (num61 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 49
-  setline(49);
+// Begin line 43
+  setline(43);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 48
-  setline(48);
+// Begin line 42
+  setline(42);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object bool62 = alloc_Boolean(0);
@@ -2699,12 +2656,12 @@ if (argcv && argcv[1] > 1)
   if (bool62 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 51
-  setline(51);
+// Begin line 45
+  setline(45);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 49
-  setline(49);
+// Begin line 43
+  setline(43);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe63 = gc_frame_new();
@@ -2719,8 +2676,8 @@ if (argcv && argcv[1] > 1)
   if (call64 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 51
-  setline(51);
+// Begin line 45
+  setline(45);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object inheritingObject65 = inheritingObject;
@@ -2768,7 +2725,7 @@ meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->type->names[0] = "
 meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->type->types[1] = type_String;
 meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->type->names[1] = "sh";
   meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->definitionModule = modulename;
-  meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->definitionLine = 52;
+  meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->definitionLine = 46;
   block_savedest(obj65);
   Object closure125 = createclosure(3, "doubleValue()do");
 setclosureframe(closure125, stackframe);
@@ -2783,7 +2740,7 @@ meth_meth_PackageManager_doubleValue_40__41_do125->type = alloc_MethodType(2, ar
 meth_meth_PackageManager_doubleValue_40__41_do125->type->types[0] = type_String;
 meth_meth_PackageManager_doubleValue_40__41_do125->type->names[0] = "name";
   meth_meth_PackageManager_doubleValue_40__41_do125->definitionModule = modulename;
-  meth_meth_PackageManager_doubleValue_40__41_do125->definitionLine = 65;
+  meth_meth_PackageManager_doubleValue_40__41_do125->definitionLine = 59;
   struct UserObject *uo183 = (struct UserObject*)obj65;
   uo183->data[3] = emptyclosure;
   Method *meth_meth_PackageManager_option_40__41_do183 = addmethod2pos(obj65, "option()do", &meth_PackageManager_option_40__41_do183, 3);
@@ -2792,7 +2749,7 @@ meth_meth_PackageManager_option_40__41_do183->type = alloc_MethodType(2, argcv_m
 meth_meth_PackageManager_option_40__41_do183->type->types[0] = type_String;
 meth_meth_PackageManager_option_40__41_do183->type->names[0] = "name";
   meth_meth_PackageManager_option_40__41_do183->definitionModule = modulename;
-  meth_meth_PackageManager_option_40__41_do183->definitionLine = 80;
+  meth_meth_PackageManager_option_40__41_do183->definitionLine = 74;
   block_savedest(obj65);
   Object closure187 = createclosure(3, "flag()shortHand()do");
 setclosureframe(closure187, stackframe);
@@ -2809,16 +2766,16 @@ meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->type->names[0] = "n
 meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->type->types[1] = type_String;
 meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->type->names[1] = "sh";
   meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->definitionModule = modulename;
-  meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->definitionLine = 84;
-  struct UserObject *uo229 = (struct UserObject*)obj65;
-  uo229->data[5] = emptyclosure;
-  Method *meth_meth_PackageManager_flag_40__41_do229 = addmethod2pos(obj65, "flag()do", &meth_PackageManager_flag_40__41_do229, 5);
-int argcv_meth_PackageManager_flag_40__41_do229[] = {1, 1};
-meth_meth_PackageManager_flag_40__41_do229->type = alloc_MethodType(2, argcv_meth_PackageManager_flag_40__41_do229);
-meth_meth_PackageManager_flag_40__41_do229->type->types[0] = type_String;
-meth_meth_PackageManager_flag_40__41_do229->type->names[0] = "name";
-  meth_meth_PackageManager_flag_40__41_do229->definitionModule = modulename;
-  meth_meth_PackageManager_flag_40__41_do229->definitionLine = 93;
+  meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->definitionLine = 78;
+  struct UserObject *uo220 = (struct UserObject*)obj65;
+  uo220->data[5] = emptyclosure;
+  Method *meth_meth_PackageManager_flag_40__41_do220 = addmethod2pos(obj65, "flag()do", &meth_PackageManager_flag_40__41_do220, 5);
+int argcv_meth_PackageManager_flag_40__41_do220[] = {1, 1};
+meth_meth_PackageManager_flag_40__41_do220->type = alloc_MethodType(2, argcv_meth_PackageManager_flag_40__41_do220);
+meth_meth_PackageManager_flag_40__41_do220->type->types[0] = type_String;
+meth_meth_PackageManager_flag_40__41_do220->type->names[0] = "name";
+  meth_meth_PackageManager_flag_40__41_do220->definitionModule = modulename;
+  meth_meth_PackageManager_flag_40__41_do220->definitionLine = 86;
   sourceObject = obj65;
   sourceObject = obj65;
   sourceObject = obj65;
@@ -2826,7 +2783,7 @@ meth_meth_PackageManager_flag_40__41_do229->type->names[0] = "name";
   sourceObject = obj65;
 objclass65 = obj65->class;
   objclass65->definitionModule = modulename;
-  objclass65->definitionLine = 51;
+  objclass65->definitionLine = 45;
   (*(struct UserObject *)self).data[0] = lowerouter65;
   self = oldself65;
   selfslot = oldselfslot65;
@@ -2836,77 +2793,65 @@ objclass65 = obj65->class;
   if (obj65 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 98
-  setline(98);
+// Begin line 101
+  setline(101);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit235 == NULL) {
-    strlit235 = alloc_String("In forargs");
-    gc_root(strlit235);
-  }
-// compilenode returning strlit235
-  params[0] = strlit235;
-  Object call236 = gracelib_print(NULL, 1,  params);
-// compilenode returning call236
-// Begin line 111
-  setline(111);
+  int callframe224 = gc_frame_new();
+// Begin line 90
+  setline(90);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe237 = gc_frame_new();
-// Begin line 99
-  setline(99);
+  Object block225 = alloc_Block(NULL, NULL, "PackageManager", 90);
+  gc_frame_newslot(block225);
+  block_savedest(block225);
+  Object closure226 = createclosure(3, "_apply");
+setclosureframe(closure226, stackframe);
+  addtoclosure(closure226, var_i);
+  addtoclosure(closure226, var_size);
+  addtoclosure(closure226, selfslot);
+  struct UserObject *uo226 = (struct UserObject*)block225;
+  uo226->data[0] = (Object)closure226;
+  Method *meth_meth_PackageManager__apply226 = addmethod2pos(block225, "_apply", &meth_PackageManager__apply226, 0);
+int argcv_meth_PackageManager__apply226[] = {0};
+meth_meth_PackageManager__apply226->type = alloc_MethodType(1, argcv_meth_PackageManager__apply226);
+  meth_meth_PackageManager__apply226->definitionModule = modulename;
+  meth_meth_PackageManager__apply226->definitionLine = 81;
+// compilenode returning block225
+  gc_frame_newslot(block225);
+// Begin line 101
+  setline(101);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block238 = alloc_Block(NULL, NULL, "PackageManager", 99);
-  gc_frame_newslot(block238);
-  block_savedest(block238);
-  Object closure239 = createclosure(3, "_apply");
-setclosureframe(closure239, stackframe);
-  addtoclosure(closure239, var_i);
-  addtoclosure(closure239, var_size);
-  addtoclosure(closure239, selfslot);
-  struct UserObject *uo239 = (struct UserObject*)block238;
-  uo239->data[0] = (Object)closure239;
-  Method *meth_meth_PackageManager__apply239 = addmethod2pos(block238, "_apply", &meth_PackageManager__apply239, 0);
-int argcv_meth_PackageManager__apply239[] = {0};
-meth_meth_PackageManager__apply239->type = alloc_MethodType(1, argcv_meth_PackageManager__apply239);
-  meth_meth_PackageManager__apply239->definitionModule = modulename;
-  meth_meth_PackageManager__apply239->definitionLine = 88;
-// compilenode returning block238
-  gc_frame_newslot(block238);
-// Begin line 111
-  setline(111);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block244 = alloc_Block(NULL, NULL, "PackageManager", 111);
-  gc_frame_newslot(block244);
-  block_savedest(block244);
-  Object closure245 = createclosure(6, "_apply");
-setclosureframe(closure245, stackframe);
-  addtoclosure(closure245, var_i);
-  addtoclosure(closure245, var_args);
-  addtoclosure(closure245, var_ran);
-  addtoclosure(closure245, var_on);
-  addtoclosure(closure245, var_block);
-  addtoclosure(closure245, selfslot);
-  struct UserObject *uo245 = (struct UserObject*)block244;
-  uo245->data[0] = (Object)closure245;
-  Method *meth_meth_PackageManager__apply245 = addmethod2pos(block244, "_apply", &meth_PackageManager__apply245, 0);
-int argcv_meth_PackageManager__apply245[] = {0};
-meth_meth_PackageManager__apply245->type = alloc_MethodType(1, argcv_meth_PackageManager__apply245);
-  meth_meth_PackageManager__apply245->definitionModule = modulename;
-  meth_meth_PackageManager__apply245->definitionLine = 88;
-// compilenode returning block244
-  gc_frame_newslot(block244);
-  params[0] = block238;
-  params[1] = block244;
+  Object block231 = alloc_Block(NULL, NULL, "PackageManager", 101);
+  gc_frame_newslot(block231);
+  block_savedest(block231);
+  Object closure232 = createclosure(6, "_apply");
+setclosureframe(closure232, stackframe);
+  addtoclosure(closure232, var_i);
+  addtoclosure(closure232, var_args);
+  addtoclosure(closure232, var_ran);
+  addtoclosure(closure232, var_on);
+  addtoclosure(closure232, var_block);
+  addtoclosure(closure232, selfslot);
+  struct UserObject *uo232 = (struct UserObject*)block231;
+  uo232->data[0] = (Object)closure232;
+  Method *meth_meth_PackageManager__apply232 = addmethod2pos(block231, "_apply", &meth_PackageManager__apply232, 0);
+int argcv_meth_PackageManager__apply232[] = {0};
+meth_meth_PackageManager__apply232->type = alloc_MethodType(1, argcv_meth_PackageManager__apply232);
+  meth_meth_PackageManager__apply232->definitionModule = modulename;
+  meth_meth_PackageManager__apply232->definitionLine = 81;
+// compilenode returning block231
+  gc_frame_newslot(block231);
+  params[0] = block225;
+  params[1] = block231;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call284 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe237);
-// compilenode returning call284
+  Object call271 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe224);
+// compilenode returning call271
   gc_frame_end(frame);
-  return call284;
+  return call271;
 }
 Object meth_PackageManager_forArgs_40__41_do60_object(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(7, NULL);
@@ -2948,12 +2893,12 @@ if (argcv && argcv[1] > 1)
   setframeelementname(stackframe, 5, "size");
   Object *var_on = &(stackframe->slots[6]);
   setframeelementname(stackframe, 6, "on");
-// Begin line 48
-  setline(48);
+// Begin line 42
+  setline(42);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 47
-  setline(47);
+// Begin line 41
+  setline(41);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object num61 = alloc_Float64(2);
@@ -2962,12 +2907,12 @@ if (argcv && argcv[1] > 1)
   if (num61 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 49
-  setline(49);
+// Begin line 43
+  setline(43);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 48
-  setline(48);
+// Begin line 42
+  setline(42);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object bool62 = alloc_Boolean(0);
@@ -2976,12 +2921,12 @@ if (argcv && argcv[1] > 1)
   if (bool62 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 51
-  setline(51);
+// Begin line 45
+  setline(45);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 49
-  setline(49);
+// Begin line 43
+  setline(43);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe63 = gc_frame_new();
@@ -2996,8 +2941,8 @@ if (argcv && argcv[1] > 1)
   if (call64 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 51
-  setline(51);
+// Begin line 45
+  setline(45);
   setmodule(modulename);
   setsource(originalSourceLines);
   Object inheritingObject65 = inheritingObject;
@@ -3045,7 +2990,7 @@ meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->type->names[0] = "
 meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->type->types[1] = type_String;
 meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->type->names[1] = "sh";
   meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->definitionModule = modulename;
-  meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->definitionLine = 52;
+  meth_meth_PackageManager_option_40__41_shortHand_40__41_do67->definitionLine = 46;
   block_savedest(obj65);
   Object closure125 = createclosure(3, "doubleValue()do");
 setclosureframe(closure125, stackframe);
@@ -3060,7 +3005,7 @@ meth_meth_PackageManager_doubleValue_40__41_do125->type = alloc_MethodType(2, ar
 meth_meth_PackageManager_doubleValue_40__41_do125->type->types[0] = type_String;
 meth_meth_PackageManager_doubleValue_40__41_do125->type->names[0] = "name";
   meth_meth_PackageManager_doubleValue_40__41_do125->definitionModule = modulename;
-  meth_meth_PackageManager_doubleValue_40__41_do125->definitionLine = 65;
+  meth_meth_PackageManager_doubleValue_40__41_do125->definitionLine = 59;
   struct UserObject *uo183 = (struct UserObject*)obj65;
   uo183->data[3] = emptyclosure;
   Method *meth_meth_PackageManager_option_40__41_do183 = addmethod2pos(obj65, "option()do", &meth_PackageManager_option_40__41_do183, 3);
@@ -3069,7 +3014,7 @@ meth_meth_PackageManager_option_40__41_do183->type = alloc_MethodType(2, argcv_m
 meth_meth_PackageManager_option_40__41_do183->type->types[0] = type_String;
 meth_meth_PackageManager_option_40__41_do183->type->names[0] = "name";
   meth_meth_PackageManager_option_40__41_do183->definitionModule = modulename;
-  meth_meth_PackageManager_option_40__41_do183->definitionLine = 80;
+  meth_meth_PackageManager_option_40__41_do183->definitionLine = 74;
   block_savedest(obj65);
   Object closure187 = createclosure(3, "flag()shortHand()do");
 setclosureframe(closure187, stackframe);
@@ -3086,16 +3031,16 @@ meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->type->names[0] = "n
 meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->type->types[1] = type_String;
 meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->type->names[1] = "sh";
   meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->definitionModule = modulename;
-  meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->definitionLine = 84;
-  struct UserObject *uo229 = (struct UserObject*)obj65;
-  uo229->data[5] = emptyclosure;
-  Method *meth_meth_PackageManager_flag_40__41_do229 = addmethod2pos(obj65, "flag()do", &meth_PackageManager_flag_40__41_do229, 5);
-int argcv_meth_PackageManager_flag_40__41_do229[] = {1, 1};
-meth_meth_PackageManager_flag_40__41_do229->type = alloc_MethodType(2, argcv_meth_PackageManager_flag_40__41_do229);
-meth_meth_PackageManager_flag_40__41_do229->type->types[0] = type_String;
-meth_meth_PackageManager_flag_40__41_do229->type->names[0] = "name";
-  meth_meth_PackageManager_flag_40__41_do229->definitionModule = modulename;
-  meth_meth_PackageManager_flag_40__41_do229->definitionLine = 93;
+  meth_meth_PackageManager_flag_40__41_shortHand_40__41_do187->definitionLine = 78;
+  struct UserObject *uo220 = (struct UserObject*)obj65;
+  uo220->data[5] = emptyclosure;
+  Method *meth_meth_PackageManager_flag_40__41_do220 = addmethod2pos(obj65, "flag()do", &meth_PackageManager_flag_40__41_do220, 5);
+int argcv_meth_PackageManager_flag_40__41_do220[] = {1, 1};
+meth_meth_PackageManager_flag_40__41_do220->type = alloc_MethodType(2, argcv_meth_PackageManager_flag_40__41_do220);
+meth_meth_PackageManager_flag_40__41_do220->type->types[0] = type_String;
+meth_meth_PackageManager_flag_40__41_do220->type->names[0] = "name";
+  meth_meth_PackageManager_flag_40__41_do220->definitionModule = modulename;
+  meth_meth_PackageManager_flag_40__41_do220->definitionLine = 86;
   sourceObject = obj65;
   sourceObject = obj65;
   sourceObject = obj65;
@@ -3103,7 +3048,7 @@ meth_meth_PackageManager_flag_40__41_do229->type->names[0] = "name";
   sourceObject = obj65;
 objclass65 = obj65->class;
   objclass65->definitionModule = modulename;
-  objclass65->definitionLine = 51;
+  objclass65->definitionLine = 45;
   (*(struct UserObject *)self).data[0] = lowerouter65;
   self = oldself65;
   selfslot = oldselfslot65;
@@ -3113,79 +3058,67 @@ objclass65 = obj65->class;
   if (obj65 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 98
-  setline(98);
+// Begin line 101
+  setline(101);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit235 == NULL) {
-    strlit235 = alloc_String("In forargs");
-    gc_root(strlit235);
-  }
-// compilenode returning strlit235
-  params[0] = strlit235;
-  Object call236 = gracelib_print(NULL, 1,  params);
-// compilenode returning call236
-// Begin line 111
-  setline(111);
+  int callframe224 = gc_frame_new();
+// Begin line 90
+  setline(90);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe237 = gc_frame_new();
-// Begin line 99
-  setline(99);
+  Object block225 = alloc_Block(NULL, NULL, "PackageManager", 90);
+  gc_frame_newslot(block225);
+  block_savedest(block225);
+  Object closure226 = createclosure(3, "_apply");
+setclosureframe(closure226, stackframe);
+  addtoclosure(closure226, var_i);
+  addtoclosure(closure226, var_size);
+  addtoclosure(closure226, selfslot);
+  struct UserObject *uo226 = (struct UserObject*)block225;
+  uo226->data[0] = (Object)closure226;
+  Method *meth_meth_PackageManager__apply226 = addmethod2pos(block225, "_apply", &meth_PackageManager__apply226, 0);
+int argcv_meth_PackageManager__apply226[] = {0};
+meth_meth_PackageManager__apply226->type = alloc_MethodType(1, argcv_meth_PackageManager__apply226);
+  meth_meth_PackageManager__apply226->definitionModule = modulename;
+  meth_meth_PackageManager__apply226->definitionLine = 81;
+// compilenode returning block225
+  gc_frame_newslot(block225);
+// Begin line 101
+  setline(101);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block238 = alloc_Block(NULL, NULL, "PackageManager", 99);
-  gc_frame_newslot(block238);
-  block_savedest(block238);
-  Object closure239 = createclosure(3, "_apply");
-setclosureframe(closure239, stackframe);
-  addtoclosure(closure239, var_i);
-  addtoclosure(closure239, var_size);
-  addtoclosure(closure239, selfslot);
-  struct UserObject *uo239 = (struct UserObject*)block238;
-  uo239->data[0] = (Object)closure239;
-  Method *meth_meth_PackageManager__apply239 = addmethod2pos(block238, "_apply", &meth_PackageManager__apply239, 0);
-int argcv_meth_PackageManager__apply239[] = {0};
-meth_meth_PackageManager__apply239->type = alloc_MethodType(1, argcv_meth_PackageManager__apply239);
-  meth_meth_PackageManager__apply239->definitionModule = modulename;
-  meth_meth_PackageManager__apply239->definitionLine = 88;
-// compilenode returning block238
-  gc_frame_newslot(block238);
-// Begin line 111
-  setline(111);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block244 = alloc_Block(NULL, NULL, "PackageManager", 111);
-  gc_frame_newslot(block244);
-  block_savedest(block244);
-  Object closure245 = createclosure(6, "_apply");
-setclosureframe(closure245, stackframe);
-  addtoclosure(closure245, var_i);
-  addtoclosure(closure245, var_args);
-  addtoclosure(closure245, var_ran);
-  addtoclosure(closure245, var_on);
-  addtoclosure(closure245, var_block);
-  addtoclosure(closure245, selfslot);
-  struct UserObject *uo245 = (struct UserObject*)block244;
-  uo245->data[0] = (Object)closure245;
-  Method *meth_meth_PackageManager__apply245 = addmethod2pos(block244, "_apply", &meth_PackageManager__apply245, 0);
-int argcv_meth_PackageManager__apply245[] = {0};
-meth_meth_PackageManager__apply245->type = alloc_MethodType(1, argcv_meth_PackageManager__apply245);
-  meth_meth_PackageManager__apply245->definitionModule = modulename;
-  meth_meth_PackageManager__apply245->definitionLine = 88;
-// compilenode returning block244
-  gc_frame_newslot(block244);
-  params[0] = block238;
-  params[1] = block244;
+  Object block231 = alloc_Block(NULL, NULL, "PackageManager", 101);
+  gc_frame_newslot(block231);
+  block_savedest(block231);
+  Object closure232 = createclosure(6, "_apply");
+setclosureframe(closure232, stackframe);
+  addtoclosure(closure232, var_i);
+  addtoclosure(closure232, var_args);
+  addtoclosure(closure232, var_ran);
+  addtoclosure(closure232, var_on);
+  addtoclosure(closure232, var_block);
+  addtoclosure(closure232, selfslot);
+  struct UserObject *uo232 = (struct UserObject*)block231;
+  uo232->data[0] = (Object)closure232;
+  Method *meth_meth_PackageManager__apply232 = addmethod2pos(block231, "_apply", &meth_PackageManager__apply232, 0);
+int argcv_meth_PackageManager__apply232[] = {0};
+meth_meth_PackageManager__apply232->type = alloc_MethodType(1, argcv_meth_PackageManager__apply232);
+  meth_meth_PackageManager__apply232->definitionModule = modulename;
+  meth_meth_PackageManager__apply232->definitionLine = 81;
+// compilenode returning block231
+  gc_frame_newslot(block231);
+  params[0] = block225;
+  params[1] = block231;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call284 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe237);
-// compilenode returning call284
+  Object call271 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe224);
+// compilenode returning call271
   gc_frame_end(frame);
-  return call284;
+  return call271;
 }
-Object meth_PackageManager_listInstalled286(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_listInstalled273(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 3, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(3, getclosureframe(closure));
@@ -3213,224 +3146,224 @@ if (argcv && argcv[0] > 0)
   setframeelementname(stackframe, 1, "globalDir");
   Object *var_usrDir = &(stackframe->slots[2]);
   setframeelementname(stackframe, 2, "usrDir");
-// Begin line 115
-  setline(115);
+// Begin line 105
+  setline(105);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 114
-  setline(114);
+// Begin line 104
+  setline(104);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit287 == NULL) {
-    strlit287 = alloc_String("Installed packages:");
-    gc_root(strlit287);
+  if (strlit274 == NULL) {
+    strlit274 = alloc_String("Installed packages:");
+    gc_root(strlit274);
   }
-// compilenode returning strlit287
-  params[0] = strlit287;
-  Object call288 = gracelib_print(NULL, 1,  params);
-// compilenode returning call288
-// Begin line 120
-  setline(120);
+// compilenode returning strlit274
+  params[0] = strlit274;
+  Object call275 = gracelib_print(NULL, 1,  params);
+// compilenode returning call275
+// Begin line 110
+  setline(110);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 115
-  setline(115);
+// Begin line 105
+  setline(105);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe290 = gc_frame_new();
-  if (strlit291 == NULL) {
-    strlit291 = alloc_String("usr/lib/grace/packages/");
-    gc_root(strlit291);
+  int callframe277 = gc_frame_new();
+  if (strlit278 == NULL) {
+    strlit278 = alloc_String("usr/lib/grace/packages/");
+    gc_root(strlit278);
   }
-// compilenode returning strlit291
-  gc_frame_newslot(strlit291);
+// compilenode returning strlit278
+  gc_frame_newslot(strlit278);
 // compilenode returning *var_io
-  params[0] = strlit291;
+  params[0] = strlit278;
   partcv[0] = 1;
-  Object call292 = callmethod(*var_io, "exists",
+  Object call279 = callmethod(*var_io, "exists",
     1, partcv, params);
-  gc_frame_end(callframe290);
-// compilenode returning call292
-  Object if289 = done;
-  if (istrue(call292)) {
-// Begin line 116
-  setline(116);
+  gc_frame_end(callframe277);
+// compilenode returning call279
+  Object if276 = done;
+  if (istrue(call279)) {
+// Begin line 106
+  setline(106);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit293 == NULL) {
-    strlit293 = alloc_String("Going into the first call");
-    gc_root(strlit293);
+  if (strlit280 == NULL) {
+    strlit280 = alloc_String("Going into the first call");
+    gc_root(strlit280);
   }
-// compilenode returning strlit293
-  params[0] = strlit293;
-  Object call294 = gracelib_print(NULL, 1,  params);
-// compilenode returning call294
-// Begin line 118
-  setline(118);
+// compilenode returning strlit280
+  params[0] = strlit280;
+  Object call281 = gracelib_print(NULL, 1,  params);
+// compilenode returning call281
+// Begin line 108
+  setline(108);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 117
-  setline(117);
+// Begin line 107
+  setline(107);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit295 == NULL) {
-    strlit295 = alloc_String("usr/lib/grace/packages");
-    gc_root(strlit295);
+  if (strlit282 == NULL) {
+    strlit282 = alloc_String("usr/lib/grace/packages");
+    gc_root(strlit282);
   }
-// compilenode returning strlit295
-  *var_globalDir = strlit295;
-  if (strlit295 == undefined)
+// compilenode returning strlit282
+  *var_globalDir = strlit282;
+  if (strlit282 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 119
-  setline(119);
+// Begin line 109
+  setline(109);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe296 = gc_frame_new();
-// Begin line 118
-  setline(118);
+  int callframe283 = gc_frame_new();
+// Begin line 108
+  setline(108);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_globalDir
   gc_frame_newslot(*var_globalDir);
-  if (strlit297 == NULL) {
-    strlit297 = alloc_String("");
-    gc_root(strlit297);
+  if (strlit284 == NULL) {
+    strlit284 = alloc_String("");
+    gc_root(strlit284);
   }
-// compilenode returning strlit297
-  gc_frame_newslot(strlit297);
+// compilenode returning strlit284
+  gc_frame_newslot(strlit284);
   params[0] = *var_globalDir;
-  params[1] = strlit297;
+  params[1] = strlit284;
   partcv[0] = 2;
-  Object call298 = callmethodflags(self, "recurseDirectory", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe296);
-// compilenode returning call298
-    gc_frame_newslot(call298);
-    if289 = call298;
+  Object call285 = callmethodflags(self, "recurseDirectory", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe283);
+// compilenode returning call285
+    gc_frame_newslot(call285);
+    if276 = call285;
   } else {
   }
-// compilenode returning if289
-// Begin line 124
-  setline(124);
+// compilenode returning if276
+// Begin line 114
+  setline(114);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 120
-  setline(120);
+// Begin line 110
+  setline(110);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe300 = gc_frame_new();
-  int callframe302 = gc_frame_new();
+  int callframe287 = gc_frame_new();
+  int callframe289 = gc_frame_new();
 // compilenode returning *var_sys
   partcv[0] = 0;
-  Object call303 = callmethod(*var_sys, "environ",
+  Object call290 = callmethod(*var_sys, "environ",
     1, partcv, params);
-  gc_frame_end(callframe302);
-// compilenode returning call303
-// compilenode returning call303
-  if (strlit304 == NULL) {
-    strlit304 = alloc_String("HOME");
-    gc_root(strlit304);
+  gc_frame_end(callframe289);
+// compilenode returning call290
+// compilenode returning call290
+  if (strlit291 == NULL) {
+    strlit291 = alloc_String("HOME");
+    gc_root(strlit291);
   }
-// compilenode returning strlit304
-  params[0] = strlit304;
+// compilenode returning strlit291
+  params[0] = strlit291;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres305 = callmethod(call303, "[]", 1, partcv, params);
-// compilenode returning idxres305
-  int op_slot_left_301 = gc_frame_newslot(idxres305);
-  if (strlit306 == NULL) {
-    strlit306 = alloc_String("/grace/packages/");
-    gc_root(strlit306);
+  Object idxres292 = callmethod(call290, "[]", 1, partcv, params);
+// compilenode returning idxres292
+  int op_slot_left_288 = gc_frame_newslot(idxres292);
+  if (strlit293 == NULL) {
+    strlit293 = alloc_String("/grace/packages/");
+    gc_root(strlit293);
   }
-// compilenode returning strlit306
-  int op_slot_right_301 = gc_frame_newslot(strlit306);
-  params[0] = strlit306;
+// compilenode returning strlit293
+  int op_slot_right_288 = gc_frame_newslot(strlit293);
+  params[0] = strlit293;
   partcv[0] = 1;
-  Object opresult308 = callmethod(idxres305, "++", 1, partcv, params);
-// compilenode returning opresult308
-  gc_frame_newslot(opresult308);
+  Object opresult295 = callmethod(idxres292, "++", 1, partcv, params);
+// compilenode returning opresult295
+  gc_frame_newslot(opresult295);
 // compilenode returning *var_io
-  params[0] = opresult308;
+  params[0] = opresult295;
   partcv[0] = 1;
-  Object call309 = callmethod(*var_io, "exists",
+  Object call296 = callmethod(*var_io, "exists",
     1, partcv, params);
-  gc_frame_end(callframe300);
-// compilenode returning call309
-  Object if299 = done;
-  if (istrue(call309)) {
-// Begin line 122
-  setline(122);
+  gc_frame_end(callframe287);
+// compilenode returning call296
+  Object if286 = done;
+  if (istrue(call296)) {
+// Begin line 112
+  setline(112);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 121
-  setline(121);
+// Begin line 111
+  setline(111);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe311 = gc_frame_new();
+  int callframe298 = gc_frame_new();
 // compilenode returning *var_sys
   partcv[0] = 0;
-  Object call312 = callmethod(*var_sys, "environ",
+  Object call299 = callmethod(*var_sys, "environ",
     1, partcv, params);
-  gc_frame_end(callframe311);
-// compilenode returning call312
-// compilenode returning call312
-  if (strlit313 == NULL) {
-    strlit313 = alloc_String("HOME");
-    gc_root(strlit313);
+  gc_frame_end(callframe298);
+// compilenode returning call299
+// compilenode returning call299
+  if (strlit300 == NULL) {
+    strlit300 = alloc_String("HOME");
+    gc_root(strlit300);
   }
-// compilenode returning strlit313
-  params[0] = strlit313;
+// compilenode returning strlit300
+  params[0] = strlit300;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres314 = callmethod(call312, "[]", 1, partcv, params);
-// compilenode returning idxres314
-  int op_slot_left_310 = gc_frame_newslot(idxres314);
-  if (strlit315 == NULL) {
-    strlit315 = alloc_String("/grace/packages");
-    gc_root(strlit315);
+  Object idxres301 = callmethod(call299, "[]", 1, partcv, params);
+// compilenode returning idxres301
+  int op_slot_left_297 = gc_frame_newslot(idxres301);
+  if (strlit302 == NULL) {
+    strlit302 = alloc_String("/grace/packages");
+    gc_root(strlit302);
   }
-// compilenode returning strlit315
-  int op_slot_right_310 = gc_frame_newslot(strlit315);
-  params[0] = strlit315;
+// compilenode returning strlit302
+  int op_slot_right_297 = gc_frame_newslot(strlit302);
+  params[0] = strlit302;
   partcv[0] = 1;
-  Object opresult317 = callmethod(idxres314, "++", 1, partcv, params);
-// compilenode returning opresult317
-  *var_usrDir = opresult317;
-  if (opresult317 == undefined)
+  Object opresult304 = callmethod(idxres301, "++", 1, partcv, params);
+// compilenode returning opresult304
+  *var_usrDir = opresult304;
+  if (opresult304 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 123
-  setline(123);
+// Begin line 113
+  setline(113);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe318 = gc_frame_new();
-// Begin line 122
-  setline(122);
+  int callframe305 = gc_frame_new();
+// Begin line 112
+  setline(112);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_usrDir
   gc_frame_newslot(*var_usrDir);
-  if (strlit319 == NULL) {
-    strlit319 = alloc_String(" ");
-    gc_root(strlit319);
+  if (strlit306 == NULL) {
+    strlit306 = alloc_String(" ");
+    gc_root(strlit306);
   }
-// compilenode returning strlit319
-  gc_frame_newslot(strlit319);
+// compilenode returning strlit306
+  gc_frame_newslot(strlit306);
   params[0] = *var_usrDir;
-  params[1] = strlit319;
+  params[1] = strlit306;
   partcv[0] = 2;
-  Object call320 = callmethodflags(self, "recurseDirectory", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe318);
-// compilenode returning call320
-    gc_frame_newslot(call320);
-    if299 = call320;
+  Object call307 = callmethodflags(self, "recurseDirectory", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe305);
+// compilenode returning call307
+    gc_frame_newslot(call307);
+    if286 = call307;
   } else {
   }
-// compilenode returning if299
+// compilenode returning if286
   gc_frame_end(frame);
-  return if299;
+  return if286;
 }
-Object meth_PackageManager__apply326(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply313(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -3458,71 +3391,123 @@ Object meth_PackageManager__apply326(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 135
-  setline(135);
+// Begin line 125
+  setline(125);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 129
-  setline(129);
+// Begin line 119
+  setline(119);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_p
-  int op_slot_left_329 = gc_frame_newslot(*var_p);
-  if (strlit330 == NULL) {
-    strlit330 = alloc_String("..");
-    gc_root(strlit330);
+  int op_slot_left_316 = gc_frame_newslot(*var_p);
+  if (strlit317 == NULL) {
+    strlit317 = alloc_String("..");
+    gc_root(strlit317);
   }
-// compilenode returning strlit330
-  int op_slot_right_329 = gc_frame_newslot(strlit330);
-  params[0] = strlit330;
+// compilenode returning strlit317
+  int op_slot_right_316 = gc_frame_newslot(strlit317);
+  params[0] = strlit317;
   partcv[0] = 1;
-  Object opresult332 = callmethod(*var_p, "!=", 1, partcv, params);
-// compilenode returning opresult332
-  int op_slot_left_328 = gc_frame_newslot(opresult332);
+  Object opresult319 = callmethod(*var_p, "!=", 1, partcv, params);
+// compilenode returning opresult319
+  int op_slot_left_315 = gc_frame_newslot(opresult319);
 // compilenode returning *var_p
-  int op_slot_left_333 = gc_frame_newslot(*var_p);
-  if (strlit334 == NULL) {
-    strlit334 = alloc_String(".");
-    gc_root(strlit334);
+  int op_slot_left_320 = gc_frame_newslot(*var_p);
+  if (strlit321 == NULL) {
+    strlit321 = alloc_String(".");
+    gc_root(strlit321);
   }
-// compilenode returning strlit334
-  int op_slot_right_333 = gc_frame_newslot(strlit334);
-  params[0] = strlit334;
+// compilenode returning strlit321
+  int op_slot_right_320 = gc_frame_newslot(strlit321);
+  params[0] = strlit321;
   partcv[0] = 1;
-  Object opresult336 = callmethod(*var_p, "!=", 1, partcv, params);
-// compilenode returning opresult336
-  int op_slot_right_328 = gc_frame_newslot(opresult336);
-  params[0] = opresult336;
+  Object opresult323 = callmethod(*var_p, "!=", 1, partcv, params);
+// compilenode returning opresult323
+  int op_slot_right_315 = gc_frame_newslot(opresult323);
+  params[0] = opresult323;
   partcv[0] = 1;
-  Object opresult338 = callmethod(opresult332, "&&", 1, partcv, params);
-// compilenode returning opresult338
-  Object if327 = done;
-  if (istrue(opresult338)) {
-// Begin line 130
-  setline(130);
+  Object opresult325 = callmethod(opresult319, "&&", 1, partcv, params);
+// compilenode returning opresult325
+  Object if314 = done;
+  if (istrue(opresult325)) {
+// Begin line 120
+  setline(120);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_padding
-  int op_slot_left_339 = gc_frame_newslot(*var_padding);
+  int op_slot_left_326 = gc_frame_newslot(*var_padding);
 // compilenode returning *var_p
-  int op_slot_right_339 = gc_frame_newslot(*var_p);
+  int op_slot_right_326 = gc_frame_newslot(*var_p);
   params[0] = *var_p;
   partcv[0] = 1;
-  Object opresult341 = callmethod(*var_padding, "++", 1, partcv, params);
-// compilenode returning opresult341
-  params[0] = opresult341;
-  Object call342 = gracelib_print(NULL, 1,  params);
+  Object opresult328 = callmethod(*var_padding, "++", 1, partcv, params);
+// compilenode returning opresult328
+  params[0] = opresult328;
+  Object call329 = gracelib_print(NULL, 1,  params);
+// compilenode returning call329
+// Begin line 124
+  setline(124);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 121
+  setline(121);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe332 = gc_frame_new();
+  int callframe333 = gc_frame_new();
+// compilenode returning *var_path
+  int op_slot_left_335 = gc_frame_newslot(*var_path);
+  if (strlit336 == NULL) {
+    strlit336 = alloc_String("/");
+    gc_root(strlit336);
+  }
+// compilenode returning strlit336
+  int op_slot_right_335 = gc_frame_newslot(strlit336);
+  params[0] = strlit336;
+  partcv[0] = 1;
+  Object opresult338 = callmethod(*var_path, "++", 1, partcv, params);
+// compilenode returning opresult338
+  int op_slot_left_334 = gc_frame_newslot(opresult338);
+// compilenode returning *var_p
+  int op_slot_right_334 = gc_frame_newslot(*var_p);
+  params[0] = *var_p;
+  partcv[0] = 1;
+  Object opresult340 = callmethod(opresult338, "++", 1, partcv, params);
+// compilenode returning opresult340
+  gc_frame_newslot(opresult340);
+// compilenode returning *var_io
+  params[0] = opresult340;
+  partcv[0] = 1;
+  Object call341 = callmethod(*var_io, "getdir",
+    1, partcv, params);
+  gc_frame_end(callframe333);
+// compilenode returning call341
+  partcv[0] = 0;
+  Object call342 = callmethod(call341, "size",
+    1, partcv, params);
+  gc_frame_end(callframe332);
 // compilenode returning call342
-// Begin line 134
-  setline(134);
+// compilenode returning call342
+  int op_slot_left_331 = gc_frame_newslot(call342);
+  Object num343 = alloc_Float64(0);
+// compilenode returning num343
+  int op_slot_right_331 = gc_frame_newslot(num343);
+  params[0] = num343;
+  partcv[0] = 1;
+  Object opresult345 = callmethod(call342, ">", 1, partcv, params);
+// compilenode returning opresult345
+  Object if330 = done;
+  if (istrue(opresult345)) {
+// Begin line 123
+  setline(123);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 131
-  setline(131);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe345 = gc_frame_new();
   int callframe346 = gc_frame_new();
+// Begin line 122
+  setline(122);
+  setmodule(modulename);
+  setsource(originalSourceLines);
 // compilenode returning *var_path
   int op_slot_left_348 = gc_frame_newslot(*var_path);
   if (strlit349 == NULL) {
@@ -3543,91 +3528,39 @@ Object meth_PackageManager__apply326(Object realself, int nparts, int *argcv, Ob
   Object opresult353 = callmethod(opresult351, "++", 1, partcv, params);
 // compilenode returning opresult353
   gc_frame_newslot(opresult353);
-// compilenode returning *var_io
-  params[0] = opresult353;
-  partcv[0] = 1;
-  Object call354 = callmethod(*var_io, "getdir",
-    1, partcv, params);
-  gc_frame_end(callframe346);
-// compilenode returning call354
-  partcv[0] = 0;
-  Object call355 = callmethod(call354, "size",
-    1, partcv, params);
-  gc_frame_end(callframe345);
-// compilenode returning call355
-// compilenode returning call355
-  int op_slot_left_344 = gc_frame_newslot(call355);
-  Object num356 = alloc_Float64(0);
-// compilenode returning num356
-  int op_slot_right_344 = gc_frame_newslot(num356);
-  params[0] = num356;
-  partcv[0] = 1;
-  Object opresult358 = callmethod(call355, ">", 1, partcv, params);
-// compilenode returning opresult358
-  Object if343 = done;
-  if (istrue(opresult358)) {
-// Begin line 133
-  setline(133);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe359 = gc_frame_new();
-// Begin line 132
-  setline(132);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_path
-  int op_slot_left_361 = gc_frame_newslot(*var_path);
-  if (strlit362 == NULL) {
-    strlit362 = alloc_String("/");
-    gc_root(strlit362);
-  }
-// compilenode returning strlit362
-  int op_slot_right_361 = gc_frame_newslot(strlit362);
-  params[0] = strlit362;
-  partcv[0] = 1;
-  Object opresult364 = callmethod(*var_path, "++", 1, partcv, params);
-// compilenode returning opresult364
-  int op_slot_left_360 = gc_frame_newslot(opresult364);
-// compilenode returning *var_p
-  int op_slot_right_360 = gc_frame_newslot(*var_p);
-  params[0] = *var_p;
-  partcv[0] = 1;
-  Object opresult366 = callmethod(opresult364, "++", 1, partcv, params);
-// compilenode returning opresult366
-  gc_frame_newslot(opresult366);
 // compilenode returning *var_padding
-  int op_slot_left_367 = gc_frame_newslot(*var_padding);
-  if (strlit368 == NULL) {
-    strlit368 = alloc_String("   ");
-    gc_root(strlit368);
+  int op_slot_left_354 = gc_frame_newslot(*var_padding);
+  if (strlit355 == NULL) {
+    strlit355 = alloc_String("   ");
+    gc_root(strlit355);
   }
-// compilenode returning strlit368
-  int op_slot_right_367 = gc_frame_newslot(strlit368);
-  params[0] = strlit368;
+// compilenode returning strlit355
+  int op_slot_right_354 = gc_frame_newslot(strlit355);
+  params[0] = strlit355;
   partcv[0] = 1;
-  Object opresult370 = callmethod(*var_padding, "++", 1, partcv, params);
-// compilenode returning opresult370
-  gc_frame_newslot(opresult370);
-  params[0] = opresult366;
-  params[1] = opresult370;
+  Object opresult357 = callmethod(*var_padding, "++", 1, partcv, params);
+// compilenode returning opresult357
+  gc_frame_newslot(opresult357);
+  params[0] = opresult353;
+  params[1] = opresult357;
   partcv[0] = 2;
-  Object call371 = callmethodflags(self, "recurseDirectory", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe359);
-// compilenode returning call371
-    gc_frame_newslot(call371);
-    if343 = call371;
+  Object call358 = callmethodflags(self, "recurseDirectory", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe346);
+// compilenode returning call358
+    gc_frame_newslot(call358);
+    if330 = call358;
   } else {
   }
-// compilenode returning if343
-    gc_frame_newslot(if343);
-    if327 = if343;
+// compilenode returning if330
+    gc_frame_newslot(if330);
+    if314 = if330;
   } else {
   }
-// compilenode returning if327
+// compilenode returning if314
   gc_frame_end(frame);
-  return if327;
+  return if314;
 }
-Object meth_PackageManager_recurseDirectory321(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_recurseDirectory308(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 4, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(4, getclosureframe(closure));
@@ -3660,68 +3593,68 @@ if (argcv && argcv[0] > 2)
   if (methodInheritingObject) curarg++;
   Object *var_pathContents = &(stackframe->slots[3]);
   setframeelementname(stackframe, 3, "pathContents");
-// Begin line 127
-  setline(127);
+// Begin line 117
+  setline(117);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe322 = gc_frame_new();
+  int callframe309 = gc_frame_new();
 // compilenode returning *var_path
   gc_frame_newslot(*var_path);
 // compilenode returning *var_io
   params[0] = *var_path;
   partcv[0] = 1;
-  Object call323 = callmethod(*var_io, "getdir",
+  Object call310 = callmethod(*var_io, "getdir",
     1, partcv, params);
-  gc_frame_end(callframe322);
-// compilenode returning call323
-  *var_pathContents = call323;
-  if (call323 == undefined)
+  gc_frame_end(callframe309);
+// compilenode returning call310
+  *var_pathContents = call310;
+  if (call310 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 136
-  setline(136);
+// Begin line 126
+  setline(126);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe324 = gc_frame_new();
-// Begin line 128
-  setline(128);
+  int callframe311 = gc_frame_new();
+// Begin line 118
+  setline(118);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_pathContents
   gc_frame_newslot(*var_pathContents);
-// Begin line 136
-  setline(136);
+// Begin line 126
+  setline(126);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block325 = alloc_Block(NULL, NULL, "PackageManager", 136);
-  gc_frame_newslot(block325);
-  block_savedest(block325);
-  Object closure326 = createclosure(4, "_apply");
-setclosureframe(closure326, stackframe);
-  addtoclosure(closure326, var_padding);
-  addtoclosure(closure326, var_path);
-  addtoclosure(closure326, var_io);
-  addtoclosure(closure326, selfslot);
-  struct UserObject *uo326 = (struct UserObject*)block325;
-  uo326->data[0] = (Object)closure326;
-  Method *meth_meth_PackageManager__apply326 = addmethod2pos(block325, "_apply", &meth_PackageManager__apply326, 0);
-int argcv_meth_PackageManager__apply326[] = {1};
-meth_meth_PackageManager__apply326->type = alloc_MethodType(1, argcv_meth_PackageManager__apply326);
-  meth_meth_PackageManager__apply326->definitionModule = modulename;
-  meth_meth_PackageManager__apply326->definitionLine = 121;
-// compilenode returning block325
-  gc_frame_newslot(block325);
+  Object block312 = alloc_Block(NULL, NULL, "PackageManager", 126);
+  gc_frame_newslot(block312);
+  block_savedest(block312);
+  Object closure313 = createclosure(4, "_apply");
+setclosureframe(closure313, stackframe);
+  addtoclosure(closure313, var_padding);
+  addtoclosure(closure313, var_path);
+  addtoclosure(closure313, var_io);
+  addtoclosure(closure313, selfslot);
+  struct UserObject *uo313 = (struct UserObject*)block312;
+  uo313->data[0] = (Object)closure313;
+  Method *meth_meth_PackageManager__apply313 = addmethod2pos(block312, "_apply", &meth_PackageManager__apply313, 0);
+int argcv_meth_PackageManager__apply313[] = {1};
+meth_meth_PackageManager__apply313->type = alloc_MethodType(1, argcv_meth_PackageManager__apply313);
+  meth_meth_PackageManager__apply313->definitionModule = modulename;
+  meth_meth_PackageManager__apply313->definitionLine = 111;
+// compilenode returning block312
+  gc_frame_newslot(block312);
   params[0] = *var_pathContents;
-  params[1] = block325;
+  params[1] = block312;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call373 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe324);
-// compilenode returning call373
+  Object call360 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe311);
+// compilenode returning call360
   gc_frame_end(frame);
-  return call373;
+  return call360;
 }
-Object meth_PackageManager__apply381(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply368(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -3746,22 +3679,22 @@ Object meth_PackageManager__apply381(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 142
-  setline(142);
+// Begin line 132
+  setline(132);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe382 = gc_frame_new();
+  int callframe369 = gc_frame_new();
 // compilenode returning *var_im
   gc_frame_newslot(*var_im);
   params[0] = *var_im;
   partcv[0] = 1;
-  Object call383 = callmethodflags(self, "write", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe382);
-// compilenode returning call383
+  Object call370 = callmethodflags(self, "write", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe369);
+// compilenode returning call370
   gc_frame_end(frame);
-  return call383;
+  return call370;
 }
-Object meth_PackageManager__apply388(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply375(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -3786,22 +3719,22 @@ Object meth_PackageManager__apply388(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 145
-  setline(145);
+// Begin line 135
+  setline(135);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe389 = gc_frame_new();
+  int callframe376 = gc_frame_new();
 // compilenode returning *var_im
   gc_frame_newslot(*var_im);
   params[0] = *var_im;
   partcv[0] = 1;
-  Object call390 = callmethodflags(self, "compile", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe389);
-// compilenode returning call390
+  Object call377 = callmethodflags(self, "compile", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe376);
+// compilenode returning call377
   gc_frame_end(frame);
-  return call390;
+  return call377;
 }
-Object meth_PackageManager_doGet374(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_doGet361(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 5, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -3829,116 +3762,116 @@ if (argcv && argcv[0] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 140
-  setline(140);
+// Begin line 130
+  setline(130);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 139
-  setline(139);
+// Begin line 129
+  setline(129);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object array375 = alloc_BuiltinList();
+  Object array362 = alloc_BuiltinList();
   gc_pause();
   gc_unpause();
-// compilenode returning array375
-  *var_imported = array375;
-  if (array375 == undefined)
+// compilenode returning array362
+  *var_imported = array362;
+  if (array362 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 141
-  setline(141);
+// Begin line 131
+  setline(131);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe377 = gc_frame_new();
-// Begin line 140
-  setline(140);
+  int callframe364 = gc_frame_new();
+// Begin line 130
+  setline(130);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_impAddress
   gc_frame_newslot(*var_impAddress);
   params[0] = *var_impAddress;
   partcv[0] = 1;
-  Object call378 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe377);
-// compilenode returning call378
-// Begin line 144
-  setline(144);
+  Object call365 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe364);
+// compilenode returning call365
+// Begin line 134
+  setline(134);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe379 = gc_frame_new();
-// Begin line 141
-  setline(141);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_imported
-  gc_frame_newslot(*var_imported);
-// Begin line 144
-  setline(144);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block380 = alloc_Block(NULL, NULL, "PackageManager", 144);
-  gc_frame_newslot(block380);
-  block_savedest(block380);
-  Object closure381 = createclosure(1, "_apply");
-setclosureframe(closure381, stackframe);
-  addtoclosure(closure381, selfslot);
-  struct UserObject *uo381 = (struct UserObject*)block380;
-  uo381->data[0] = (Object)closure381;
-  Method *meth_meth_PackageManager__apply381 = addmethod2pos(block380, "_apply", &meth_PackageManager__apply381, 0);
-int argcv_meth_PackageManager__apply381[] = {1};
-meth_meth_PackageManager__apply381->type = alloc_MethodType(1, argcv_meth_PackageManager__apply381);
-  meth_meth_PackageManager__apply381->definitionModule = modulename;
-  meth_meth_PackageManager__apply381->definitionLine = 131;
-// compilenode returning block380
-  gc_frame_newslot(block380);
-  params[0] = *var_imported;
-  params[1] = block380;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call385 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe379);
-// compilenode returning call385
-// Begin line 147
-  setline(147);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe386 = gc_frame_new();
-// Begin line 144
-  setline(144);
+  int callframe366 = gc_frame_new();
+// Begin line 131
+  setline(131);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_imported
   gc_frame_newslot(*var_imported);
-// Begin line 147
-  setline(147);
+// Begin line 134
+  setline(134);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block387 = alloc_Block(NULL, NULL, "PackageManager", 147);
-  gc_frame_newslot(block387);
-  block_savedest(block387);
-  Object closure388 = createclosure(1, "_apply");
-setclosureframe(closure388, stackframe);
-  addtoclosure(closure388, selfslot);
-  struct UserObject *uo388 = (struct UserObject*)block387;
-  uo388->data[0] = (Object)closure388;
-  Method *meth_meth_PackageManager__apply388 = addmethod2pos(block387, "_apply", &meth_PackageManager__apply388, 0);
-int argcv_meth_PackageManager__apply388[] = {1};
-meth_meth_PackageManager__apply388->type = alloc_MethodType(1, argcv_meth_PackageManager__apply388);
-  meth_meth_PackageManager__apply388->definitionModule = modulename;
-  meth_meth_PackageManager__apply388->definitionLine = 131;
-// compilenode returning block387
-  gc_frame_newslot(block387);
+  Object block367 = alloc_Block(NULL, NULL, "PackageManager", 134);
+  gc_frame_newslot(block367);
+  block_savedest(block367);
+  Object closure368 = createclosure(1, "_apply");
+setclosureframe(closure368, stackframe);
+  addtoclosure(closure368, selfslot);
+  struct UserObject *uo368 = (struct UserObject*)block367;
+  uo368->data[0] = (Object)closure368;
+  Method *meth_meth_PackageManager__apply368 = addmethod2pos(block367, "_apply", &meth_PackageManager__apply368, 0);
+int argcv_meth_PackageManager__apply368[] = {1};
+meth_meth_PackageManager__apply368->type = alloc_MethodType(1, argcv_meth_PackageManager__apply368);
+  meth_meth_PackageManager__apply368->definitionModule = modulename;
+  meth_meth_PackageManager__apply368->definitionLine = 121;
+// compilenode returning block367
+  gc_frame_newslot(block367);
   params[0] = *var_imported;
-  params[1] = block387;
+  params[1] = block367;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call392 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe386);
-// compilenode returning call392
+  Object call372 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe366);
+// compilenode returning call372
+// Begin line 137
+  setline(137);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe373 = gc_frame_new();
+// Begin line 134
+  setline(134);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_imported
+  gc_frame_newslot(*var_imported);
+// Begin line 137
+  setline(137);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block374 = alloc_Block(NULL, NULL, "PackageManager", 137);
+  gc_frame_newslot(block374);
+  block_savedest(block374);
+  Object closure375 = createclosure(1, "_apply");
+setclosureframe(closure375, stackframe);
+  addtoclosure(closure375, selfslot);
+  struct UserObject *uo375 = (struct UserObject*)block374;
+  uo375->data[0] = (Object)closure375;
+  Method *meth_meth_PackageManager__apply375 = addmethod2pos(block374, "_apply", &meth_PackageManager__apply375, 0);
+int argcv_meth_PackageManager__apply375[] = {1};
+meth_meth_PackageManager__apply375->type = alloc_MethodType(1, argcv_meth_PackageManager__apply375);
+  meth_meth_PackageManager__apply375->definitionModule = modulename;
+  meth_meth_PackageManager__apply375->definitionLine = 121;
+// compilenode returning block374
+  gc_frame_newslot(block374);
+  params[0] = *var_imported;
+  params[1] = block374;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call379 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe373);
+// compilenode returning call379
   gc_frame_end(frame);
-  return call392;
+  return call379;
 }
-Object meth_PackageManager_setFile393(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_setFile380(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 6, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(3, getclosureframe(closure));
@@ -3968,139 +3901,139 @@ if (argcv && argcv[0] > 1)
   if (methodInheritingObject) curarg++;
   Object *var_file = &(stackframe->slots[2]);
   setframeelementname(stackframe, 2, "file");
-// Begin line 158
-  setline(158);
+// Begin line 148
+  setline(148);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 150
-  setline(150);
+// Begin line 140
+  setline(140);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe396 = gc_frame_new();
-  int callframe398 = gc_frame_new();
+  int callframe383 = gc_frame_new();
+  int callframe385 = gc_frame_new();
 // compilenode returning *var_fileAddress
   partcv[0] = 0;
-  Object call399 = callmethod(*var_fileAddress, "size",
+  Object call386 = callmethod(*var_fileAddress, "size",
     1, partcv, params);
-  gc_frame_end(callframe398);
-// compilenode returning call399
-// compilenode returning call399
-  int op_slot_left_397 = gc_frame_newslot(call399);
-  Object num400 = alloc_Float64(5);
-// compilenode returning num400
-  int op_slot_right_397 = gc_frame_newslot(num400);
-  params[0] = num400;
+  gc_frame_end(callframe385);
+// compilenode returning call386
+// compilenode returning call386
+  int op_slot_left_384 = gc_frame_newslot(call386);
+  Object num387 = alloc_Float64(5);
+// compilenode returning num387
+  int op_slot_right_384 = gc_frame_newslot(num387);
+  params[0] = num387;
   partcv[0] = 1;
-  Object diff402 = callmethod(call399, "-", 1, partcv, params);
-// compilenode returning diff402
-  gc_frame_newslot(diff402);
-  int callframe403 = gc_frame_new();
+  Object diff389 = callmethod(call386, "-", 1, partcv, params);
+// compilenode returning diff389
+  gc_frame_newslot(diff389);
+  int callframe390 = gc_frame_new();
 // compilenode returning *var_fileAddress
   partcv[0] = 0;
-  Object call404 = callmethod(*var_fileAddress, "size",
+  Object call391 = callmethod(*var_fileAddress, "size",
     1, partcv, params);
-  gc_frame_end(callframe403);
-// compilenode returning call404
-// compilenode returning call404
-  gc_frame_newslot(call404);
+  gc_frame_end(callframe390);
+// compilenode returning call391
+// compilenode returning call391
+  gc_frame_newslot(call391);
 // compilenode returning *var_fileAddress
-  params[0] = diff402;
-  params[1] = call404;
+  params[0] = diff389;
+  params[1] = call391;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call405 = callmethod(*var_fileAddress, "substringFrom()to",
+  Object call392 = callmethod(*var_fileAddress, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe396);
-// compilenode returning call405
-  int op_slot_left_395 = gc_frame_newslot(call405);
-  if (strlit406 == NULL) {
-    strlit406 = alloc_String(".grace");
-    gc_root(strlit406);
+  gc_frame_end(callframe383);
+// compilenode returning call392
+  int op_slot_left_382 = gc_frame_newslot(call392);
+  if (strlit393 == NULL) {
+    strlit393 = alloc_String(".grace");
+    gc_root(strlit393);
   }
-// compilenode returning strlit406
-  int op_slot_right_395 = gc_frame_newslot(strlit406);
-  params[0] = strlit406;
+// compilenode returning strlit393
+  int op_slot_right_382 = gc_frame_newslot(strlit393);
+  params[0] = strlit393;
   partcv[0] = 1;
-  Object opresult408 = callmethod(call405, "==", 1, partcv, params);
-// compilenode returning opresult408
-  Object if394 = done;
-  if (istrue(opresult408)) {
-// Begin line 151
-  setline(151);
+  Object opresult395 = callmethod(call392, "==", 1, partcv, params);
+// compilenode returning opresult395
+  Object if381 = done;
+  if (istrue(opresult395)) {
+// Begin line 141
+  setline(141);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object inheritingObject409 = inheritingObject;
+  Object inheritingObject396 = inheritingObject;
   if (isTailObject) {
     isTailObject = 0;
     inheritingObject = NULL;
   }
-  Object obj409 = alloc_userobj2(4,4, objclass409);
-  gc_frame_newslot(obj409);
+  Object obj396 = alloc_userobj2(4,4, objclass396);
+  gc_frame_newslot(obj396);
 // OBJECT OUTER DEC outer
-  adddatum2(obj409, self, 0);
-  addmethodreal(obj409,"outer", &reader_PackageManager_outer_410);
-  Object oldself409 = self;
-  struct StackFrameObject *oldstackframe409 = stackframe;
-  stackframe = alloc_StackFrame(1, oldstackframe409);
+  adddatum2(obj396, self, 0);
+  addmethodreal(obj396,"outer", &reader_PackageManager_outer_397);
+  Object oldself396 = self;
+  struct StackFrameObject *oldstackframe396 = stackframe;
+  stackframe = alloc_StackFrame(1, oldstackframe396);
   gc_frame_newslot((Object)stackframe);
-  self = obj409;
-  Object *oldselfslot409 = selfslot;
+  self = obj396;
+  Object *oldselfslot396 = selfslot;
   selfslot = &stackframe->slots[0];
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
-  Object thisouter409 = (*(struct UserObject *)self).data[0], lowerouter409 = thisouter409;
-  if (inheritingObject409) {
-    struct UserObject *inho409 = (struct UserObject *)inheritingObject409;
-    while (inho409->super != GraceDefaultObject) inho409 = (struct UserObject *)inho409->super;
-    inho409->super = obj409;
-    self = inheritingObject409;
+  Object thisouter396 = (*(struct UserObject *)self).data[0], lowerouter396 = thisouter396;
+  if (inheritingObject396) {
+    struct UserObject *inho396 = (struct UserObject *)inheritingObject396;
+    while (inho396->super != GraceDefaultObject) inho396 = (struct UserObject *)inho396->super;
+    inho396->super = obj396;
+    self = inheritingObject396;
     *selfslot = self;
-    lowerouter409 = (*(struct UserObject *)self).data[0];
-    (*(struct UserObject *)self).data[0] = thisouter409;
+    lowerouter396 = (*(struct UserObject *)self).data[0];
+    (*(struct UserObject *)self).data[0] = thisouter396;
   }
-if (objclass409 == NULL) {
-  Method *reader411 = addmethodrealflags(obj409, "address",&reader_PackageManager_address_411, 0);
-  Method *writer411 = addmethodrealflags(obj409, "address:=",&writer_PackageManager_address_411, 0);
-  reader411->definitionModule = modulename;
-  writer411->definitionModule = modulename;
-  reader411->definitionLine = 153;
-  writer411->definitionLine = 153;
+if (objclass396 == NULL) {
+  Method *reader398 = addmethodrealflags(obj396, "address",&reader_PackageManager_address_398, 0);
+  Method *writer398 = addmethodrealflags(obj396, "address:=",&writer_PackageManager_address_398, 0);
+  reader398->definitionModule = modulename;
+  writer398->definitionModule = modulename;
+  reader398->definitionLine = 143;
+  writer398->definitionLine = 143;
 }
-obj409->flags |= OFLAG_MUTABLE;
-adddatum2(obj409, alloc_Undefined(), 1);
-if (objclass409 == NULL) {
-  Method *reader412 = addmethodrealflags(obj409, "data",&reader_PackageManager_data_412, 0);
-  Method *writer412 = addmethodrealflags(obj409, "data:=",&writer_PackageManager_data_412, 0);
-  reader412->definitionModule = modulename;
-  writer412->definitionModule = modulename;
-  reader412->definitionLine = 154;
-  writer412->definitionLine = 154;
+obj396->flags |= OFLAG_MUTABLE;
+adddatum2(obj396, alloc_Undefined(), 1);
+if (objclass396 == NULL) {
+  Method *reader399 = addmethodrealflags(obj396, "data",&reader_PackageManager_data_399, 0);
+  Method *writer399 = addmethodrealflags(obj396, "data:=",&writer_PackageManager_data_399, 0);
+  reader399->definitionModule = modulename;
+  writer399->definitionModule = modulename;
+  reader399->definitionLine = 144;
+  writer399->definitionLine = 144;
 }
-obj409->flags |= OFLAG_MUTABLE;
-adddatum2(obj409, alloc_Undefined(), 2);
-  sourceObject = obj409;
-// Begin line 152
-  setline(152);
+obj396->flags |= OFLAG_MUTABLE;
+adddatum2(obj396, alloc_Undefined(), 2);
+  sourceObject = obj396;
+// Begin line 142
+  setline(142);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_fileAddress
-  adddatum2(obj409, *var_fileAddress, 1);
-  sourceObject = obj409;
-  adddatum2(obj409, undefined, 2);
-objclass409 = obj409->class;
-  objclass409->definitionModule = modulename;
-  objclass409->definitionLine = 151;
-  (*(struct UserObject *)self).data[0] = lowerouter409;
-  self = oldself409;
-  selfslot = oldselfslot409;
-  stackframe = oldstackframe409;
-// compilenode returning obj409
-  *var_file = obj409;
-  if (obj409 == undefined)
+  adddatum2(obj396, *var_fileAddress, 1);
+  sourceObject = obj396;
+  adddatum2(obj396, undefined, 2);
+objclass396 = obj396->class;
+  objclass396->definitionModule = modulename;
+  objclass396->definitionLine = 141;
+  (*(struct UserObject *)self).data[0] = lowerouter396;
+  self = oldself396;
+  selfslot = oldselfslot396;
+  stackframe = oldstackframe396;
+// compilenode returning obj396
+  *var_file = obj396;
+  if (obj396 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 155
-  setline(155);
+// Begin line 145
+  setline(145);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_file
@@ -4108,31 +4041,31 @@ objclass409 = obj409->class;
   if (*var_file == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 156
-  setline(156);
+// Begin line 146
+  setline(146);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool414 = alloc_Boolean(1);
-// compilenode returning bool414
-  return bool414;
+  Object bool401 = alloc_Boolean(1);
+// compilenode returning bool401
+  return bool401;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if394 = undefined;
+    if381 = undefined;
   } else {
   }
-// compilenode returning if394
-// Begin line 158
-  setline(158);
+// compilenode returning if381
+// Begin line 148
+  setline(148);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool415 = alloc_Boolean(0);
-// compilenode returning bool415
-  return bool415;
+  Object bool402 = alloc_Boolean(0);
+// compilenode returning bool402
+  return bool402;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager__apply452(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply448(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -4153,26 +4086,26 @@ Object meth_PackageManager__apply452(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-  int callframe454 = gc_frame_new();
+  int callframe450 = gc_frame_new();
 // compilenode returning *var_toProcess
   partcv[0] = 0;
-  Object call455 = callmethod(*var_toProcess, "size",
+  Object call451 = callmethod(*var_toProcess, "size",
     1, partcv, params);
-  gc_frame_end(callframe454);
-// compilenode returning call455
-// compilenode returning call455
-  int op_slot_left_453 = gc_frame_newslot(call455);
-  Object num456 = alloc_Float64(0);
-// compilenode returning num456
-  int op_slot_right_453 = gc_frame_newslot(num456);
-  params[0] = num456;
+  gc_frame_end(callframe450);
+// compilenode returning call451
+// compilenode returning call451
+  int op_slot_left_449 = gc_frame_newslot(call451);
+  Object num452 = alloc_Float64(0);
+// compilenode returning num452
+  int op_slot_right_449 = gc_frame_newslot(num452);
+  params[0] = num452;
   partcv[0] = 1;
-  Object opresult458 = callmethod(call455, ">", 1, partcv, params);
-// compilenode returning opresult458
+  Object opresult454 = callmethod(call451, ">", 1, partcv, params);
+// compilenode returning opresult454
   gc_frame_end(frame);
-  return opresult458;
+  return opresult454;
 }
-Object meth_PackageManager__apply461(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply457(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -4193,33 +4126,33 @@ Object meth_PackageManager__apply461(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 174
-  setline(174);
+// Begin line 164
+  setline(164);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe462 = gc_frame_new();
-// Begin line 173
-  setline(173);
+  int callframe458 = gc_frame_new();
+// Begin line 163
+  setline(163);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe463 = gc_frame_new();
+  int callframe459 = gc_frame_new();
 // compilenode returning *var_toProcess
   partcv[0] = 0;
-  Object call464 = callmethod(*var_toProcess, "pop",
+  Object call460 = callmethod(*var_toProcess, "pop",
     1, partcv, params);
-  gc_frame_end(callframe463);
-// compilenode returning call464
-// compilenode returning call464
-  gc_frame_newslot(call464);
-  params[0] = call464;
+  gc_frame_end(callframe459);
+// compilenode returning call460
+// compilenode returning call460
+  gc_frame_newslot(call460);
+  params[0] = call460;
   partcv[0] = 1;
-  Object call465 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe462);
-// compilenode returning call465
+  Object call461 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe458);
+// compilenode returning call461
   gc_frame_end(frame);
-  return call465;
+  return call461;
 }
-Object meth_PackageManager_fetchImports416(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_fetchImports403(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 7, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -4249,91 +4182,269 @@ if (argcv && argcv[0] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 184
-  setline(184);
+// Begin line 174
+  setline(174);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 162
-  setline(162);
+// Begin line 152
+  setline(152);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe418 = gc_frame_new();
+  int callframe405 = gc_frame_new();
 // compilenode returning *var_fileAddress
   gc_frame_newslot(*var_fileAddress);
   params[0] = *var_fileAddress;
   partcv[0] = 1;
-  Object call419 = callmethodflags(self, "setFile", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe418);
-// compilenode returning call419
-  Object if417 = done;
-  if (istrue(call419)) {
-// Begin line 164
-  setline(164);
+  Object call406 = callmethodflags(self, "setFile", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe405);
+// compilenode returning call406
+  Object if404 = done;
+  if (istrue(call406)) {
+// Begin line 154
+  setline(154);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 163
-  setline(163);
+// Begin line 153
+  setline(153);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit422 == NULL) {
-    strlit422 = alloc_String("File address ");
-    gc_root(strlit422);
+  if (strlit409 == NULL) {
+    strlit409 = alloc_String("File address ");
+    gc_root(strlit409);
   }
-// compilenode returning strlit422
-  int op_slot_left_421 = gc_frame_newslot(strlit422);
-  int callframe423 = gc_frame_new();
+// compilenode returning strlit409
+  int op_slot_left_408 = gc_frame_newslot(strlit409);
+  int callframe410 = gc_frame_new();
 // compilenode returning *var_curFile
   partcv[0] = 0;
-  Object call424 = callmethod(*var_curFile, "address",
+  Object call411 = callmethod(*var_curFile, "address",
     1, partcv, params);
-  gc_frame_end(callframe423);
-// compilenode returning call424
-// compilenode returning call424
-  int op_slot_right_421 = gc_frame_newslot(call424);
-  params[0] = call424;
+  gc_frame_end(callframe410);
+// compilenode returning call411
+// compilenode returning call411
+  int op_slot_right_408 = gc_frame_newslot(call411);
+  params[0] = call411;
   partcv[0] = 1;
-  Object opresult426 = callmethod(strlit422, "++", 1, partcv, params);
-// compilenode returning opresult426
-  int op_slot_left_420 = gc_frame_newslot(opresult426);
-  if (strlit427 == NULL) {
-    strlit427 = alloc_String("");
-    gc_root(strlit427);
+  Object opresult413 = callmethod(strlit409, "++", 1, partcv, params);
+// compilenode returning opresult413
+  int op_slot_left_407 = gc_frame_newslot(opresult413);
+  if (strlit414 == NULL) {
+    strlit414 = alloc_String("");
+    gc_root(strlit414);
   }
-// compilenode returning strlit427
-  int op_slot_right_420 = gc_frame_newslot(strlit427);
-  params[0] = strlit427;
+// compilenode returning strlit414
+  int op_slot_right_407 = gc_frame_newslot(strlit414);
+  params[0] = strlit414;
   partcv[0] = 1;
-  Object opresult429 = callmethod(opresult426, "++", 1, partcv, params);
-// compilenode returning opresult429
-  params[0] = opresult429;
-  Object call430 = gracelib_print(NULL, 1,  params);
-// compilenode returning call430
-// Begin line 168
-  setline(168);
+  Object opresult416 = callmethod(opresult413, "++", 1, partcv, params);
+// compilenode returning opresult416
+  params[0] = opresult416;
+  Object call417 = gracelib_print(NULL, 1,  params);
+// compilenode returning call417
+// Begin line 158
+  setline(158);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 164
-  setline(164);
+// Begin line 154
+  setline(154);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe433 = gc_frame_new();
+  int callframe420 = gc_frame_new();
 // compilenode returning *var_curFile
   gc_frame_newslot(*var_curFile);
   params[0] = *var_curFile;
   partcv[0] = 1;
-  Object call434 = callmethodflags(self, "setFileData", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe433);
-// compilenode returning call434
-  int op_slot_left_432 = gc_frame_newslot(call434);
-  Object bool435 = alloc_Boolean(0);
-// compilenode returning bool435
-  int op_slot_right_432 = gc_frame_newslot(bool435);
-  params[0] = bool435;
+  Object call421 = callmethodflags(self, "setFileData", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe420);
+// compilenode returning call421
+  int op_slot_left_419 = gc_frame_newslot(call421);
+  Object bool422 = alloc_Boolean(0);
+// compilenode returning bool422
+  int op_slot_right_419 = gc_frame_newslot(bool422);
+  params[0] = bool422;
   partcv[0] = 1;
-  Object opresult437 = callmethod(call434, "==", 1, partcv, params);
+  Object opresult424 = callmethod(call421, "==", 1, partcv, params);
+// compilenode returning opresult424
+  Object if418 = done;
+  if (istrue(opresult424)) {
+// Begin line 156
+  setline(156);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 155
+  setline(155);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit425 == NULL) {
+    strlit425 = alloc_String("Could not retrieve file data");
+    gc_root(strlit425);
+  }
+// compilenode returning strlit425
+  params[0] = strlit425;
+  Object call426 = gracelib_print(NULL, 1,  params);
+// compilenode returning call426
+// Begin line 157
+  setline(157);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 156
+  setline(156);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object bool427 = alloc_Boolean(0);
+// compilenode returning bool427
+  return bool427;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if418 = undefined;
+  } else {
+  }
+// compilenode returning if418
+// Begin line 167
+  setline(167);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 158
+  setline(158);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe429 = gc_frame_new();
+// compilenode returning *var_curFile
+  gc_frame_newslot(*var_curFile);
+  params[0] = *var_curFile;
+  partcv[0] = 1;
+  Object call430 = callmethodflags(self, "validateFile", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe429);
+// compilenode returning call430
+  Object if428 = done;
+  if (istrue(call430)) {
+// Begin line 160
+  setline(160);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 159
+  setline(159);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit433 == NULL) {
+    strlit433 = alloc_String("Pushing ");
+    gc_root(strlit433);
+  }
+// compilenode returning strlit433
+  int op_slot_left_432 = gc_frame_newslot(strlit433);
+  int callframe434 = gc_frame_new();
+// compilenode returning *var_curFile
+  partcv[0] = 0;
+  Object call435 = callmethod(*var_curFile, "address",
+    1, partcv, params);
+  gc_frame_end(callframe434);
+// compilenode returning call435
+// compilenode returning call435
+  int op_slot_right_432 = gc_frame_newslot(call435);
+  params[0] = call435;
+  partcv[0] = 1;
+  Object opresult437 = callmethod(strlit433, "++", 1, partcv, params);
 // compilenode returning opresult437
-  Object if431 = done;
-  if (istrue(opresult437)) {
+  int op_slot_left_431 = gc_frame_newslot(opresult437);
+  if (strlit438 == NULL) {
+    strlit438 = alloc_String(" to imported");
+    gc_root(strlit438);
+  }
+// compilenode returning strlit438
+  int op_slot_right_431 = gc_frame_newslot(strlit438);
+  params[0] = strlit438;
+  partcv[0] = 1;
+  Object opresult440 = callmethod(opresult437, "++", 1, partcv, params);
+// compilenode returning opresult440
+  params[0] = opresult440;
+  Object call441 = gracelib_print(NULL, 1,  params);
+// compilenode returning call441
+// Begin line 161
+  setline(161);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe442 = gc_frame_new();
+// Begin line 160
+  setline(160);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_curFile
+  gc_frame_newslot(*var_curFile);
+// compilenode returning *var_imported
+  params[0] = *var_curFile;
+  partcv[0] = 1;
+  Object call443 = callmethod(*var_imported, "push",
+    1, partcv, params);
+  gc_frame_end(callframe442);
+// compilenode returning call443
+// Begin line 162
+  setline(162);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe444 = gc_frame_new();
+// Begin line 161
+  setline(161);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_curFile
+  gc_frame_newslot(*var_curFile);
+  params[0] = *var_curFile;
+  partcv[0] = 1;
+  Object call445 = callmethodflags(self, "parseFile", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe444);
+// compilenode returning call445
+// Begin line 165
+  setline(165);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe446 = gc_frame_new();
+// Begin line 162
+  setline(162);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block447 = alloc_Block(NULL, NULL, "PackageManager", 162);
+  gc_frame_newslot(block447);
+  block_savedest(block447);
+  Object closure448 = createclosure(2, "_apply");
+setclosureframe(closure448, stackframe);
+  addtoclosure(closure448, var_toProcess);
+  addtoclosure(closure448, selfslot);
+  struct UserObject *uo448 = (struct UserObject*)block447;
+  uo448->data[0] = (Object)closure448;
+  Method *meth_meth_PackageManager__apply448 = addmethod2pos(block447, "_apply", &meth_PackageManager__apply448, 0);
+int argcv_meth_PackageManager__apply448[] = {0};
+meth_meth_PackageManager__apply448->type = alloc_MethodType(1, argcv_meth_PackageManager__apply448);
+  meth_meth_PackageManager__apply448->definitionModule = modulename;
+  meth_meth_PackageManager__apply448->definitionLine = 159;
+// compilenode returning block447
+  gc_frame_newslot(block447);
+// Begin line 165
+  setline(165);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block456 = alloc_Block(NULL, NULL, "PackageManager", 165);
+  gc_frame_newslot(block456);
+  block_savedest(block456);
+  Object closure457 = createclosure(2, "_apply");
+setclosureframe(closure457, stackframe);
+  addtoclosure(closure457, var_toProcess);
+  addtoclosure(closure457, selfslot);
+  struct UserObject *uo457 = (struct UserObject*)block456;
+  uo457->data[0] = (Object)closure457;
+  Method *meth_meth_PackageManager__apply457 = addmethod2pos(block456, "_apply", &meth_PackageManager__apply457, 0);
+int argcv_meth_PackageManager__apply457[] = {0};
+meth_meth_PackageManager__apply457->type = alloc_MethodType(1, argcv_meth_PackageManager__apply457);
+  meth_meth_PackageManager__apply457->definitionModule = modulename;
+  meth_meth_PackageManager__apply457->definitionLine = 162;
+// compilenode returning block456
+  gc_frame_newslot(block456);
+  params[0] = block447;
+  params[1] = block456;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call463 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe446);
+// compilenode returning call463
 // Begin line 166
   setline(166);
   setmodule(modulename);
@@ -4342,245 +4453,92 @@ if (argcv && argcv[0] > 1)
   setline(165);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit438 == NULL) {
-    strlit438 = alloc_String("Could not retrieve file data");
-    gc_root(strlit438);
-  }
-// compilenode returning strlit438
-  params[0] = strlit438;
-  Object call439 = gracelib_print(NULL, 1,  params);
-// compilenode returning call439
-// Begin line 167
-  setline(167);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 166
-  setline(166);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool440 = alloc_Boolean(0);
-// compilenode returning bool440
-  return bool440;
+  Object bool464 = alloc_Boolean(1);
+// compilenode returning bool464
+  return bool464;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if431 = undefined;
+    if428 = undefined;
   } else {
   }
-// compilenode returning if431
-// Begin line 177
-  setline(177);
+// compilenode returning if428
+    gc_frame_newslot(if428);
+    if404 = if428;
+  } else {
+// Begin line 173
+  setline(173);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 168
-  setline(168);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe442 = gc_frame_new();
-// compilenode returning *var_curFile
-  gc_frame_newslot(*var_curFile);
-  params[0] = *var_curFile;
-  partcv[0] = 1;
-  Object call443 = callmethodflags(self, "validateFile", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe442);
-// compilenode returning call443
-  Object if441 = done;
-  if (istrue(call443)) {
-// Begin line 170
-  setline(170);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe444 = gc_frame_new();
 // Begin line 169
   setline(169);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_curFile
-  gc_frame_newslot(*var_curFile);
-// compilenode returning *var_imported
-  params[0] = *var_curFile;
+  int callframe467 = gc_frame_new();
+// compilenode returning *var_fileAddress
+  int op_slot_left_468 = gc_frame_newslot(*var_fileAddress);
+  if (strlit469 == NULL) {
+    strlit469 = alloc_String(".grace");
+    gc_root(strlit469);
+  }
+// compilenode returning strlit469
+  int op_slot_right_468 = gc_frame_newslot(strlit469);
+  params[0] = strlit469;
   partcv[0] = 1;
-  Object call445 = callmethod(*var_imported, "push",
-    1, partcv, params);
-  gc_frame_end(callframe444);
-// compilenode returning call445
-// Begin line 171
-  setline(171);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+  Object opresult471 = callmethod(*var_fileAddress, "++", 1, partcv, params);
+// compilenode returning opresult471
+  gc_frame_newslot(opresult471);
+  params[0] = opresult471;
+  partcv[0] = 1;
+  Object call472 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe467);
+// compilenode returning call472
+  int op_slot_left_466 = gc_frame_newslot(call472);
+  Object bool473 = alloc_Boolean(0);
+// compilenode returning bool473
+  int op_slot_right_466 = gc_frame_newslot(bool473);
+  params[0] = bool473;
+  partcv[0] = 1;
+  Object opresult475 = callmethod(call472, "==", 1, partcv, params);
+// compilenode returning opresult475
+  Object if465 = done;
+  if (istrue(opresult475)) {
 // Begin line 170
   setline(170);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object array446 = alloc_BuiltinList();
-  gc_pause();
-  gc_unpause();
-// compilenode returning array446
-  *var_toProcess = array446;
-  if (array446 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
+  if (strlit476 == NULL) {
+    strlit476 = alloc_String("Could not locate file. Check file address.");
+    gc_root(strlit476);
+  }
+// compilenode returning strlit476
+  params[0] = strlit476;
+  Object call477 = gracelib_print(NULL, 1,  params);
+// compilenode returning call477
 // Begin line 172
   setline(172);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe448 = gc_frame_new();
 // Begin line 171
   setline(171);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_curFile
-  gc_frame_newslot(*var_curFile);
-  params[0] = *var_curFile;
-  partcv[0] = 1;
-  Object call449 = callmethodflags(self, "parseFile", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe448);
-// compilenode returning call449
-// Begin line 175
-  setline(175);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe450 = gc_frame_new();
-// Begin line 172
-  setline(172);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block451 = alloc_Block(NULL, NULL, "PackageManager", 172);
-  gc_frame_newslot(block451);
-  block_savedest(block451);
-  Object closure452 = createclosure(2, "_apply");
-setclosureframe(closure452, stackframe);
-  addtoclosure(closure452, var_toProcess);
-  addtoclosure(closure452, selfslot);
-  struct UserObject *uo452 = (struct UserObject*)block451;
-  uo452->data[0] = (Object)closure452;
-  Method *meth_meth_PackageManager__apply452 = addmethod2pos(block451, "_apply", &meth_PackageManager__apply452, 0);
-int argcv_meth_PackageManager__apply452[] = {0};
-meth_meth_PackageManager__apply452->type = alloc_MethodType(1, argcv_meth_PackageManager__apply452);
-  meth_meth_PackageManager__apply452->definitionModule = modulename;
-  meth_meth_PackageManager__apply452->definitionLine = 163;
-// compilenode returning block451
-  gc_frame_newslot(block451);
-// Begin line 175
-  setline(175);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block460 = alloc_Block(NULL, NULL, "PackageManager", 175);
-  gc_frame_newslot(block460);
-  block_savedest(block460);
-  Object closure461 = createclosure(2, "_apply");
-setclosureframe(closure461, stackframe);
-  addtoclosure(closure461, var_toProcess);
-  addtoclosure(closure461, selfslot);
-  struct UserObject *uo461 = (struct UserObject*)block460;
-  uo461->data[0] = (Object)closure461;
-  Method *meth_meth_PackageManager__apply461 = addmethod2pos(block460, "_apply", &meth_PackageManager__apply461, 0);
-int argcv_meth_PackageManager__apply461[] = {0};
-meth_meth_PackageManager__apply461->type = alloc_MethodType(1, argcv_meth_PackageManager__apply461);
-  meth_meth_PackageManager__apply461->definitionModule = modulename;
-  meth_meth_PackageManager__apply461->definitionLine = 172;
-// compilenode returning block460
-  gc_frame_newslot(block460);
-  params[0] = block451;
-  params[1] = block460;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call467 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe450);
-// compilenode returning call467
-// Begin line 176
-  setline(176);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 175
-  setline(175);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool468 = alloc_Boolean(1);
-// compilenode returning bool468
-  return bool468;
+  Object bool478 = alloc_Boolean(0);
+// compilenode returning bool478
+  return bool478;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if441 = undefined;
+    if465 = undefined;
   } else {
   }
-// compilenode returning if441
-    gc_frame_newslot(if441);
-    if417 = if441;
-  } else {
-// Begin line 183
-  setline(183);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 179
-  setline(179);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe471 = gc_frame_new();
-// compilenode returning *var_fileAddress
-  int op_slot_left_472 = gc_frame_newslot(*var_fileAddress);
-  if (strlit473 == NULL) {
-    strlit473 = alloc_String(".grace");
-    gc_root(strlit473);
+// compilenode returning if465
+    gc_frame_newslot(if465);
+    if404 = if465;
   }
-// compilenode returning strlit473
-  int op_slot_right_472 = gc_frame_newslot(strlit473);
-  params[0] = strlit473;
-  partcv[0] = 1;
-  Object opresult475 = callmethod(*var_fileAddress, "++", 1, partcv, params);
-// compilenode returning opresult475
-  gc_frame_newslot(opresult475);
-  params[0] = opresult475;
-  partcv[0] = 1;
-  Object call476 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe471);
-// compilenode returning call476
-  int op_slot_left_470 = gc_frame_newslot(call476);
-  Object bool477 = alloc_Boolean(0);
-// compilenode returning bool477
-  int op_slot_right_470 = gc_frame_newslot(bool477);
-  params[0] = bool477;
-  partcv[0] = 1;
-  Object opresult479 = callmethod(call476, "==", 1, partcv, params);
-// compilenode returning opresult479
-  Object if469 = done;
-  if (istrue(opresult479)) {
-// Begin line 180
-  setline(180);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit480 == NULL) {
-    strlit480 = alloc_String("Could not locate file. Check file address.");
-    gc_root(strlit480);
-  }
-// compilenode returning strlit480
-  params[0] = strlit480;
-  Object call481 = gracelib_print(NULL, 1,  params);
-// compilenode returning call481
-// Begin line 182
-  setline(182);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 181
-  setline(181);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool482 = alloc_Boolean(0);
-// compilenode returning bool482
-  return bool482;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if469 = undefined;
-  } else {
-  }
-// compilenode returning if469
-    gc_frame_newslot(if469);
-    if417 = if469;
-  }
-// compilenode returning if417
+// compilenode returning if404
   gc_frame_end(frame);
-  return if417;
+  return if404;
 }
-Object meth_PackageManager__apply537(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply533(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -4606,74 +4564,74 @@ Object meth_PackageManager__apply537(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 202
-  setline(202);
+// Begin line 192
+  setline(192);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 201
-  setline(201);
+// Begin line 191
+  setline(191);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit534 == NULL) {
+    strlit534 = alloc_String(" Response received");
+    gc_root(strlit534);
+  }
+// compilenode returning strlit534
+  params[0] = strlit534;
+  Object call535 = gracelib_print(NULL, 1,  params);
+// compilenode returning call535
+// Begin line 193
+  setline(193);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 188
+  setline(188);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe536 = gc_frame_new();
+// Begin line 193
+  setline(193);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe537 = gc_frame_new();
+// Begin line 192
+  setline(192);
   setmodule(modulename);
   setsource(originalSourceLines);
   if (strlit538 == NULL) {
-    strlit538 = alloc_String(" Response received");
+    strlit538 = alloc_String("utf-8");
     gc_root(strlit538);
   }
 // compilenode returning strlit538
-  params[0] = strlit538;
-  Object call539 = gracelib_print(NULL, 1,  params);
-// compilenode returning call539
-// Begin line 203
-  setline(203);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 198
-  setline(198);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe540 = gc_frame_new();
-// Begin line 203
-  setline(203);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe541 = gc_frame_new();
-// Begin line 202
-  setline(202);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit542 == NULL) {
-    strlit542 = alloc_String("utf-8");
-    gc_root(strlit542);
-  }
-// compilenode returning strlit542
-  gc_frame_newslot(strlit542);
+  gc_frame_newslot(strlit538);
 // compilenode returning *var_d
-  params[0] = strlit542;
+  params[0] = strlit538;
   partcv[0] = 1;
-  Object call543 = callmethod(*var_d, "decode",
+  Object call539 = callmethod(*var_d, "decode",
     1, partcv, params);
-  gc_frame_end(callframe541);
-// compilenode returning call543
-  gc_frame_newslot(call543);
+  gc_frame_end(callframe537);
+// compilenode returning call539
+  gc_frame_newslot(call539);
 // compilenode returning *var_file
-  params[0] = call543;
+  params[0] = call539;
   partcv[0] = 1;
-  Object call544 = callmethod(*var_file, "data:=",
+  Object call540 = callmethod(*var_file, "data:=",
     1, partcv, params);
-  gc_frame_end(callframe540);
-// compilenode returning call544
+  gc_frame_end(callframe536);
+// compilenode returning call540
 // compilenode returning done
-// Begin line 203
-  setline(203);
+// Begin line 193
+  setline(193);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool545 = alloc_Boolean(1);
-// compilenode returning bool545
-  block_return(realself, bool545);
+  Object bool541 = alloc_Boolean(1);
+// compilenode returning bool541
+  block_return(realself, bool541);
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager_setFileData483(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_setFileData479(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 8, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(6, getclosureframe(closure));
@@ -4707,546 +4665,546 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "findData");
   Object *var_req = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "req");
-// Begin line 211
-  setline(211);
+// Begin line 201
+  setline(201);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 187
-  setline(187);
+// Begin line 177
+  setline(177);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe486 = gc_frame_new();
-  Object num487 = alloc_Float64(1);
-// compilenode returning num487
-  gc_frame_newslot(num487);
-  Object num488 = alloc_Float64(4);
-// compilenode returning num488
-  gc_frame_newslot(num488);
-  int callframe489 = gc_frame_new();
+  int callframe482 = gc_frame_new();
+  Object num483 = alloc_Float64(1);
+// compilenode returning num483
+  gc_frame_newslot(num483);
+  Object num484 = alloc_Float64(4);
+// compilenode returning num484
+  gc_frame_newslot(num484);
+  int callframe485 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call490 = callmethod(*var_file, "address",
+  Object call486 = callmethod(*var_file, "address",
     1, partcv, params);
-  gc_frame_end(callframe489);
-// compilenode returning call490
-// compilenode returning call490
-  params[0] = num487;
-  params[1] = num488;
+  gc_frame_end(callframe485);
+// compilenode returning call486
+// compilenode returning call486
+  params[0] = num483;
+  params[1] = num484;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call491 = callmethod(call490, "substringFrom()to",
+  Object call487 = callmethod(call486, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe486);
-// compilenode returning call491
-  int op_slot_left_485 = gc_frame_newslot(call491);
-  if (strlit492 == NULL) {
-    strlit492 = alloc_String("http");
-    gc_root(strlit492);
+  gc_frame_end(callframe482);
+// compilenode returning call487
+  int op_slot_left_481 = gc_frame_newslot(call487);
+  if (strlit488 == NULL) {
+    strlit488 = alloc_String("http");
+    gc_root(strlit488);
   }
-// compilenode returning strlit492
-  int op_slot_right_485 = gc_frame_newslot(strlit492);
-  params[0] = strlit492;
+// compilenode returning strlit488
+  int op_slot_right_481 = gc_frame_newslot(strlit488);
+  params[0] = strlit488;
   partcv[0] = 1;
-  Object opresult494 = callmethod(call491, "==", 1, partcv, params);
-// compilenode returning opresult494
-  Object if484 = done;
-  if (istrue(opresult494)) {
-// Begin line 188
-  setline(188);
+  Object opresult490 = callmethod(call487, "==", 1, partcv, params);
+// compilenode returning opresult490
+  Object if480 = done;
+  if (istrue(opresult490)) {
+// Begin line 178
+  setline(178);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe495 = gc_frame_new();
-  Object num496 = alloc_Float64(1);
-// compilenode returning num496
-  gc_frame_newslot(num496);
-  Object num497 = alloc_Float64(4);
-// compilenode returning num497
-  gc_frame_newslot(num497);
-  int callframe498 = gc_frame_new();
+  int callframe491 = gc_frame_new();
+  Object num492 = alloc_Float64(1);
+// compilenode returning num492
+  gc_frame_newslot(num492);
+  Object num493 = alloc_Float64(4);
+// compilenode returning num493
+  gc_frame_newslot(num493);
+  int callframe494 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call499 = callmethod(*var_file, "address",
+  Object call495 = callmethod(*var_file, "address",
     1, partcv, params);
-  gc_frame_end(callframe498);
-// compilenode returning call499
-// compilenode returning call499
-  params[0] = num496;
-  params[1] = num497;
+  gc_frame_end(callframe494);
+// compilenode returning call495
+// compilenode returning call495
+  params[0] = num492;
+  params[1] = num493;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call500 = callmethod(call499, "substringFrom()to",
+  Object call496 = callmethod(call495, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe495);
-// compilenode returning call500
-  *var_strippedUrl = call500;
-  if (call500 == undefined)
+  gc_frame_end(callframe491);
+// compilenode returning call496
+  *var_strippedUrl = call496;
+  if (call496 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 196
-  setline(196);
+// Begin line 186
+  setline(186);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 189
-  setline(189);
+// Begin line 179
+  setline(179);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe503 = gc_frame_new();
-  int callframe504 = gc_frame_new();
+  int callframe499 = gc_frame_new();
+  int callframe500 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call505 = callmethod(*var_file, "address",
+  Object call501 = callmethod(*var_file, "address",
     1, partcv, params);
-  gc_frame_end(callframe504);
-// compilenode returning call505
-// compilenode returning call505
-  gc_frame_newslot(call505);
-  params[0] = call505;
+  gc_frame_end(callframe500);
+// compilenode returning call501
+// compilenode returning call501
+  gc_frame_newslot(call501);
+  params[0] = call501;
   partcv[0] = 1;
-  Object call506 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe503);
-// compilenode returning call506
-  int op_slot_left_502 = gc_frame_newslot(call506);
-  Object bool507 = alloc_Boolean(0);
-// compilenode returning bool507
-  int op_slot_right_502 = gc_frame_newslot(bool507);
-  params[0] = bool507;
+  Object call502 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe499);
+// compilenode returning call502
+  int op_slot_left_498 = gc_frame_newslot(call502);
+  Object bool503 = alloc_Boolean(0);
+// compilenode returning bool503
+  int op_slot_right_498 = gc_frame_newslot(bool503);
+  params[0] = bool503;
   partcv[0] = 1;
-  Object opresult509 = callmethod(call506, "!=", 1, partcv, params);
-// compilenode returning opresult509
-  Object if501 = done;
-  if (istrue(opresult509)) {
-// Begin line 191
-  setline(191);
+  Object opresult505 = callmethod(call502, "!=", 1, partcv, params);
+// compilenode returning opresult505
+  Object if497 = done;
+  if (istrue(opresult505)) {
+// Begin line 181
+  setline(181);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe510 = gc_frame_new();
-// Begin line 190
-  setline(190);
+  int callframe506 = gc_frame_new();
+// Begin line 180
+  setline(180);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_strippedUrl
   gc_frame_newslot(*var_strippedUrl);
   params[0] = *var_strippedUrl;
   partcv[0] = 1;
-  Object call511 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe510);
-// compilenode returning call511
-  *var_findData = call511;
-  if (call511 == undefined)
+  Object call507 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe506);
+// compilenode returning call507
+  *var_findData = call507;
+  if (call507 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 195
-  setline(195);
+// Begin line 185
+  setline(185);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 191
-  setline(191);
+// Begin line 181
+  setline(181);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_findData
-  int op_slot_left_513 = gc_frame_newslot(*var_findData);
-  Object num514 = alloc_Float64(0);
-// compilenode returning num514
-  int op_slot_right_513 = gc_frame_newslot(num514);
-  params[0] = num514;
+  int op_slot_left_509 = gc_frame_newslot(*var_findData);
+  Object num510 = alloc_Float64(0);
+// compilenode returning num510
+  int op_slot_right_509 = gc_frame_newslot(num510);
+  params[0] = num510;
   partcv[0] = 1;
-  Object opresult516 = callmethod(*var_findData, ">", 1, partcv, params);
-// compilenode returning opresult516
-  Object if512 = done;
-  if (istrue(opresult516)) {
-// Begin line 193
-  setline(193);
+  Object opresult512 = callmethod(*var_findData, ">", 1, partcv, params);
+// compilenode returning opresult512
+  Object if508 = done;
+  if (istrue(opresult512)) {
+// Begin line 183
+  setline(183);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 179
+  setline(179);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe513 = gc_frame_new();
+// Begin line 182
+  setline(182);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_findData
+  gc_frame_newslot(*var_findData);
+// compilenode returning *var_file
+  params[0] = *var_findData;
+  partcv[0] = 1;
+  Object call514 = callmethod(*var_file, "data:=",
+    1, partcv, params);
+  gc_frame_end(callframe513);
+// compilenode returning call514
+// compilenode returning done
+// Begin line 183
+  setline(183);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object bool515 = alloc_Boolean(1);
+// compilenode returning bool515
+  return bool515;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if508 = undefined;
+  } else {
+  }
+// compilenode returning if508
+    gc_frame_newslot(if508);
+    if497 = if508;
+  } else {
+  }
+// compilenode returning if497
+// Begin line 187
+  setline(187);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 186
+  setline(186);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe516 = gc_frame_new();
+// compilenode returning *var_curl
+  partcv[0] = 0;
+  Object call517 = callmethod(*var_curl, "easy",
+    1, partcv, params);
+  gc_frame_end(callframe516);
+// compilenode returning call517
+// compilenode returning call517
+  *var_req = call517;
+  if (call517 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 188
+  setline(188);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 186
+  setline(186);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe518 = gc_frame_new();
+// Begin line 187
+  setline(187);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe519 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call520 = callmethod(*var_file, "address",
+    1, partcv, params);
+  gc_frame_end(callframe519);
+// compilenode returning call520
+// compilenode returning call520
+  gc_frame_newslot(call520);
+// compilenode returning *var_req
+  params[0] = call520;
+  partcv[0] = 1;
+  Object call521 = callmethod(*var_req, "url:=",
+    1, partcv, params);
+  gc_frame_end(callframe518);
+// compilenode returning call521
+// compilenode returning done
+// Begin line 189
+  setline(189);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 188
+  setline(188);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit523 == NULL) {
+    strlit523 = alloc_String("Searching for import: ");
+    gc_root(strlit523);
+  }
+// compilenode returning strlit523
+  int op_slot_left_522 = gc_frame_newslot(strlit523);
+  int callframe524 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call525 = callmethod(*var_file, "address",
+    1, partcv, params);
+  gc_frame_end(callframe524);
+// compilenode returning call525
+// compilenode returning call525
+  int op_slot_right_522 = gc_frame_newslot(call525);
+  params[0] = call525;
+  partcv[0] = 1;
+  Object opresult527 = callmethod(strlit523, "++", 1, partcv, params);
+// compilenode returning opresult527
+  params[0] = opresult527;
+  Object call528 = gracelib_print(NULL, 1,  params);
+// compilenode returning call528
+// Begin line 190
+  setline(190);
   setmodule(modulename);
   setsource(originalSourceLines);
 // Begin line 189
   setline(189);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe517 = gc_frame_new();
-// Begin line 192
-  setline(192);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_findData
-  gc_frame_newslot(*var_findData);
-// compilenode returning *var_file
-  params[0] = *var_findData;
-  partcv[0] = 1;
-  Object call518 = callmethod(*var_file, "data:=",
-    1, partcv, params);
-  gc_frame_end(callframe517);
-// compilenode returning call518
-// compilenode returning done
-// Begin line 193
-  setline(193);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool519 = alloc_Boolean(1);
-// compilenode returning bool519
-  return bool519;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if512 = undefined;
-  } else {
+  if (strlit529 == NULL) {
+    strlit529 = alloc_String(" Connecting...");
+    gc_root(strlit529);
   }
-// compilenode returning if512
-    gc_frame_newslot(if512);
-    if501 = if512;
-  } else {
-  }
-// compilenode returning if501
-// Begin line 197
-  setline(197);
+// compilenode returning strlit529
+  params[0] = strlit529;
+  Object call530 = gracelib_print(NULL, 1,  params);
+// compilenode returning call530
+// Begin line 195
+  setline(195);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 196
-  setline(196);
+  int callframe531 = gc_frame_new();
+  Object block532 = alloc_Block(NULL, NULL, "PackageManager", 195);
+  gc_frame_newslot(block532);
+  block_savedest(block532);
+  Object closure533 = createclosure(2, "_apply");
+setclosureframe(closure533, stackframe);
+  addtoclosure(closure533, var_file);
+  addtoclosure(closure533, selfslot);
+  struct UserObject *uo533 = (struct UserObject*)block532;
+  uo533->data[0] = (Object)closure533;
+  Method *meth_meth_PackageManager__apply533 = addmethod2pos(block532, "_apply", &meth_PackageManager__apply533, 0);
+int argcv_meth_PackageManager__apply533[] = {1};
+meth_meth_PackageManager__apply533->type = alloc_MethodType(1, argcv_meth_PackageManager__apply533);
+  meth_meth_PackageManager__apply533->definitionModule = modulename;
+  meth_meth_PackageManager__apply533->definitionLine = 188;
+// compilenode returning block532
+  gc_frame_newslot(block532);
+// Begin line 190
+  setline(190);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe520 = gc_frame_new();
-// compilenode returning *var_curl
-  partcv[0] = 0;
-  Object call521 = callmethod(*var_curl, "easy",
-    1, partcv, params);
-  gc_frame_end(callframe520);
-// compilenode returning call521
-// compilenode returning call521
-  *var_req = call521;
-  if (call521 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 198
-  setline(198);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 196
-  setline(196);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe522 = gc_frame_new();
-// Begin line 197
-  setline(197);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe523 = gc_frame_new();
-// compilenode returning *var_file
-  partcv[0] = 0;
-  Object call524 = callmethod(*var_file, "address",
-    1, partcv, params);
-  gc_frame_end(callframe523);
-// compilenode returning call524
-// compilenode returning call524
-  gc_frame_newslot(call524);
 // compilenode returning *var_req
-  params[0] = call524;
+  params[0] = block532;
   partcv[0] = 1;
-  Object call525 = callmethod(*var_req, "url:=",
+  Object call543 = callmethod(*var_req, "onReceive",
     1, partcv, params);
-  gc_frame_end(callframe522);
-// compilenode returning call525
-// compilenode returning done
-// Begin line 199
-  setline(199);
+  gc_frame_end(callframe531);
+// compilenode returning call543
+// Begin line 195
+  setline(195);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 198
-  setline(198);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit527 == NULL) {
-    strlit527 = alloc_String("Searching for import: ");
-    gc_root(strlit527);
-  }
-// compilenode returning strlit527
-  int op_slot_left_526 = gc_frame_newslot(strlit527);
-  int callframe528 = gc_frame_new();
-// compilenode returning *var_file
+  int callframe544 = gc_frame_new();
+// compilenode returning *var_req
   partcv[0] = 0;
-  Object call529 = callmethod(*var_file, "address",
+  Object call545 = callmethod(*var_req, "perform",
     1, partcv, params);
-  gc_frame_end(callframe528);
-// compilenode returning call529
-// compilenode returning call529
-  int op_slot_right_526 = gc_frame_newslot(call529);
-  params[0] = call529;
-  partcv[0] = 1;
-  Object opresult531 = callmethod(strlit527, "++", 1, partcv, params);
-// compilenode returning opresult531
-  params[0] = opresult531;
-  Object call532 = gracelib_print(NULL, 1,  params);
-// compilenode returning call532
+  gc_frame_end(callframe544);
+// compilenode returning call545
+// compilenode returning call545
 // Begin line 200
   setline(200);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 199
-  setline(199);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit533 == NULL) {
-    strlit533 = alloc_String(" Connecting...");
-    gc_root(strlit533);
-  }
-// compilenode returning strlit533
-  params[0] = strlit533;
-  Object call534 = gracelib_print(NULL, 1,  params);
-// compilenode returning call534
-// Begin line 205
-  setline(205);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe535 = gc_frame_new();
-  Object block536 = alloc_Block(NULL, NULL, "PackageManager", 205);
-  gc_frame_newslot(block536);
-  block_savedest(block536);
-  Object closure537 = createclosure(2, "_apply");
-setclosureframe(closure537, stackframe);
-  addtoclosure(closure537, var_file);
-  addtoclosure(closure537, selfslot);
-  struct UserObject *uo537 = (struct UserObject*)block536;
-  uo537->data[0] = (Object)closure537;
-  Method *meth_meth_PackageManager__apply537 = addmethod2pos(block536, "_apply", &meth_PackageManager__apply537, 0);
-int argcv_meth_PackageManager__apply537[] = {1};
-meth_meth_PackageManager__apply537->type = alloc_MethodType(1, argcv_meth_PackageManager__apply537);
-  meth_meth_PackageManager__apply537->definitionModule = modulename;
-  meth_meth_PackageManager__apply537->definitionLine = 198;
-// compilenode returning block536
-  gc_frame_newslot(block536);
-// Begin line 200
-  setline(200);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_req
-  params[0] = block536;
-  partcv[0] = 1;
-  Object call547 = callmethod(*var_req, "onReceive",
-    1, partcv, params);
-  gc_frame_end(callframe535);
-// compilenode returning call547
-// Begin line 205
-  setline(205);
+// Begin line 196
+  setline(196);
   setmodule(modulename);
   setsource(originalSourceLines);
   int callframe548 = gc_frame_new();
 // compilenode returning *var_req
   partcv[0] = 0;
-  Object call549 = callmethod(*var_req, "perform",
+  Object call549 = callmethod(*var_req, "responseCode",
     1, partcv, params);
   gc_frame_end(callframe548);
 // compilenode returning call549
 // compilenode returning call549
-// Begin line 210
-  setline(210);
+  int op_slot_left_547 = gc_frame_newslot(call549);
+  Object num550 = alloc_Float64(200);
+// compilenode returning num550
+  int op_slot_right_547 = gc_frame_newslot(num550);
+  params[0] = num550;
+  partcv[0] = 1;
+  Object opresult552 = callmethod(call549, "!=", 1, partcv, params);
+// compilenode returning opresult552
+  Object if546 = done;
+  if (istrue(opresult552)) {
+// Begin line 197
+  setline(197);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 206
-  setline(206);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe552 = gc_frame_new();
+  if (strlit557 == NULL) {
+    strlit557 = alloc_String(" Could not locate import: Error ");
+    gc_root(strlit557);
+  }
+// compilenode returning strlit557
+  int op_slot_left_556 = gc_frame_newslot(strlit557);
+  int callframe558 = gc_frame_new();
 // compilenode returning *var_req
   partcv[0] = 0;
-  Object call553 = callmethod(*var_req, "responseCode",
+  Object call559 = callmethod(*var_req, "responseCode",
     1, partcv, params);
-  gc_frame_end(callframe552);
-// compilenode returning call553
-// compilenode returning call553
-  int op_slot_left_551 = gc_frame_newslot(call553);
-  Object num554 = alloc_Float64(200);
-// compilenode returning num554
-  int op_slot_right_551 = gc_frame_newslot(num554);
-  params[0] = num554;
+  gc_frame_end(callframe558);
+// compilenode returning call559
+// compilenode returning call559
+  int op_slot_right_556 = gc_frame_newslot(call559);
+  params[0] = call559;
   partcv[0] = 1;
-  Object opresult556 = callmethod(call553, "!=", 1, partcv, params);
-// compilenode returning opresult556
-  Object if550 = done;
-  if (istrue(opresult556)) {
-// Begin line 207
-  setline(207);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit561 == NULL) {
-    strlit561 = alloc_String(" Could not locate import: Error ");
-    gc_root(strlit561);
+  Object opresult561 = callmethod(strlit557, "++", 1, partcv, params);
+// compilenode returning opresult561
+  int op_slot_left_555 = gc_frame_newslot(opresult561);
+  if (strlit562 == NULL) {
+    strlit562 = alloc_String(" for import ");
+    gc_root(strlit562);
   }
-// compilenode returning strlit561
-  int op_slot_left_560 = gc_frame_newslot(strlit561);
-  int callframe562 = gc_frame_new();
-// compilenode returning *var_req
-  partcv[0] = 0;
-  Object call563 = callmethod(*var_req, "responseCode",
-    1, partcv, params);
-  gc_frame_end(callframe562);
-// compilenode returning call563
-// compilenode returning call563
-  int op_slot_right_560 = gc_frame_newslot(call563);
-  params[0] = call563;
+// compilenode returning strlit562
+  int op_slot_right_555 = gc_frame_newslot(strlit562);
+  params[0] = strlit562;
   partcv[0] = 1;
-  Object opresult565 = callmethod(strlit561, "++", 1, partcv, params);
-// compilenode returning opresult565
-  int op_slot_left_559 = gc_frame_newslot(opresult565);
-  if (strlit566 == NULL) {
-    strlit566 = alloc_String(" for import ");
-    gc_root(strlit566);
-  }
-// compilenode returning strlit566
-  int op_slot_right_559 = gc_frame_newslot(strlit566);
-  params[0] = strlit566;
-  partcv[0] = 1;
-  Object opresult568 = callmethod(opresult565, "++", 1, partcv, params);
-// compilenode returning opresult568
-  int op_slot_left_558 = gc_frame_newslot(opresult568);
-  int callframe569 = gc_frame_new();
+  Object opresult564 = callmethod(opresult561, "++", 1, partcv, params);
+// compilenode returning opresult564
+  int op_slot_left_554 = gc_frame_newslot(opresult564);
+  int callframe565 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call570 = callmethod(*var_file, "address",
+  Object call566 = callmethod(*var_file, "address",
     1, partcv, params);
-  gc_frame_end(callframe569);
-// compilenode returning call570
-// compilenode returning call570
-  int op_slot_right_558 = gc_frame_newslot(call570);
-  params[0] = call570;
+  gc_frame_end(callframe565);
+// compilenode returning call566
+// compilenode returning call566
+  int op_slot_right_554 = gc_frame_newslot(call566);
+  params[0] = call566;
   partcv[0] = 1;
-  Object opresult572 = callmethod(opresult568, "++", 1, partcv, params);
-// compilenode returning opresult572
-  int op_slot_left_557 = gc_frame_newslot(opresult572);
-  if (strlit573 == NULL) {
-    strlit573 = alloc_String("");
-    gc_root(strlit573);
+  Object opresult568 = callmethod(opresult564, "++", 1, partcv, params);
+// compilenode returning opresult568
+  int op_slot_left_553 = gc_frame_newslot(opresult568);
+  if (strlit569 == NULL) {
+    strlit569 = alloc_String("");
+    gc_root(strlit569);
   }
-// compilenode returning strlit573
-  int op_slot_right_557 = gc_frame_newslot(strlit573);
-  params[0] = strlit573;
+// compilenode returning strlit569
+  int op_slot_right_553 = gc_frame_newslot(strlit569);
+  params[0] = strlit569;
   partcv[0] = 1;
-  Object opresult575 = callmethod(opresult572, "++", 1, partcv, params);
-// compilenode returning opresult575
-  params[0] = opresult575;
-  Object call576 = gracelib_print(NULL, 1,  params);
-// compilenode returning call576
+  Object opresult571 = callmethod(opresult568, "++", 1, partcv, params);
+// compilenode returning opresult571
+  params[0] = opresult571;
+  Object call572 = gracelib_print(NULL, 1,  params);
+// compilenode returning call572
+// Begin line 199
+  setline(199);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 198
+  setline(198);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object bool573 = alloc_Boolean(0);
+// compilenode returning bool573
+  return bool573;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if546 = undefined;
+  } else {
+  }
+// compilenode returning if546
+    gc_frame_newslot(if546);
+    if480 = if546;
+  } else {
+  }
+// compilenode returning if480
 // Begin line 209
   setline(209);
   setmodule(modulename);
   setsource(originalSourceLines);
+// Begin line 201
+  setline(201);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe576 = gc_frame_new();
+  int callframe577 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call578 = callmethod(*var_file, "address",
+    1, partcv, params);
+  gc_frame_end(callframe577);
+// compilenode returning call578
+// compilenode returning call578
+  gc_frame_newslot(call578);
+  params[0] = call578;
+  partcv[0] = 1;
+  Object call579 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe576);
+// compilenode returning call579
+  int op_slot_left_575 = gc_frame_newslot(call579);
+  Object bool580 = alloc_Boolean(0);
+// compilenode returning bool580
+  int op_slot_right_575 = gc_frame_newslot(bool580);
+  params[0] = bool580;
+  partcv[0] = 1;
+  Object opresult582 = callmethod(call579, "!=", 1, partcv, params);
+// compilenode returning opresult582
+  Object if574 = done;
+  if (istrue(opresult582)) {
+// Begin line 202
+  setline(202);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit583 == NULL) {
+    strlit583 = alloc_String("Now searching in find existing");
+    gc_root(strlit583);
+  }
+// compilenode returning strlit583
+  params[0] = strlit583;
+  Object call584 = gracelib_print(NULL, 1,  params);
+// compilenode returning call584
+// Begin line 204
+  setline(204);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe585 = gc_frame_new();
+// Begin line 203
+  setline(203);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe586 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call587 = callmethod(*var_file, "address",
+    1, partcv, params);
+  gc_frame_end(callframe586);
+// compilenode returning call587
+// compilenode returning call587
+  gc_frame_newslot(call587);
+  params[0] = call587;
+  partcv[0] = 1;
+  Object call588 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe585);
+// compilenode returning call588
+  *var_findData = call588;
+  if (call588 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
 // Begin line 208
   setline(208);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool577 = alloc_Boolean(0);
-// compilenode returning bool577
-  return bool577;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if550 = undefined;
-  } else {
-  }
-// compilenode returning if550
-    gc_frame_newslot(if550);
-    if484 = if550;
-  } else {
-  }
-// compilenode returning if484
-// Begin line 219
-  setline(219);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 211
-  setline(211);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe580 = gc_frame_new();
-  int callframe581 = gc_frame_new();
-// compilenode returning *var_file
-  partcv[0] = 0;
-  Object call582 = callmethod(*var_file, "address",
-    1, partcv, params);
-  gc_frame_end(callframe581);
-// compilenode returning call582
-// compilenode returning call582
-  gc_frame_newslot(call582);
-  params[0] = call582;
-  partcv[0] = 1;
-  Object call583 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe580);
-// compilenode returning call583
-  int op_slot_left_579 = gc_frame_newslot(call583);
-  Object bool584 = alloc_Boolean(0);
-// compilenode returning bool584
-  int op_slot_right_579 = gc_frame_newslot(bool584);
-  params[0] = bool584;
-  partcv[0] = 1;
-  Object opresult586 = callmethod(call583, "!=", 1, partcv, params);
-// compilenode returning opresult586
-  Object if578 = done;
-  if (istrue(opresult586)) {
-// Begin line 212
-  setline(212);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit587 == NULL) {
-    strlit587 = alloc_String("Now searching in find existing");
-    gc_root(strlit587);
-  }
-// compilenode returning strlit587
-  params[0] = strlit587;
-  Object call588 = gracelib_print(NULL, 1,  params);
-// compilenode returning call588
-// Begin line 214
-  setline(214);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe589 = gc_frame_new();
-// Begin line 213
-  setline(213);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe590 = gc_frame_new();
-// compilenode returning *var_file
-  partcv[0] = 0;
-  Object call591 = callmethod(*var_file, "address",
-    1, partcv, params);
-  gc_frame_end(callframe590);
-// compilenode returning call591
-// compilenode returning call591
-  gc_frame_newslot(call591);
-  params[0] = call591;
-  partcv[0] = 1;
-  Object call592 = callmethodflags(self, "findExisting", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe589);
-// compilenode returning call592
-  *var_findData = call592;
-  if (call592 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 218
-  setline(218);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 214
-  setline(214);
+// Begin line 204
+  setline(204);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_findData
-  int op_slot_left_594 = gc_frame_newslot(*var_findData);
-  Object bool595 = alloc_Boolean(0);
-// compilenode returning bool595
-  int op_slot_right_594 = gc_frame_newslot(bool595);
-  params[0] = bool595;
+  int op_slot_left_590 = gc_frame_newslot(*var_findData);
+  Object bool591 = alloc_Boolean(0);
+// compilenode returning bool591
+  int op_slot_right_590 = gc_frame_newslot(bool591);
+  params[0] = bool591;
   partcv[0] = 1;
-  Object opresult597 = callmethod(*var_findData, "!=", 1, partcv, params);
-// compilenode returning opresult597
-  Object if593 = done;
-  if (istrue(opresult597)) {
-// Begin line 216
-  setline(216);
+  Object opresult593 = callmethod(*var_findData, "!=", 1, partcv, params);
+// compilenode returning opresult593
+  Object if589 = done;
+  if (istrue(opresult593)) {
+// Begin line 206
+  setline(206);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 213
-  setline(213);
+// Begin line 203
+  setline(203);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe598 = gc_frame_new();
-// Begin line 215
-  setline(215);
+  int callframe594 = gc_frame_new();
+// Begin line 205
+  setline(205);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_findData
@@ -5254,41 +5212,41 @@ meth_meth_PackageManager__apply537->type = alloc_MethodType(1, argcv_meth_Packag
 // compilenode returning *var_file
   params[0] = *var_findData;
   partcv[0] = 1;
-  Object call599 = callmethod(*var_file, "data:=",
+  Object call595 = callmethod(*var_file, "data:=",
     1, partcv, params);
-  gc_frame_end(callframe598);
-// compilenode returning call599
+  gc_frame_end(callframe594);
+// compilenode returning call595
 // compilenode returning done
-// Begin line 216
-  setline(216);
+// Begin line 206
+  setline(206);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool600 = alloc_Boolean(1);
-// compilenode returning bool600
-  return bool600;
+  Object bool596 = alloc_Boolean(1);
+// compilenode returning bool596
+  return bool596;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if593 = undefined;
+    if589 = undefined;
   } else {
   }
-// compilenode returning if593
-    gc_frame_newslot(if593);
-    if578 = if593;
+// compilenode returning if589
+    gc_frame_newslot(if589);
+    if574 = if589;
   } else {
   }
-// compilenode returning if578
-// Begin line 219
-  setline(219);
+// compilenode returning if574
+// Begin line 209
+  setline(209);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool601 = alloc_Boolean(0);
-// compilenode returning bool601
-  return bool601;
+  Object bool597 = alloc_Boolean(0);
+// compilenode returning bool597
+  return bool597;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager_findExisting602(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_findExisting598(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 9, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(5, getclosureframe(closure));
@@ -5324,79 +5282,438 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "ret");
   Object *var_homePath = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "homePath");
-// Begin line 228
-  setline(228);
+// Begin line 218
+  setline(218);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 223
-  setline(223);
+// Begin line 213
+  setline(213);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe604 = gc_frame_new();
+  int callframe600 = gc_frame_new();
 // compilenode returning *var_fileName
   gc_frame_newslot(*var_fileName);
 // compilenode returning *var_io
   params[0] = *var_fileName;
   partcv[0] = 1;
-  Object call605 = callmethod(*var_io, "exists",
+  Object call601 = callmethod(*var_io, "exists",
     1, partcv, params);
-  gc_frame_end(callframe604);
-// compilenode returning call605
-  Object if603 = done;
-  if (istrue(call605)) {
-// Begin line 224
-  setline(224);
+  gc_frame_end(callframe600);
+// compilenode returning call601
+  Object if599 = done;
+  if (istrue(call601)) {
+// Begin line 214
+  setline(214);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe606 = gc_frame_new();
+  int callframe602 = gc_frame_new();
 // compilenode returning *var_fileName
   gc_frame_newslot(*var_fileName);
-  if (strlit607 == NULL) {
-    strlit607 = alloc_String("r");
-    gc_root(strlit607);
+  if (strlit603 == NULL) {
+    strlit603 = alloc_String("r");
+    gc_root(strlit603);
   }
-// compilenode returning strlit607
-  gc_frame_newslot(strlit607);
+// compilenode returning strlit603
+  gc_frame_newslot(strlit603);
 // compilenode returning *var_io
   params[0] = *var_fileName;
-  params[1] = strlit607;
+  params[1] = strlit603;
   partcv[0] = 2;
-  Object call608 = callmethod(*var_io, "open",
+  Object call604 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe606);
-// compilenode returning call608
-  *var_open = call608;
-  if (call608 == undefined)
+  gc_frame_end(callframe602);
+// compilenode returning call604
+  *var_open = call604;
+  if (call604 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 225
-  setline(225);
+// Begin line 215
+  setline(215);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe609 = gc_frame_new();
+  int callframe605 = gc_frame_new();
 // compilenode returning *var_open
   partcv[0] = 0;
-  Object call610 = callmethod(*var_open, "read",
+  Object call606 = callmethod(*var_open, "read",
     1, partcv, params);
-  gc_frame_end(callframe609);
-// compilenode returning call610
-// compilenode returning call610
-  *var_ret = call610;
-  if (call610 == undefined)
+  gc_frame_end(callframe605);
+// compilenode returning call606
+// compilenode returning call606
+  *var_ret = call606;
+  if (call606 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 226
-  setline(226);
+// Begin line 216
+  setline(216);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_ret
   return *var_ret;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if603 = undefined;
+    if599 = undefined;
   } else {
   }
-// compilenode returning if603
+// compilenode returning if599
+// Begin line 221
+  setline(221);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 218
+  setline(218);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe608 = gc_frame_new();
+  if (strlit610 == NULL) {
+    strlit610 = alloc_String("/usr/lib/grace/modules/");
+    gc_root(strlit610);
+  }
+// compilenode returning strlit610
+  int op_slot_left_609 = gc_frame_newslot(strlit610);
+// compilenode returning *var_fileName
+  int op_slot_right_609 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult612 = callmethod(strlit610, "++", 1, partcv, params);
+// compilenode returning opresult612
+  gc_frame_newslot(opresult612);
+// compilenode returning *var_io
+  params[0] = opresult612;
+  partcv[0] = 1;
+  Object call613 = callmethod(*var_io, "exists",
+    1, partcv, params);
+  gc_frame_end(callframe608);
+// compilenode returning call613
+  Object if607 = done;
+  if (istrue(call613)) {
+// Begin line 220
+  setline(220);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 219
+  setline(219);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe614 = gc_frame_new();
+  int callframe615 = gc_frame_new();
+  if (strlit617 == NULL) {
+    strlit617 = alloc_String("/usr/lib/grace/modules/");
+    gc_root(strlit617);
+  }
+// compilenode returning strlit617
+  int op_slot_left_616 = gc_frame_newslot(strlit617);
+// compilenode returning *var_fileName
+  int op_slot_right_616 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult619 = callmethod(strlit617, "++", 1, partcv, params);
+// compilenode returning opresult619
+  gc_frame_newslot(opresult619);
+  if (strlit620 == NULL) {
+    strlit620 = alloc_String("r");
+    gc_root(strlit620);
+  }
+// compilenode returning strlit620
+  gc_frame_newslot(strlit620);
+// compilenode returning *var_io
+  params[0] = opresult619;
+  params[1] = strlit620;
+  partcv[0] = 2;
+  Object call621 = callmethod(*var_io, "open",
+    1, partcv, params);
+  gc_frame_end(callframe615);
+// compilenode returning call621
+  partcv[0] = 0;
+  Object call622 = callmethod(call621, "read",
+    1, partcv, params);
+  gc_frame_end(callframe614);
+// compilenode returning call622
+// compilenode returning call622
+  return call622;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if607 = undefined;
+  } else {
+  }
+// compilenode returning if607
+// Begin line 222
+  setline(222);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 221
+  setline(221);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe623 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call624 = callmethod(*var_sys, "environ",
+    1, partcv, params);
+  gc_frame_end(callframe623);
+// compilenode returning call624
+// compilenode returning call624
+  if (strlit625 == NULL) {
+    strlit625 = alloc_String("HOME");
+    gc_root(strlit625);
+  }
+// compilenode returning strlit625
+  params[0] = strlit625;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres626 = callmethod(call624, "[]", 1, partcv, params);
+// compilenode returning idxres626
+  *var_homePath = idxres626;
+  if (idxres626 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 225
+  setline(225);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 222
+  setline(222);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe628 = gc_frame_new();
+  if (strlit632 == NULL) {
+    strlit632 = alloc_String("");
+    gc_root(strlit632);
+  }
+// compilenode returning strlit632
+  int op_slot_left_631 = gc_frame_newslot(strlit632);
+// compilenode returning *var_homePath
+  int op_slot_right_631 = gc_frame_newslot(*var_homePath);
+  params[0] = *var_homePath;
+  partcv[0] = 1;
+  Object opresult634 = callmethod(strlit632, "++", 1, partcv, params);
+// compilenode returning opresult634
+  int op_slot_left_630 = gc_frame_newslot(opresult634);
+  if (strlit635 == NULL) {
+    strlit635 = alloc_String("/.local/share/grace/modules/");
+    gc_root(strlit635);
+  }
+// compilenode returning strlit635
+  int op_slot_right_630 = gc_frame_newslot(strlit635);
+  params[0] = strlit635;
+  partcv[0] = 1;
+  Object opresult637 = callmethod(opresult634, "++", 1, partcv, params);
+// compilenode returning opresult637
+  int op_slot_left_629 = gc_frame_newslot(opresult637);
+// compilenode returning *var_fileName
+  int op_slot_right_629 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult639 = callmethod(opresult637, "++", 1, partcv, params);
+// compilenode returning opresult639
+  gc_frame_newslot(opresult639);
+// compilenode returning *var_io
+  params[0] = opresult639;
+  partcv[0] = 1;
+  Object call640 = callmethod(*var_io, "exists",
+    1, partcv, params);
+  gc_frame_end(callframe628);
+// compilenode returning call640
+  Object if627 = done;
+  if (istrue(call640)) {
+// Begin line 224
+  setline(224);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 223
+  setline(223);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe641 = gc_frame_new();
+  int callframe642 = gc_frame_new();
+  if (strlit646 == NULL) {
+    strlit646 = alloc_String("");
+    gc_root(strlit646);
+  }
+// compilenode returning strlit646
+  int op_slot_left_645 = gc_frame_newslot(strlit646);
+// compilenode returning *var_homePath
+  int op_slot_right_645 = gc_frame_newslot(*var_homePath);
+  params[0] = *var_homePath;
+  partcv[0] = 1;
+  Object opresult648 = callmethod(strlit646, "++", 1, partcv, params);
+// compilenode returning opresult648
+  int op_slot_left_644 = gc_frame_newslot(opresult648);
+  if (strlit649 == NULL) {
+    strlit649 = alloc_String("/.local/share/grace/modules/");
+    gc_root(strlit649);
+  }
+// compilenode returning strlit649
+  int op_slot_right_644 = gc_frame_newslot(strlit649);
+  params[0] = strlit649;
+  partcv[0] = 1;
+  Object opresult651 = callmethod(opresult648, "++", 1, partcv, params);
+// compilenode returning opresult651
+  int op_slot_left_643 = gc_frame_newslot(opresult651);
+// compilenode returning *var_fileName
+  int op_slot_right_643 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult653 = callmethod(opresult651, "++", 1, partcv, params);
+// compilenode returning opresult653
+  gc_frame_newslot(opresult653);
+  if (strlit654 == NULL) {
+    strlit654 = alloc_String("r");
+    gc_root(strlit654);
+  }
+// compilenode returning strlit654
+  gc_frame_newslot(strlit654);
+// compilenode returning *var_io
+  params[0] = opresult653;
+  params[1] = strlit654;
+  partcv[0] = 2;
+  Object call655 = callmethod(*var_io, "open",
+    1, partcv, params);
+  gc_frame_end(callframe642);
+// compilenode returning call655
+  partcv[0] = 0;
+  Object call656 = callmethod(call655, "read",
+    1, partcv, params);
+  gc_frame_end(callframe641);
+// compilenode returning call656
+// compilenode returning call656
+  return call656;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if627 = undefined;
+  } else {
+  }
+// compilenode returning if627
+// Begin line 228
+  setline(228);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 225
+  setline(225);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe658 = gc_frame_new();
+  if (strlit662 == NULL) {
+    strlit662 = alloc_String("");
+    gc_root(strlit662);
+  }
+// compilenode returning strlit662
+  int op_slot_left_661 = gc_frame_newslot(strlit662);
+  int callframe663 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call664 = callmethod(*var_sys, "execPath",
+    1, partcv, params);
+  gc_frame_end(callframe663);
+// compilenode returning call664
+// compilenode returning call664
+  int op_slot_right_661 = gc_frame_newslot(call664);
+  params[0] = call664;
+  partcv[0] = 1;
+  Object opresult666 = callmethod(strlit662, "++", 1, partcv, params);
+// compilenode returning opresult666
+  int op_slot_left_660 = gc_frame_newslot(opresult666);
+  if (strlit667 == NULL) {
+    strlit667 = alloc_String("/../lib/minigrace/modules/");
+    gc_root(strlit667);
+  }
+// compilenode returning strlit667
+  int op_slot_right_660 = gc_frame_newslot(strlit667);
+  params[0] = strlit667;
+  partcv[0] = 1;
+  Object opresult669 = callmethod(opresult666, "++", 1, partcv, params);
+// compilenode returning opresult669
+  int op_slot_left_659 = gc_frame_newslot(opresult669);
+// compilenode returning *var_fileName
+  int op_slot_right_659 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult671 = callmethod(opresult669, "++", 1, partcv, params);
+// compilenode returning opresult671
+  gc_frame_newslot(opresult671);
+// compilenode returning *var_io
+  params[0] = opresult671;
+  partcv[0] = 1;
+  Object call672 = callmethod(*var_io, "exists",
+    1, partcv, params);
+  gc_frame_end(callframe658);
+// compilenode returning call672
+  Object if657 = done;
+  if (istrue(call672)) {
+// Begin line 227
+  setline(227);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 226
+  setline(226);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe673 = gc_frame_new();
+  int callframe674 = gc_frame_new();
+  if (strlit678 == NULL) {
+    strlit678 = alloc_String("");
+    gc_root(strlit678);
+  }
+// compilenode returning strlit678
+  int op_slot_left_677 = gc_frame_newslot(strlit678);
+  int callframe679 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call680 = callmethod(*var_sys, "execPath",
+    1, partcv, params);
+  gc_frame_end(callframe679);
+// compilenode returning call680
+// compilenode returning call680
+  int op_slot_right_677 = gc_frame_newslot(call680);
+  params[0] = call680;
+  partcv[0] = 1;
+  Object opresult682 = callmethod(strlit678, "++", 1, partcv, params);
+// compilenode returning opresult682
+  int op_slot_left_676 = gc_frame_newslot(opresult682);
+  if (strlit683 == NULL) {
+    strlit683 = alloc_String("/../lib/minigrace/modules/");
+    gc_root(strlit683);
+  }
+// compilenode returning strlit683
+  int op_slot_right_676 = gc_frame_newslot(strlit683);
+  params[0] = strlit683;
+  partcv[0] = 1;
+  Object opresult685 = callmethod(opresult682, "++", 1, partcv, params);
+// compilenode returning opresult685
+  int op_slot_left_675 = gc_frame_newslot(opresult685);
+// compilenode returning *var_fileName
+  int op_slot_right_675 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult687 = callmethod(opresult685, "++", 1, partcv, params);
+// compilenode returning opresult687
+  gc_frame_newslot(opresult687);
+  if (strlit688 == NULL) {
+    strlit688 = alloc_String("r");
+    gc_root(strlit688);
+  }
+// compilenode returning strlit688
+  gc_frame_newslot(strlit688);
+// compilenode returning *var_io
+  params[0] = opresult687;
+  params[1] = strlit688;
+  partcv[0] = 2;
+  Object call689 = callmethod(*var_io, "open",
+    1, partcv, params);
+  gc_frame_end(callframe674);
+// compilenode returning call689
+  partcv[0] = 0;
+  Object call690 = callmethod(call689, "read",
+    1, partcv, params);
+  gc_frame_end(callframe673);
+// compilenode returning call690
+// compilenode returning call690
+  return call690;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if657 = undefined;
+  } else {
+  }
+// compilenode returning if657
 // Begin line 231
   setline(231);
   setmodule(modulename);
@@ -5405,29 +5722,54 @@ if (argcv && argcv[0] > 1)
   setline(228);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe612 = gc_frame_new();
-  if (strlit614 == NULL) {
-    strlit614 = alloc_String("/usr/lib/grace/modules/");
-    gc_root(strlit614);
+  int callframe692 = gc_frame_new();
+  if (strlit696 == NULL) {
+    strlit696 = alloc_String("");
+    gc_root(strlit696);
   }
-// compilenode returning strlit614
-  int op_slot_left_613 = gc_frame_newslot(strlit614);
+// compilenode returning strlit696
+  int op_slot_left_695 = gc_frame_newslot(strlit696);
+  int callframe697 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call698 = callmethod(*var_sys, "execPath",
+    1, partcv, params);
+  gc_frame_end(callframe697);
+// compilenode returning call698
+// compilenode returning call698
+  int op_slot_right_695 = gc_frame_newslot(call698);
+  params[0] = call698;
+  partcv[0] = 1;
+  Object opresult700 = callmethod(strlit696, "++", 1, partcv, params);
+// compilenode returning opresult700
+  int op_slot_left_694 = gc_frame_newslot(opresult700);
+  if (strlit701 == NULL) {
+    strlit701 = alloc_String("/");
+    gc_root(strlit701);
+  }
+// compilenode returning strlit701
+  int op_slot_right_694 = gc_frame_newslot(strlit701);
+  params[0] = strlit701;
+  partcv[0] = 1;
+  Object opresult703 = callmethod(opresult700, "++", 1, partcv, params);
+// compilenode returning opresult703
+  int op_slot_left_693 = gc_frame_newslot(opresult703);
 // compilenode returning *var_fileName
-  int op_slot_right_613 = gc_frame_newslot(*var_fileName);
+  int op_slot_right_693 = gc_frame_newslot(*var_fileName);
   params[0] = *var_fileName;
   partcv[0] = 1;
-  Object opresult616 = callmethod(strlit614, "++", 1, partcv, params);
-// compilenode returning opresult616
-  gc_frame_newslot(opresult616);
+  Object opresult705 = callmethod(opresult703, "++", 1, partcv, params);
+// compilenode returning opresult705
+  gc_frame_newslot(opresult705);
 // compilenode returning *var_io
-  params[0] = opresult616;
+  params[0] = opresult705;
   partcv[0] = 1;
-  Object call617 = callmethod(*var_io, "exists",
+  Object call706 = callmethod(*var_io, "exists",
     1, partcv, params);
-  gc_frame_end(callframe612);
-// compilenode returning call617
-  Object if611 = done;
-  if (istrue(call617)) {
+  gc_frame_end(callframe692);
+// compilenode returning call706
+  Object if691 = done;
+  if (istrue(call706)) {
 // Begin line 230
   setline(230);
   setmodule(modulename);
@@ -5436,127 +5778,149 @@ if (argcv && argcv[0] > 1)
   setline(229);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe618 = gc_frame_new();
-  int callframe619 = gc_frame_new();
-  if (strlit621 == NULL) {
-    strlit621 = alloc_String("/usr/lib/grace/modules/");
-    gc_root(strlit621);
+  int callframe707 = gc_frame_new();
+  int callframe708 = gc_frame_new();
+  if (strlit712 == NULL) {
+    strlit712 = alloc_String("");
+    gc_root(strlit712);
   }
-// compilenode returning strlit621
-  int op_slot_left_620 = gc_frame_newslot(strlit621);
+// compilenode returning strlit712
+  int op_slot_left_711 = gc_frame_newslot(strlit712);
+  int callframe713 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call714 = callmethod(*var_sys, "execPath",
+    1, partcv, params);
+  gc_frame_end(callframe713);
+// compilenode returning call714
+// compilenode returning call714
+  int op_slot_right_711 = gc_frame_newslot(call714);
+  params[0] = call714;
+  partcv[0] = 1;
+  Object opresult716 = callmethod(strlit712, "++", 1, partcv, params);
+// compilenode returning opresult716
+  int op_slot_left_710 = gc_frame_newslot(opresult716);
+  if (strlit717 == NULL) {
+    strlit717 = alloc_String("/");
+    gc_root(strlit717);
+  }
+// compilenode returning strlit717
+  int op_slot_right_710 = gc_frame_newslot(strlit717);
+  params[0] = strlit717;
+  partcv[0] = 1;
+  Object opresult719 = callmethod(opresult716, "++", 1, partcv, params);
+// compilenode returning opresult719
+  int op_slot_left_709 = gc_frame_newslot(opresult719);
 // compilenode returning *var_fileName
-  int op_slot_right_620 = gc_frame_newslot(*var_fileName);
+  int op_slot_right_709 = gc_frame_newslot(*var_fileName);
   params[0] = *var_fileName;
   partcv[0] = 1;
-  Object opresult623 = callmethod(strlit621, "++", 1, partcv, params);
-// compilenode returning opresult623
-  gc_frame_newslot(opresult623);
-  if (strlit624 == NULL) {
-    strlit624 = alloc_String("r");
-    gc_root(strlit624);
+  Object opresult721 = callmethod(opresult719, "++", 1, partcv, params);
+// compilenode returning opresult721
+  gc_frame_newslot(opresult721);
+  if (strlit722 == NULL) {
+    strlit722 = alloc_String("r");
+    gc_root(strlit722);
   }
-// compilenode returning strlit624
-  gc_frame_newslot(strlit624);
+// compilenode returning strlit722
+  gc_frame_newslot(strlit722);
 // compilenode returning *var_io
-  params[0] = opresult623;
-  params[1] = strlit624;
+  params[0] = opresult721;
+  params[1] = strlit722;
   partcv[0] = 2;
-  Object call625 = callmethod(*var_io, "open",
+  Object call723 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe619);
-// compilenode returning call625
+  gc_frame_end(callframe708);
+// compilenode returning call723
   partcv[0] = 0;
-  Object call626 = callmethod(call625, "read",
+  Object call724 = callmethod(call723, "read",
     1, partcv, params);
-  gc_frame_end(callframe618);
-// compilenode returning call626
-// compilenode returning call626
-  return call626;
+  gc_frame_end(callframe707);
+// compilenode returning call724
+// compilenode returning call724
+  return call724;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if611 = undefined;
+    if691 = undefined;
   } else {
   }
-// compilenode returning if611
-// Begin line 232
-  setline(232);
+// compilenode returning if691
+// Begin line 235
+  setline(235);
   setmodule(modulename);
   setsource(originalSourceLines);
 // Begin line 231
   setline(231);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe627 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call628 = callmethod(*var_sys, "environ",
-    1, partcv, params);
-  gc_frame_end(callframe627);
-// compilenode returning call628
-// compilenode returning call628
-  if (strlit629 == NULL) {
-    strlit629 = alloc_String("HOME");
-    gc_root(strlit629);
+  int callframe726 = gc_frame_new();
+  if (strlit731 == NULL) {
+    strlit731 = alloc_String("");
+    gc_root(strlit731);
   }
-// compilenode returning strlit629
-  params[0] = strlit629;
-  gc_frame_newslot(params[0]);
+// compilenode returning strlit731
+  int op_slot_left_730 = gc_frame_newslot(strlit731);
+  int callframe732 = gc_frame_new();
+  partcv[0] = 0;
+  Object call733 = callmethodflags(self, "getBuildPath", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe732);
+// compilenode returning call733
+  int op_slot_right_730 = gc_frame_newslot(call733);
+  params[0] = call733;
   partcv[0] = 1;
-  Object idxres630 = callmethod(call628, "[]", 1, partcv, params);
-// compilenode returning idxres630
-  *var_homePath = idxres630;
-  if (idxres630 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 235
-  setline(235);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+  Object opresult735 = callmethod(strlit731, "++", 1, partcv, params);
+// compilenode returning opresult735
+  int op_slot_left_729 = gc_frame_newslot(opresult735);
+  if (strlit736 == NULL) {
+    strlit736 = alloc_String("/");
+    gc_root(strlit736);
+  }
+// compilenode returning strlit736
+  int op_slot_right_729 = gc_frame_newslot(strlit736);
+  params[0] = strlit736;
+  partcv[0] = 1;
+  Object opresult738 = callmethod(opresult735, "++", 1, partcv, params);
+// compilenode returning opresult738
+  int op_slot_left_728 = gc_frame_newslot(opresult738);
+// compilenode returning *var_fileName
+  int op_slot_right_728 = gc_frame_newslot(*var_fileName);
+  params[0] = *var_fileName;
+  partcv[0] = 1;
+  Object opresult740 = callmethod(opresult738, "++", 1, partcv, params);
+// compilenode returning opresult740
+  int op_slot_left_727 = gc_frame_newslot(opresult740);
+  if (strlit741 == NULL) {
+    strlit741 = alloc_String("");
+    gc_root(strlit741);
+  }
+// compilenode returning strlit741
+  int op_slot_right_727 = gc_frame_newslot(strlit741);
+  params[0] = strlit741;
+  partcv[0] = 1;
+  Object opresult743 = callmethod(opresult740, "++", 1, partcv, params);
+// compilenode returning opresult743
+  gc_frame_newslot(opresult743);
+// compilenode returning *var_io
+  params[0] = opresult743;
+  partcv[0] = 1;
+  Object call744 = callmethod(*var_io, "exists",
+    1, partcv, params);
+  gc_frame_end(callframe726);
+// compilenode returning call744
+  Object if725 = done;
+  if (istrue(call744)) {
 // Begin line 232
   setline(232);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe632 = gc_frame_new();
-  if (strlit636 == NULL) {
-    strlit636 = alloc_String("");
-    gc_root(strlit636);
+  if (strlit745 == NULL) {
+    strlit745 = alloc_String("YES IT DOES");
+    gc_root(strlit745);
   }
-// compilenode returning strlit636
-  int op_slot_left_635 = gc_frame_newslot(strlit636);
-// compilenode returning *var_homePath
-  int op_slot_right_635 = gc_frame_newslot(*var_homePath);
-  params[0] = *var_homePath;
-  partcv[0] = 1;
-  Object opresult638 = callmethod(strlit636, "++", 1, partcv, params);
-// compilenode returning opresult638
-  int op_slot_left_634 = gc_frame_newslot(opresult638);
-  if (strlit639 == NULL) {
-    strlit639 = alloc_String("/.local/share/grace/modules/");
-    gc_root(strlit639);
-  }
-// compilenode returning strlit639
-  int op_slot_right_634 = gc_frame_newslot(strlit639);
-  params[0] = strlit639;
-  partcv[0] = 1;
-  Object opresult641 = callmethod(opresult638, "++", 1, partcv, params);
-// compilenode returning opresult641
-  int op_slot_left_633 = gc_frame_newslot(opresult641);
-// compilenode returning *var_fileName
-  int op_slot_right_633 = gc_frame_newslot(*var_fileName);
-  params[0] = *var_fileName;
-  partcv[0] = 1;
-  Object opresult643 = callmethod(opresult641, "++", 1, partcv, params);
-// compilenode returning opresult643
-  gc_frame_newslot(opresult643);
-// compilenode returning *var_io
-  params[0] = opresult643;
-  partcv[0] = 1;
-  Object call644 = callmethod(*var_io, "exists",
-    1, partcv, params);
-  gc_frame_end(callframe632);
-// compilenode returning call644
-  Object if631 = done;
-  if (istrue(call644)) {
+// compilenode returning strlit745
+  params[0] = strlit745;
+  Object call746 = gracelib_print(NULL, 1,  params);
+// compilenode returning call746
 // Begin line 234
   setline(234);
   setmodule(modulename);
@@ -5565,253 +5929,178 @@ if (argcv && argcv[0] > 1)
   setline(233);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe645 = gc_frame_new();
-  int callframe646 = gc_frame_new();
-  if (strlit650 == NULL) {
-    strlit650 = alloc_String("");
-    gc_root(strlit650);
+  int callframe747 = gc_frame_new();
+  int callframe748 = gc_frame_new();
+  if (strlit753 == NULL) {
+    strlit753 = alloc_String("");
+    gc_root(strlit753);
   }
-// compilenode returning strlit650
-  int op_slot_left_649 = gc_frame_newslot(strlit650);
-// compilenode returning *var_homePath
-  int op_slot_right_649 = gc_frame_newslot(*var_homePath);
-  params[0] = *var_homePath;
+// compilenode returning strlit753
+  int op_slot_left_752 = gc_frame_newslot(strlit753);
+  int callframe754 = gc_frame_new();
+  partcv[0] = 0;
+  Object call755 = callmethodflags(self, "getBuildPath", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe754);
+// compilenode returning call755
+  int op_slot_right_752 = gc_frame_newslot(call755);
+  params[0] = call755;
   partcv[0] = 1;
-  Object opresult652 = callmethod(strlit650, "++", 1, partcv, params);
-// compilenode returning opresult652
-  int op_slot_left_648 = gc_frame_newslot(opresult652);
-  if (strlit653 == NULL) {
-    strlit653 = alloc_String("/.local/share/grace/modules/");
-    gc_root(strlit653);
+  Object opresult757 = callmethod(strlit753, "++", 1, partcv, params);
+// compilenode returning opresult757
+  int op_slot_left_751 = gc_frame_newslot(opresult757);
+  if (strlit758 == NULL) {
+    strlit758 = alloc_String("/");
+    gc_root(strlit758);
   }
-// compilenode returning strlit653
-  int op_slot_right_648 = gc_frame_newslot(strlit653);
-  params[0] = strlit653;
+// compilenode returning strlit758
+  int op_slot_right_751 = gc_frame_newslot(strlit758);
+  params[0] = strlit758;
   partcv[0] = 1;
-  Object opresult655 = callmethod(opresult652, "++", 1, partcv, params);
-// compilenode returning opresult655
-  int op_slot_left_647 = gc_frame_newslot(opresult655);
+  Object opresult760 = callmethod(opresult757, "++", 1, partcv, params);
+// compilenode returning opresult760
+  int op_slot_left_750 = gc_frame_newslot(opresult760);
 // compilenode returning *var_fileName
-  int op_slot_right_647 = gc_frame_newslot(*var_fileName);
+  int op_slot_right_750 = gc_frame_newslot(*var_fileName);
   params[0] = *var_fileName;
   partcv[0] = 1;
-  Object opresult657 = callmethod(opresult655, "++", 1, partcv, params);
-// compilenode returning opresult657
-  gc_frame_newslot(opresult657);
-  if (strlit658 == NULL) {
-    strlit658 = alloc_String("r");
-    gc_root(strlit658);
+  Object opresult762 = callmethod(opresult760, "++", 1, partcv, params);
+// compilenode returning opresult762
+  int op_slot_left_749 = gc_frame_newslot(opresult762);
+  if (strlit763 == NULL) {
+    strlit763 = alloc_String("");
+    gc_root(strlit763);
   }
-// compilenode returning strlit658
-  gc_frame_newslot(strlit658);
+// compilenode returning strlit763
+  int op_slot_right_749 = gc_frame_newslot(strlit763);
+  params[0] = strlit763;
+  partcv[0] = 1;
+  Object opresult765 = callmethod(opresult762, "++", 1, partcv, params);
+// compilenode returning opresult765
+  gc_frame_newslot(opresult765);
+  if (strlit766 == NULL) {
+    strlit766 = alloc_String("r");
+    gc_root(strlit766);
+  }
+// compilenode returning strlit766
+  gc_frame_newslot(strlit766);
 // compilenode returning *var_io
-  params[0] = opresult657;
-  params[1] = strlit658;
+  params[0] = opresult765;
+  params[1] = strlit766;
   partcv[0] = 2;
-  Object call659 = callmethod(*var_io, "open",
+  Object call767 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe646);
-// compilenode returning call659
+  gc_frame_end(callframe748);
+// compilenode returning call767
   partcv[0] = 0;
-  Object call660 = callmethod(call659, "read",
+  Object call768 = callmethod(call767, "read",
     1, partcv, params);
-  gc_frame_end(callframe645);
-// compilenode returning call660
-// compilenode returning call660
-  return call660;
+  gc_frame_end(callframe747);
+// compilenode returning call768
+// compilenode returning call768
+  return call768;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if631 = undefined;
+    if725 = undefined;
   } else {
   }
-// compilenode returning if631
-// Begin line 238
-  setline(238);
+// compilenode returning if725
+// Begin line 239
+  setline(239);
   setmodule(modulename);
   setsource(originalSourceLines);
 // Begin line 235
   setline(235);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe662 = gc_frame_new();
-  if (strlit666 == NULL) {
-    strlit666 = alloc_String("");
-    gc_root(strlit666);
+// compilenode returning *var_bundlePath
+  int op_slot_left_770 = gc_frame_newslot(*var_bundlePath);
+  if (strlit771 == NULL) {
+    strlit771 = alloc_String("");
+    gc_root(strlit771);
   }
-// compilenode returning strlit666
-  int op_slot_left_665 = gc_frame_newslot(strlit666);
-  int callframe667 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call668 = callmethod(*var_sys, "execPath",
-    1, partcv, params);
-  gc_frame_end(callframe667);
-// compilenode returning call668
-// compilenode returning call668
-  int op_slot_right_665 = gc_frame_newslot(call668);
-  params[0] = call668;
+// compilenode returning strlit771
+  int op_slot_right_770 = gc_frame_newslot(strlit771);
+  params[0] = strlit771;
   partcv[0] = 1;
-  Object opresult670 = callmethod(strlit666, "++", 1, partcv, params);
-// compilenode returning opresult670
-  int op_slot_left_664 = gc_frame_newslot(opresult670);
-  if (strlit671 == NULL) {
-    strlit671 = alloc_String("/../lib/minigrace/modules/");
-    gc_root(strlit671);
-  }
-// compilenode returning strlit671
-  int op_slot_right_664 = gc_frame_newslot(strlit671);
-  params[0] = strlit671;
-  partcv[0] = 1;
-  Object opresult673 = callmethod(opresult670, "++", 1, partcv, params);
-// compilenode returning opresult673
-  int op_slot_left_663 = gc_frame_newslot(opresult673);
-// compilenode returning *var_fileName
-  int op_slot_right_663 = gc_frame_newslot(*var_fileName);
-  params[0] = *var_fileName;
-  partcv[0] = 1;
-  Object opresult675 = callmethod(opresult673, "++", 1, partcv, params);
-// compilenode returning opresult675
-  gc_frame_newslot(opresult675);
-// compilenode returning *var_io
-  params[0] = opresult675;
-  partcv[0] = 1;
-  Object call676 = callmethod(*var_io, "exists",
-    1, partcv, params);
-  gc_frame_end(callframe662);
-// compilenode returning call676
-  Object if661 = done;
-  if (istrue(call676)) {
-// Begin line 237
-  setline(237);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+  Object opresult773 = callmethod(*var_bundlePath, "!=", 1, partcv, params);
+// compilenode returning opresult773
+  Object if769 = done;
+  if (istrue(opresult773)) {
 // Begin line 236
   setline(236);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe677 = gc_frame_new();
-  int callframe678 = gc_frame_new();
-  if (strlit682 == NULL) {
-    strlit682 = alloc_String("");
-    gc_root(strlit682);
+  int callframe774 = gc_frame_new();
+  int callframe775 = gc_frame_new();
+  if (strlit780 == NULL) {
+    strlit780 = alloc_String("");
+    gc_root(strlit780);
   }
-// compilenode returning strlit682
-  int op_slot_left_681 = gc_frame_newslot(strlit682);
-  int callframe683 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call684 = callmethod(*var_sys, "execPath",
-    1, partcv, params);
-  gc_frame_end(callframe683);
-// compilenode returning call684
-// compilenode returning call684
-  int op_slot_right_681 = gc_frame_newslot(call684);
-  params[0] = call684;
+// compilenode returning strlit780
+  int op_slot_left_779 = gc_frame_newslot(strlit780);
+// compilenode returning *var_bundlePath
+  int op_slot_right_779 = gc_frame_newslot(*var_bundlePath);
+  params[0] = *var_bundlePath;
   partcv[0] = 1;
-  Object opresult686 = callmethod(strlit682, "++", 1, partcv, params);
-// compilenode returning opresult686
-  int op_slot_left_680 = gc_frame_newslot(opresult686);
-  if (strlit687 == NULL) {
-    strlit687 = alloc_String("/../lib/minigrace/modules/");
-    gc_root(strlit687);
+  Object opresult782 = callmethod(strlit780, "++", 1, partcv, params);
+// compilenode returning opresult782
+  int op_slot_left_778 = gc_frame_newslot(opresult782);
+  if (strlit783 == NULL) {
+    strlit783 = alloc_String("/");
+    gc_root(strlit783);
   }
-// compilenode returning strlit687
-  int op_slot_right_680 = gc_frame_newslot(strlit687);
-  params[0] = strlit687;
+// compilenode returning strlit783
+  int op_slot_right_778 = gc_frame_newslot(strlit783);
+  params[0] = strlit783;
   partcv[0] = 1;
-  Object opresult689 = callmethod(opresult686, "++", 1, partcv, params);
-// compilenode returning opresult689
-  int op_slot_left_679 = gc_frame_newslot(opresult689);
+  Object opresult785 = callmethod(opresult782, "++", 1, partcv, params);
+// compilenode returning opresult785
+  int op_slot_left_777 = gc_frame_newslot(opresult785);
 // compilenode returning *var_fileName
-  int op_slot_right_679 = gc_frame_newslot(*var_fileName);
+  int op_slot_right_777 = gc_frame_newslot(*var_fileName);
   params[0] = *var_fileName;
   partcv[0] = 1;
-  Object opresult691 = callmethod(opresult689, "++", 1, partcv, params);
-// compilenode returning opresult691
-  gc_frame_newslot(opresult691);
-  if (strlit692 == NULL) {
-    strlit692 = alloc_String("r");
-    gc_root(strlit692);
+  Object opresult787 = callmethod(opresult785, "++", 1, partcv, params);
+// compilenode returning opresult787
+  int op_slot_left_776 = gc_frame_newslot(opresult787);
+  if (strlit788 == NULL) {
+    strlit788 = alloc_String("");
+    gc_root(strlit788);
   }
-// compilenode returning strlit692
-  gc_frame_newslot(strlit692);
+// compilenode returning strlit788
+  int op_slot_right_776 = gc_frame_newslot(strlit788);
+  params[0] = strlit788;
+  partcv[0] = 1;
+  Object opresult790 = callmethod(opresult787, "++", 1, partcv, params);
+// compilenode returning opresult790
+  gc_frame_newslot(opresult790);
+  if (strlit791 == NULL) {
+    strlit791 = alloc_String("r");
+    gc_root(strlit791);
+  }
+// compilenode returning strlit791
+  gc_frame_newslot(strlit791);
 // compilenode returning *var_io
-  params[0] = opresult691;
-  params[1] = strlit692;
+  params[0] = opresult790;
+  params[1] = strlit791;
   partcv[0] = 2;
-  Object call693 = callmethod(*var_io, "open",
+  Object call792 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe678);
-// compilenode returning call693
+  gc_frame_end(callframe775);
+// compilenode returning call792
   partcv[0] = 0;
-  Object call694 = callmethod(call693, "read",
+  Object call793 = callmethod(call792, "read",
     1, partcv, params);
-  gc_frame_end(callframe677);
-// compilenode returning call694
-// compilenode returning call694
-  return call694;
+  gc_frame_end(callframe774);
+// compilenode returning call793
+// compilenode returning call793
+  return call793;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if661 = undefined;
+    if769 = undefined;
   } else {
   }
-// compilenode returning if661
-// Begin line 241
-  setline(241);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 238
-  setline(238);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe696 = gc_frame_new();
-  if (strlit700 == NULL) {
-    strlit700 = alloc_String("");
-    gc_root(strlit700);
-  }
-// compilenode returning strlit700
-  int op_slot_left_699 = gc_frame_newslot(strlit700);
-  int callframe701 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call702 = callmethod(*var_sys, "execPath",
-    1, partcv, params);
-  gc_frame_end(callframe701);
-// compilenode returning call702
-// compilenode returning call702
-  int op_slot_right_699 = gc_frame_newslot(call702);
-  params[0] = call702;
-  partcv[0] = 1;
-  Object opresult704 = callmethod(strlit700, "++", 1, partcv, params);
-// compilenode returning opresult704
-  int op_slot_left_698 = gc_frame_newslot(opresult704);
-  if (strlit705 == NULL) {
-    strlit705 = alloc_String("/");
-    gc_root(strlit705);
-  }
-// compilenode returning strlit705
-  int op_slot_right_698 = gc_frame_newslot(strlit705);
-  params[0] = strlit705;
-  partcv[0] = 1;
-  Object opresult707 = callmethod(opresult704, "++", 1, partcv, params);
-// compilenode returning opresult707
-  int op_slot_left_697 = gc_frame_newslot(opresult707);
-// compilenode returning *var_fileName
-  int op_slot_right_697 = gc_frame_newslot(*var_fileName);
-  params[0] = *var_fileName;
-  partcv[0] = 1;
-  Object opresult709 = callmethod(opresult707, "++", 1, partcv, params);
-// compilenode returning opresult709
-  gc_frame_newslot(opresult709);
-// compilenode returning *var_io
-  params[0] = opresult709;
-  partcv[0] = 1;
-  Object call710 = callmethod(*var_io, "exists",
-    1, partcv, params);
-  gc_frame_end(callframe696);
-// compilenode returning call710
-  Object if695 = done;
-  if (istrue(call710)) {
+// compilenode returning if769
 // Begin line 240
   setline(240);
   setmodule(modulename);
@@ -5820,186 +6109,14 @@ if (argcv && argcv[0] > 1)
   setline(239);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe711 = gc_frame_new();
-  int callframe712 = gc_frame_new();
-  if (strlit716 == NULL) {
-    strlit716 = alloc_String("");
-    gc_root(strlit716);
-  }
-// compilenode returning strlit716
-  int op_slot_left_715 = gc_frame_newslot(strlit716);
-  int callframe717 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call718 = callmethod(*var_sys, "execPath",
-    1, partcv, params);
-  gc_frame_end(callframe717);
-// compilenode returning call718
-// compilenode returning call718
-  int op_slot_right_715 = gc_frame_newslot(call718);
-  params[0] = call718;
-  partcv[0] = 1;
-  Object opresult720 = callmethod(strlit716, "++", 1, partcv, params);
-// compilenode returning opresult720
-  int op_slot_left_714 = gc_frame_newslot(opresult720);
-  if (strlit721 == NULL) {
-    strlit721 = alloc_String("/");
-    gc_root(strlit721);
-  }
-// compilenode returning strlit721
-  int op_slot_right_714 = gc_frame_newslot(strlit721);
-  params[0] = strlit721;
-  partcv[0] = 1;
-  Object opresult723 = callmethod(opresult720, "++", 1, partcv, params);
-// compilenode returning opresult723
-  int op_slot_left_713 = gc_frame_newslot(opresult723);
-// compilenode returning *var_fileName
-  int op_slot_right_713 = gc_frame_newslot(*var_fileName);
-  params[0] = *var_fileName;
-  partcv[0] = 1;
-  Object opresult725 = callmethod(opresult723, "++", 1, partcv, params);
-// compilenode returning opresult725
-  gc_frame_newslot(opresult725);
-  if (strlit726 == NULL) {
-    strlit726 = alloc_String("r");
-    gc_root(strlit726);
-  }
-// compilenode returning strlit726
-  gc_frame_newslot(strlit726);
-// compilenode returning *var_io
-  params[0] = opresult725;
-  params[1] = strlit726;
-  partcv[0] = 2;
-  Object call727 = callmethod(*var_io, "open",
-    1, partcv, params);
-  gc_frame_end(callframe712);
-// compilenode returning call727
-  partcv[0] = 0;
-  Object call728 = callmethod(call727, "read",
-    1, partcv, params);
-  gc_frame_end(callframe711);
-// compilenode returning call728
-// compilenode returning call728
-  return call728;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if695 = undefined;
-  } else {
-  }
-// compilenode returning if695
-// Begin line 246
-  setline(246);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 241
-  setline(241);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_bundlePath
-  int op_slot_left_730 = gc_frame_newslot(*var_bundlePath);
-  if (strlit731 == NULL) {
-    strlit731 = alloc_String("");
-    gc_root(strlit731);
-  }
-// compilenode returning strlit731
-  int op_slot_right_730 = gc_frame_newslot(strlit731);
-  params[0] = strlit731;
-  partcv[0] = 1;
-  Object opresult733 = callmethod(*var_bundlePath, "!=", 1, partcv, params);
-// compilenode returning opresult733
-  Object if729 = done;
-  if (istrue(opresult733)) {
-// Begin line 242
-  setline(242);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe734 = gc_frame_new();
-  int callframe735 = gc_frame_new();
-  if (strlit740 == NULL) {
-    strlit740 = alloc_String("");
-    gc_root(strlit740);
-  }
-// compilenode returning strlit740
-  int op_slot_left_739 = gc_frame_newslot(strlit740);
-// compilenode returning *var_bundlePath
-  int op_slot_right_739 = gc_frame_newslot(*var_bundlePath);
-  params[0] = *var_bundlePath;
-  partcv[0] = 1;
-  Object opresult742 = callmethod(strlit740, "++", 1, partcv, params);
-// compilenode returning opresult742
-  int op_slot_left_738 = gc_frame_newslot(opresult742);
-  if (strlit743 == NULL) {
-    strlit743 = alloc_String("/");
-    gc_root(strlit743);
-  }
-// compilenode returning strlit743
-  int op_slot_right_738 = gc_frame_newslot(strlit743);
-  params[0] = strlit743;
-  partcv[0] = 1;
-  Object opresult745 = callmethod(opresult742, "++", 1, partcv, params);
-// compilenode returning opresult745
-  int op_slot_left_737 = gc_frame_newslot(opresult745);
-// compilenode returning *var_fileName
-  int op_slot_right_737 = gc_frame_newslot(*var_fileName);
-  params[0] = *var_fileName;
-  partcv[0] = 1;
-  Object opresult747 = callmethod(opresult745, "++", 1, partcv, params);
-// compilenode returning opresult747
-  int op_slot_left_736 = gc_frame_newslot(opresult747);
-  if (strlit748 == NULL) {
-    strlit748 = alloc_String("");
-    gc_root(strlit748);
-  }
-// compilenode returning strlit748
-  int op_slot_right_736 = gc_frame_newslot(strlit748);
-  params[0] = strlit748;
-  partcv[0] = 1;
-  Object opresult750 = callmethod(opresult747, "++", 1, partcv, params);
-// compilenode returning opresult750
-  gc_frame_newslot(opresult750);
-  if (strlit751 == NULL) {
-    strlit751 = alloc_String("r");
-    gc_root(strlit751);
-  }
-// compilenode returning strlit751
-  gc_frame_newslot(strlit751);
-// compilenode returning *var_io
-  params[0] = opresult750;
-  params[1] = strlit751;
-  partcv[0] = 2;
-  Object call752 = callmethod(*var_io, "open",
-    1, partcv, params);
-  gc_frame_end(callframe735);
-// compilenode returning call752
-  partcv[0] = 0;
-  Object call753 = callmethod(call752, "read",
-    1, partcv, params);
-  gc_frame_end(callframe734);
-// compilenode returning call753
-// compilenode returning call753
-  return call753;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if729 = undefined;
-  } else {
-  }
-// compilenode returning if729
-// Begin line 247
-  setline(247);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 246
-  setline(246);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool754 = alloc_Boolean(0);
-// compilenode returning bool754
-  return bool754;
+  Object bool794 = alloc_Boolean(0);
+// compilenode returning bool794
+  return bool794;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager_validateFile755(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_validateFile795(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(2, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "validateFile");
@@ -6024,125 +6141,125 @@ if (argcv && argcv[0] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 256
-  setline(256);
+// Begin line 249
+  setline(249);
   setmodule(modulename);
   setsource(originalSourceLines);
+// Begin line 243
+  setline(243);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe798 = gc_frame_new();
+  int callframe799 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call800 = callmethod(*var_file, "data",
+    1, partcv, params);
+  gc_frame_end(callframe799);
+// compilenode returning call800
+// compilenode returning call800
+  partcv[0] = 0;
+  Object call801 = callmethod(call800, "size",
+    1, partcv, params);
+  gc_frame_end(callframe798);
+// compilenode returning call801
+// compilenode returning call801
+  int op_slot_left_797 = gc_frame_newslot(call801);
+  Object num802 = alloc_Float64(1);
+// compilenode returning num802
+  int op_slot_right_797 = gc_frame_newslot(num802);
+  params[0] = num802;
+  partcv[0] = 1;
+  Object opresult804 = callmethod(call801, ">", 1, partcv, params);
+// compilenode returning opresult804
+  Object if796 = done;
+  if (istrue(opresult804)) {
+// Begin line 248
+  setline(248);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 244
+  setline(244);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe807 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call808 = callmethod(*var_file, "data",
+    1, partcv, params);
+  gc_frame_end(callframe807);
+// compilenode returning call808
+// compilenode returning call808
+  Object num809 = alloc_Float64(1);
+// compilenode returning num809
+  params[0] = num809;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres810 = callmethod(call808, "[]", 1, partcv, params);
+// compilenode returning idxres810
+  int op_slot_left_806 = gc_frame_newslot(idxres810);
+  if (strlit811 == NULL) {
+    strlit811 = alloc_String("<");
+    gc_root(strlit811);
+  }
+// compilenode returning strlit811
+  int op_slot_right_806 = gc_frame_newslot(strlit811);
+  params[0] = strlit811;
+  partcv[0] = 1;
+  Object opresult813 = callmethod(idxres810, "==", 1, partcv, params);
+// compilenode returning opresult813
+  Object if805 = done;
+  if (istrue(opresult813)) {
+// Begin line 245
+  setline(245);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit814 == NULL) {
+    strlit814 = alloc_String("Not a valid grace file");
+    gc_root(strlit814);
+  }
+// compilenode returning strlit814
+  params[0] = strlit814;
+  Object call815 = gracelib_print(NULL, 1,  params);
+// compilenode returning call815
+// Begin line 247
+  setline(247);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 246
+  setline(246);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object bool816 = alloc_Boolean(0);
+// compilenode returning bool816
+  return bool816;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if805 = undefined;
+  } else {
+  }
+// compilenode returning if805
+    gc_frame_newslot(if805);
+    if796 = if805;
+  } else {
+  }
+// compilenode returning if796
 // Begin line 250
   setline(250);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe758 = gc_frame_new();
-  int callframe759 = gc_frame_new();
-// compilenode returning *var_file
-  partcv[0] = 0;
-  Object call760 = callmethod(*var_file, "data",
-    1, partcv, params);
-  gc_frame_end(callframe759);
-// compilenode returning call760
-// compilenode returning call760
-  partcv[0] = 0;
-  Object call761 = callmethod(call760, "size",
-    1, partcv, params);
-  gc_frame_end(callframe758);
-// compilenode returning call761
-// compilenode returning call761
-  int op_slot_left_757 = gc_frame_newslot(call761);
-  Object num762 = alloc_Float64(1);
-// compilenode returning num762
-  int op_slot_right_757 = gc_frame_newslot(num762);
-  params[0] = num762;
-  partcv[0] = 1;
-  Object opresult764 = callmethod(call761, ">", 1, partcv, params);
-// compilenode returning opresult764
-  Object if756 = done;
-  if (istrue(opresult764)) {
-// Begin line 255
-  setline(255);
+// Begin line 249
+  setline(249);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 251
-  setline(251);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe767 = gc_frame_new();
-// compilenode returning *var_file
-  partcv[0] = 0;
-  Object call768 = callmethod(*var_file, "data",
-    1, partcv, params);
-  gc_frame_end(callframe767);
-// compilenode returning call768
-// compilenode returning call768
-  Object num769 = alloc_Float64(1);
-// compilenode returning num769
-  params[0] = num769;
-  gc_frame_newslot(params[0]);
-  partcv[0] = 1;
-  Object idxres770 = callmethod(call768, "[]", 1, partcv, params);
-// compilenode returning idxres770
-  int op_slot_left_766 = gc_frame_newslot(idxres770);
-  if (strlit771 == NULL) {
-    strlit771 = alloc_String("<");
-    gc_root(strlit771);
-  }
-// compilenode returning strlit771
-  int op_slot_right_766 = gc_frame_newslot(strlit771);
-  params[0] = strlit771;
-  partcv[0] = 1;
-  Object opresult773 = callmethod(idxres770, "==", 1, partcv, params);
-// compilenode returning opresult773
-  Object if765 = done;
-  if (istrue(opresult773)) {
-// Begin line 252
-  setline(252);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit774 == NULL) {
-    strlit774 = alloc_String("Not a valid grace file");
-    gc_root(strlit774);
-  }
-// compilenode returning strlit774
-  params[0] = strlit774;
-  Object call775 = gracelib_print(NULL, 1,  params);
-// compilenode returning call775
-// Begin line 254
-  setline(254);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 253
-  setline(253);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool776 = alloc_Boolean(0);
-// compilenode returning bool776
-  return bool776;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if765 = undefined;
-  } else {
-  }
-// compilenode returning if765
-    gc_frame_newslot(if765);
-    if756 = if765;
-  } else {
-  }
-// compilenode returning if756
-// Begin line 257
-  setline(257);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 256
-  setline(256);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool777 = alloc_Boolean(1);
-// compilenode returning bool777
-  return bool777;
+  Object bool817 = alloc_Boolean(1);
+// compilenode returning bool817
+  return bool817;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager_write778(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_write818(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 11, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(5, getclosureframe(closure));
@@ -6178,220 +6295,220 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "fileDir");
   Object *var_toWrite = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "toWrite");
-// Begin line 261
-  setline(261);
+// Begin line 254
+  setline(254);
   setmodule(modulename);
   setsource(originalSourceLines);
+// Begin line 253
+  setline(253);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit819 == NULL) {
+    strlit819 = alloc_String("");
+    gc_root(strlit819);
+  }
+// compilenode returning strlit819
+  *var_usrDir = strlit819;
+  if (strlit819 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
 // Begin line 260
   setline(260);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit779 == NULL) {
-    strlit779 = alloc_String("");
-    gc_root(strlit779);
-  }
-// compilenode returning strlit779
-  *var_usrDir = strlit779;
-  if (strlit779 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 267
-  setline(267);
+// Begin line 254
+  setline(254);
   setmodule(modulename);
   setsource(originalSourceLines);
+// compilenode returning *var_global
+  Object if820 = done;
+  if (istrue(*var_global)) {
+// Begin line 256
+  setline(256);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 255
+  setline(255);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit821 == NULL) {
+    strlit821 = alloc_String("usr/lib/grace/modules/");
+    gc_root(strlit821);
+  }
+// compilenode returning strlit821
+  *var_usrDir = strlit821;
+  if (strlit821 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+    gc_frame_newslot(done);
+    if820 = done;
+  } else {
+// Begin line 259
+  setline(259);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 258
+  setline(258);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe824 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call825 = callmethod(*var_sys, "environ",
+    1, partcv, params);
+  gc_frame_end(callframe824);
+// compilenode returning call825
+// compilenode returning call825
+  if (strlit826 == NULL) {
+    strlit826 = alloc_String("HOME");
+    gc_root(strlit826);
+  }
+// compilenode returning strlit826
+  params[0] = strlit826;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres827 = callmethod(call825, "[]", 1, partcv, params);
+// compilenode returning idxres827
+  int op_slot_left_823 = gc_frame_newslot(idxres827);
+  if (strlit828 == NULL) {
+    strlit828 = alloc_String("/.local/lib/grace/modules/");
+    gc_root(strlit828);
+  }
+// compilenode returning strlit828
+  int op_slot_right_823 = gc_frame_newslot(strlit828);
+  params[0] = strlit828;
+  partcv[0] = 1;
+  Object opresult830 = callmethod(idxres827, "++", 1, partcv, params);
+// compilenode returning opresult830
+  *var_usrDir = opresult830;
+  if (opresult830 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+    gc_frame_newslot(done);
+    if820 = done;
+  }
+// compilenode returning if820
 // Begin line 261
   setline(261);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_global
-  Object if780 = done;
-  if (istrue(*var_global)) {
-// Begin line 263
-  setline(263);
+  int callframe832 = gc_frame_new();
+// Begin line 260
+  setline(260);
   setmodule(modulename);
   setsource(originalSourceLines);
+// compilenode returning *var_usrDir
+  int op_slot_left_833 = gc_frame_newslot(*var_usrDir);
+  int callframe834 = gc_frame_new();
+// compilenode returning *var_file
+  partcv[0] = 0;
+  Object call835 = callmethod(*var_file, "address",
+    1, partcv, params);
+  gc_frame_end(callframe834);
+// compilenode returning call835
+// compilenode returning call835
+  int op_slot_right_833 = gc_frame_newslot(call835);
+  params[0] = call835;
+  partcv[0] = 1;
+  Object opresult837 = callmethod(*var_usrDir, "++", 1, partcv, params);
+// compilenode returning opresult837
+  gc_frame_newslot(opresult837);
+  params[0] = opresult837;
+  partcv[0] = 1;
+  Object call838 = callmethodflags(self, "createDirectory", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe832);
+// compilenode returning call838
+  *var_fileDir = call838;
+  if (call838 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
 // Begin line 262
   setline(262);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit781 == NULL) {
-    strlit781 = alloc_String("usr/lib/grace/modules/");
-    gc_root(strlit781);
-  }
-// compilenode returning strlit781
-  *var_usrDir = strlit781;
-  if (strlit781 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-    gc_frame_newslot(done);
-    if780 = done;
-  } else {
-// Begin line 266
-  setline(266);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 265
-  setline(265);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe784 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call785 = callmethod(*var_sys, "environ",
-    1, partcv, params);
-  gc_frame_end(callframe784);
-// compilenode returning call785
-// compilenode returning call785
-  if (strlit786 == NULL) {
-    strlit786 = alloc_String("HOME");
-    gc_root(strlit786);
-  }
-// compilenode returning strlit786
-  params[0] = strlit786;
-  gc_frame_newslot(params[0]);
-  partcv[0] = 1;
-  Object idxres787 = callmethod(call785, "[]", 1, partcv, params);
-// compilenode returning idxres787
-  int op_slot_left_783 = gc_frame_newslot(idxres787);
-  if (strlit788 == NULL) {
-    strlit788 = alloc_String("/.local/lib/grace/modules/");
-    gc_root(strlit788);
-  }
-// compilenode returning strlit788
-  int op_slot_right_783 = gc_frame_newslot(strlit788);
-  params[0] = strlit788;
-  partcv[0] = 1;
-  Object opresult790 = callmethod(idxres787, "++", 1, partcv, params);
-// compilenode returning opresult790
-  *var_usrDir = opresult790;
-  if (opresult790 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-    gc_frame_newslot(done);
-    if780 = done;
-  }
-// compilenode returning if780
-// Begin line 268
-  setline(268);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe792 = gc_frame_new();
-// Begin line 267
-  setline(267);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_usrDir
-  int op_slot_left_793 = gc_frame_newslot(*var_usrDir);
-  int callframe794 = gc_frame_new();
-// compilenode returning *var_file
-  partcv[0] = 0;
-  Object call795 = callmethod(*var_file, "address",
-    1, partcv, params);
-  gc_frame_end(callframe794);
-// compilenode returning call795
-// compilenode returning call795
-  int op_slot_right_793 = gc_frame_newslot(call795);
-  params[0] = call795;
-  partcv[0] = 1;
-  Object opresult797 = callmethod(*var_usrDir, "++", 1, partcv, params);
-// compilenode returning opresult797
-  gc_frame_newslot(opresult797);
-  params[0] = opresult797;
-  partcv[0] = 1;
-  Object call798 = callmethodflags(self, "createDirectory", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe792);
-// compilenode returning call798
-  *var_fileDir = call798;
-  if (call798 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 269
-  setline(269);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe799 = gc_frame_new();
-// Begin line 268
-  setline(268);
+  int callframe839 = gc_frame_new();
+// Begin line 261
+  setline(261);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_fileDir
-  Object num801 = alloc_Float64(1);
-// compilenode returning num801
-  params[0] = num801;
+  Object num841 = alloc_Float64(1);
+// compilenode returning num841
+  params[0] = num841;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres802 = callmethod(*var_fileDir, "[]", 1, partcv, params);
-// compilenode returning idxres802
-  int op_slot_left_800 = gc_frame_newslot(idxres802);
+  Object idxres842 = callmethod(*var_fileDir, "[]", 1, partcv, params);
+// compilenode returning idxres842
+  int op_slot_left_840 = gc_frame_newslot(idxres842);
 // compilenode returning *var_fileDir
-  Object num803 = alloc_Float64(2);
-// compilenode returning num803
-  params[0] = num803;
+  Object num843 = alloc_Float64(2);
+// compilenode returning num843
+  params[0] = num843;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres804 = callmethod(*var_fileDir, "[]", 1, partcv, params);
-// compilenode returning idxres804
-  int op_slot_right_800 = gc_frame_newslot(idxres804);
-  params[0] = idxres804;
+  Object idxres844 = callmethod(*var_fileDir, "[]", 1, partcv, params);
+// compilenode returning idxres844
+  int op_slot_right_840 = gc_frame_newslot(idxres844);
+  params[0] = idxres844;
   partcv[0] = 1;
-  Object opresult806 = callmethod(idxres802, "++", 1, partcv, params);
-// compilenode returning opresult806
-  gc_frame_newslot(opresult806);
-  if (strlit807 == NULL) {
-    strlit807 = alloc_String("w");
-    gc_root(strlit807);
+  Object opresult846 = callmethod(idxres842, "++", 1, partcv, params);
+// compilenode returning opresult846
+  gc_frame_newslot(opresult846);
+  if (strlit847 == NULL) {
+    strlit847 = alloc_String("w");
+    gc_root(strlit847);
   }
-// compilenode returning strlit807
-  gc_frame_newslot(strlit807);
+// compilenode returning strlit847
+  gc_frame_newslot(strlit847);
 // compilenode returning *var_io
-  params[0] = opresult806;
-  params[1] = strlit807;
+  params[0] = opresult846;
+  params[1] = strlit847;
   partcv[0] = 2;
-  Object call808 = callmethod(*var_io, "open",
+  Object call848 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe799);
-// compilenode returning call808
-  *var_toWrite = call808;
-  if (call808 == undefined)
+  gc_frame_end(callframe839);
+// compilenode returning call848
+  *var_toWrite = call848;
+  if (call848 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 269
-  setline(269);
+// Begin line 262
+  setline(262);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe809 = gc_frame_new();
-  int callframe810 = gc_frame_new();
+  int callframe849 = gc_frame_new();
+  int callframe850 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call811 = callmethod(*var_file, "data",
+  Object call851 = callmethod(*var_file, "data",
     1, partcv, params);
-  gc_frame_end(callframe810);
-// compilenode returning call811
-// compilenode returning call811
-  gc_frame_newslot(call811);
+  gc_frame_end(callframe850);
+// compilenode returning call851
+// compilenode returning call851
+  gc_frame_newslot(call851);
 // compilenode returning *var_toWrite
-  params[0] = call811;
+  params[0] = call851;
   partcv[0] = 1;
-  Object call812 = callmethod(*var_toWrite, "write",
+  Object call852 = callmethod(*var_toWrite, "write",
     1, partcv, params);
-  gc_frame_end(callframe809);
-// compilenode returning call812
-// Begin line 270
-  setline(270);
+  gc_frame_end(callframe849);
+// compilenode returning call852
+// Begin line 263
+  setline(263);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe813 = gc_frame_new();
+  int callframe853 = gc_frame_new();
 // compilenode returning *var_toWrite
   partcv[0] = 0;
-  Object call814 = callmethod(*var_toWrite, "close",
+  Object call854 = callmethod(*var_toWrite, "close",
     1, partcv, params);
-  gc_frame_end(callframe813);
-// compilenode returning call814
-// compilenode returning call814
+  gc_frame_end(callframe853);
+// compilenode returning call854
+// compilenode returning call854
   gc_frame_end(frame);
-  return call814;
+  return call854;
 }
-Object meth_PackageManager__apply829(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply869(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -6419,116 +6536,116 @@ Object meth_PackageManager__apply829(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 287
-  setline(287);
+// Begin line 280
+  setline(280);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 278
-  setline(278);
+// Begin line 271
+  setline(271);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe832 = gc_frame_new();
+  int callframe872 = gc_frame_new();
 // compilenode returning *var_t
   gc_frame_newslot(*var_t);
 // compilenode returning *var_paths
   params[0] = *var_t;
   partcv[0] = 1;
-  Object call833 = callmethod(*var_paths, "at",
+  Object call873 = callmethod(*var_paths, "at",
     1, partcv, params);
-  gc_frame_end(callframe832);
-// compilenode returning call833
-  int op_slot_left_831 = gc_frame_newslot(call833);
-  if (strlit834 == NULL) {
-    strlit834 = alloc_String(":");
-    gc_root(strlit834);
+  gc_frame_end(callframe872);
+// compilenode returning call873
+  int op_slot_left_871 = gc_frame_newslot(call873);
+  if (strlit874 == NULL) {
+    strlit874 = alloc_String(":");
+    gc_root(strlit874);
   }
-// compilenode returning strlit834
-  int op_slot_right_831 = gc_frame_newslot(strlit834);
-  params[0] = strlit834;
+// compilenode returning strlit874
+  int op_slot_right_871 = gc_frame_newslot(strlit874);
+  params[0] = strlit874;
   partcv[0] = 1;
-  Object opresult836 = callmethod(call833, "==", 1, partcv, params);
-// compilenode returning opresult836
-  Object if830 = done;
-  if (istrue(opresult836)) {
-// Begin line 282
-  setline(282);
+  Object opresult876 = callmethod(call873, "==", 1, partcv, params);
+// compilenode returning opresult876
+  Object if870 = done;
+  if (istrue(opresult876)) {
+// Begin line 275
+  setline(275);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 279
-  setline(279);
+// Begin line 272
+  setline(272);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe838 = gc_frame_new();
+  int callframe878 = gc_frame_new();
 // compilenode returning *var_buildPath
-  int op_slot_left_839 = gc_frame_newslot(*var_buildPath);
-  if (strlit840 == NULL) {
-    strlit840 = alloc_String("/minigrace");
-    gc_root(strlit840);
+  int op_slot_left_879 = gc_frame_newslot(*var_buildPath);
+  if (strlit880 == NULL) {
+    strlit880 = alloc_String("/minigrace");
+    gc_root(strlit880);
   }
-// compilenode returning strlit840
-  int op_slot_right_839 = gc_frame_newslot(strlit840);
-  params[0] = strlit840;
+// compilenode returning strlit880
+  int op_slot_right_879 = gc_frame_newslot(strlit880);
+  params[0] = strlit880;
   partcv[0] = 1;
-  Object opresult842 = callmethod(*var_buildPath, "++", 1, partcv, params);
-// compilenode returning opresult842
-  gc_frame_newslot(opresult842);
+  Object opresult882 = callmethod(*var_buildPath, "++", 1, partcv, params);
+// compilenode returning opresult882
+  gc_frame_newslot(opresult882);
 // compilenode returning *var_io
-  params[0] = opresult842;
+  params[0] = opresult882;
   partcv[0] = 1;
-  Object call843 = callmethod(*var_io, "exists",
+  Object call883 = callmethod(*var_io, "exists",
     1, partcv, params);
-  gc_frame_end(callframe838);
-// compilenode returning call843
-  Object if837 = done;
-  if (istrue(call843)) {
-// Begin line 280
-  setline(280);
+  gc_frame_end(callframe878);
+// compilenode returning call883
+  Object if877 = done;
+  if (istrue(call883)) {
+// Begin line 273
+  setline(273);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_buildPath
   block_return(realself, *var_buildPath);
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if837 = undefined;
+    if877 = undefined;
   } else {
   }
-// compilenode returning if837
-// Begin line 283
-  setline(283);
+// compilenode returning if877
+// Begin line 276
+  setline(276);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 282
-  setline(282);
+// Begin line 275
+  setline(275);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit844 == NULL) {
-    strlit844 = alloc_String("");
-    gc_root(strlit844);
+  if (strlit884 == NULL) {
+    strlit884 = alloc_String("");
+    gc_root(strlit884);
   }
-// compilenode returning strlit844
-  *var_buildPath = strlit844;
-  if (strlit844 == undefined)
+// compilenode returning strlit884
+  *var_buildPath = strlit884;
+  if (strlit884 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if830 = done;
+    if870 = done;
   } else {
-// Begin line 286
-  setline(286);
+// Begin line 279
+  setline(279);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 285
-  setline(285);
+// Begin line 278
+  setline(278);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_buildPath
-  int op_slot_left_846 = gc_frame_newslot(*var_buildPath);
-// Begin line 286
-  setline(286);
+  int op_slot_left_886 = gc_frame_newslot(*var_buildPath);
+// Begin line 279
+  setline(279);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 285
-  setline(285);
+// Begin line 278
+  setline(278);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_paths
@@ -6536,25 +6653,25 @@ Object meth_PackageManager__apply829(Object realself, int nparts, int *argcv, Ob
   params[0] = *var_t;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres847 = callmethod(*var_paths, "[]", 1, partcv, params);
-// compilenode returning idxres847
-  int op_slot_right_846 = gc_frame_newslot(idxres847);
-  params[0] = idxres847;
+  Object idxres887 = callmethod(*var_paths, "[]", 1, partcv, params);
+// compilenode returning idxres887
+  int op_slot_right_886 = gc_frame_newslot(idxres887);
+  params[0] = idxres887;
   partcv[0] = 1;
-  Object opresult849 = callmethod(*var_buildPath, "++", 1, partcv, params);
-// compilenode returning opresult849
-  *var_buildPath = opresult849;
-  if (opresult849 == undefined)
+  Object opresult889 = callmethod(*var_buildPath, "++", 1, partcv, params);
+// compilenode returning opresult889
+  *var_buildPath = opresult889;
+  if (opresult889 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if830 = done;
+    if870 = done;
   }
-// compilenode returning if830
+// compilenode returning if870
   gc_frame_end(frame);
-  return if830;
+  return if870;
 }
-Object meth_PackageManager_getBuildPath815(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_getBuildPath855(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 12, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(3, getclosureframe(closure));
@@ -6582,110 +6699,110 @@ if (argcv && argcv[0] > 0)
   setframeelementname(stackframe, 1, "paths");
   Object *var_buildPath = &(stackframe->slots[2]);
   setframeelementname(stackframe, 2, "buildPath");
-// Begin line 276
-  setline(276);
+// Begin line 269
+  setline(269);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 275
-  setline(275);
+// Begin line 268
+  setline(268);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe816 = gc_frame_new();
+  int callframe856 = gc_frame_new();
 // compilenode returning *var_sys
   partcv[0] = 0;
-  Object call817 = callmethod(*var_sys, "environ",
+  Object call857 = callmethod(*var_sys, "environ",
     1, partcv, params);
-  gc_frame_end(callframe816);
-// compilenode returning call817
-// compilenode returning call817
-  if (strlit818 == NULL) {
-    strlit818 = alloc_String("PATH");
-    gc_root(strlit818);
+  gc_frame_end(callframe856);
+// compilenode returning call857
+// compilenode returning call857
+  if (strlit858 == NULL) {
+    strlit858 = alloc_String("PATH");
+    gc_root(strlit858);
   }
-// compilenode returning strlit818
-  params[0] = strlit818;
+// compilenode returning strlit858
+  params[0] = strlit858;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres819 = callmethod(call817, "[]", 1, partcv, params);
-// compilenode returning idxres819
-  *var_paths = idxres819;
-  if (idxres819 == undefined)
+  Object idxres859 = callmethod(call857, "[]", 1, partcv, params);
+// compilenode returning idxres859
+  *var_paths = idxres859;
+  if (idxres859 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 277
-  setline(277);
+// Begin line 270
+  setline(270);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 276
-  setline(276);
+// Begin line 269
+  setline(269);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit820 == NULL) {
-    strlit820 = alloc_String("");
-    gc_root(strlit820);
+  if (strlit860 == NULL) {
+    strlit860 = alloc_String("");
+    gc_root(strlit860);
   }
-// compilenode returning strlit820
-  *var_buildPath = strlit820;
-  if (strlit820 == undefined)
+// compilenode returning strlit860
+  *var_buildPath = strlit860;
+  if (strlit860 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 288
-  setline(288);
+// Begin line 281
+  setline(281);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe821 = gc_frame_new();
-// Begin line 277
-  setline(277);
+  int callframe861 = gc_frame_new();
+// Begin line 270
+  setline(270);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num823 = alloc_Float64(1);
-// compilenode returning num823
-  int op_slot_left_822 = gc_frame_newslot(num823);
-  int callframe824 = gc_frame_new();
+  Object num863 = alloc_Float64(1);
+// compilenode returning num863
+  int op_slot_left_862 = gc_frame_newslot(num863);
+  int callframe864 = gc_frame_new();
 // compilenode returning *var_paths
   partcv[0] = 0;
-  Object call825 = callmethod(*var_paths, "size",
+  Object call865 = callmethod(*var_paths, "size",
     1, partcv, params);
-  gc_frame_end(callframe824);
-// compilenode returning call825
-// compilenode returning call825
-  int op_slot_right_822 = gc_frame_newslot(call825);
-  params[0] = call825;
+  gc_frame_end(callframe864);
+// compilenode returning call865
+// compilenode returning call865
+  int op_slot_right_862 = gc_frame_newslot(call865);
+  params[0] = call865;
   partcv[0] = 1;
-  Object opresult827 = callmethod(num823, "..", 1, partcv, params);
-// compilenode returning opresult827
-  gc_frame_newslot(opresult827);
-// Begin line 288
-  setline(288);
+  Object opresult867 = callmethod(num863, "..", 1, partcv, params);
+// compilenode returning opresult867
+  gc_frame_newslot(opresult867);
+// Begin line 281
+  setline(281);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block828 = alloc_Block(NULL, NULL, "PackageManager", 288);
-  gc_frame_newslot(block828);
-  block_savedest(block828);
-  Object closure829 = createclosure(4, "_apply");
-setclosureframe(closure829, stackframe);
-  addtoclosure(closure829, var_paths);
-  addtoclosure(closure829, var_buildPath);
-  addtoclosure(closure829, var_io);
-  addtoclosure(closure829, selfslot);
-  struct UserObject *uo829 = (struct UserObject*)block828;
-  uo829->data[0] = (Object)closure829;
-  Method *meth_meth_PackageManager__apply829 = addmethod2pos(block828, "_apply", &meth_PackageManager__apply829, 0);
-int argcv_meth_PackageManager__apply829[] = {1};
-meth_meth_PackageManager__apply829->type = alloc_MethodType(1, argcv_meth_PackageManager__apply829);
-  meth_meth_PackageManager__apply829->definitionModule = modulename;
-  meth_meth_PackageManager__apply829->definitionLine = 277;
-// compilenode returning block828
-  gc_frame_newslot(block828);
-  params[0] = opresult827;
-  params[1] = block828;
+  Object block868 = alloc_Block(NULL, NULL, "PackageManager", 281);
+  gc_frame_newslot(block868);
+  block_savedest(block868);
+  Object closure869 = createclosure(4, "_apply");
+setclosureframe(closure869, stackframe);
+  addtoclosure(closure869, var_paths);
+  addtoclosure(closure869, var_buildPath);
+  addtoclosure(closure869, var_io);
+  addtoclosure(closure869, selfslot);
+  struct UserObject *uo869 = (struct UserObject*)block868;
+  uo869->data[0] = (Object)closure869;
+  Method *meth_meth_PackageManager__apply869 = addmethod2pos(block868, "_apply", &meth_PackageManager__apply869, 0);
+int argcv_meth_PackageManager__apply869[] = {1};
+meth_meth_PackageManager__apply869->type = alloc_MethodType(1, argcv_meth_PackageManager__apply869);
+  meth_meth_PackageManager__apply869->definitionModule = modulename;
+  meth_meth_PackageManager__apply869->definitionLine = 270;
+// compilenode returning block868
+  gc_frame_newslot(block868);
+  params[0] = opresult867;
+  params[1] = block868;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call852 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe821);
-// compilenode returning call852
-// Begin line 288
-  setline(288);
+  Object call892 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe861);
+// compilenode returning call892
+// Begin line 281
+  setline(281);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_buildPath
@@ -6694,7 +6811,7 @@ meth_meth_PackageManager__apply829->type = alloc_MethodType(1, argcv_meth_Packag
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager_compile853(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_compile893(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 13, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(5, getclosureframe(closure));
@@ -6730,6 +6847,99 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "paths");
   Object *var_buildPath = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "buildPath");
+// Begin line 286
+  setline(286);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 285
+  setline(285);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit894 == NULL) {
+    strlit894 = alloc_String("");
+    gc_root(strlit894);
+  }
+// compilenode returning strlit894
+  *var_usrDir = strlit894;
+  if (strlit894 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 292
+  setline(292);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 286
+  setline(286);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_global
+  Object if895 = done;
+  if (istrue(*var_global)) {
+// Begin line 288
+  setline(288);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 287
+  setline(287);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit896 == NULL) {
+    strlit896 = alloc_String("usr/lib/grace/modules/");
+    gc_root(strlit896);
+  }
+// compilenode returning strlit896
+  *var_usrDir = strlit896;
+  if (strlit896 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+    gc_frame_newslot(done);
+    if895 = done;
+  } else {
+// Begin line 291
+  setline(291);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 290
+  setline(290);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe899 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call900 = callmethod(*var_sys, "environ",
+    1, partcv, params);
+  gc_frame_end(callframe899);
+// compilenode returning call900
+// compilenode returning call900
+  if (strlit901 == NULL) {
+    strlit901 = alloc_String("HOME");
+    gc_root(strlit901);
+  }
+// compilenode returning strlit901
+  params[0] = strlit901;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres902 = callmethod(call900, "[]", 1, partcv, params);
+// compilenode returning idxres902
+  int op_slot_left_898 = gc_frame_newslot(idxres902);
+  if (strlit903 == NULL) {
+    strlit903 = alloc_String("/.local/lib/grace/modules/");
+    gc_root(strlit903);
+  }
+// compilenode returning strlit903
+  int op_slot_right_898 = gc_frame_newslot(strlit903);
+  params[0] = strlit903;
+  partcv[0] = 1;
+  Object opresult905 = callmethod(idxres902, "++", 1, partcv, params);
+// compilenode returning opresult905
+  *var_usrDir = opresult905;
+  if (opresult905 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+    gc_frame_newslot(done);
+    if895 = done;
+  }
+// compilenode returning if895
 // Begin line 293
   setline(293);
   setmodule(modulename);
@@ -6738,219 +6948,126 @@ if (argcv && argcv[0] > 1)
   setline(292);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit854 == NULL) {
-    strlit854 = alloc_String("");
-    gc_root(strlit854);
+  int callframe907 = gc_frame_new();
+// compilenode returning *var_sys
+  partcv[0] = 0;
+  Object call908 = callmethod(*var_sys, "environ",
+    1, partcv, params);
+  gc_frame_end(callframe907);
+// compilenode returning call908
+// compilenode returning call908
+  if (strlit909 == NULL) {
+    strlit909 = alloc_String("PATH");
+    gc_root(strlit909);
   }
-// compilenode returning strlit854
-  *var_usrDir = strlit854;
-  if (strlit854 == undefined)
+// compilenode returning strlit909
+  params[0] = strlit909;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres910 = callmethod(call908, "[]", 1, partcv, params);
+// compilenode returning idxres910
+  *var_paths = idxres910;
+  if (idxres910 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 299
-  setline(299);
+// Begin line 294
+  setline(294);
   setmodule(modulename);
   setsource(originalSourceLines);
 // Begin line 293
   setline(293);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_global
-  Object if855 = done;
-  if (istrue(*var_global)) {
-// Begin line 295
-  setline(295);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+  if (strlit912 == NULL) {
+    strlit912 = alloc_String("PATHS = ");
+    gc_root(strlit912);
+  }
+// compilenode returning strlit912
+  int op_slot_left_911 = gc_frame_newslot(strlit912);
+// compilenode returning *var_paths
+  int op_slot_right_911 = gc_frame_newslot(*var_paths);
+  params[0] = *var_paths;
+  partcv[0] = 1;
+  Object opresult914 = callmethod(strlit912, "++", 1, partcv, params);
+// compilenode returning opresult914
+  params[0] = opresult914;
+  Object call915 = gracelib_print(NULL, 1,  params);
+// compilenode returning call915
 // Begin line 294
   setline(294);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit856 == NULL) {
-    strlit856 = alloc_String("usr/lib/grace/modules/");
-    gc_root(strlit856);
-  }
-// compilenode returning strlit856
-  *var_usrDir = strlit856;
-  if (strlit856 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-    gc_frame_newslot(done);
-    if855 = done;
-  } else {
-// Begin line 298
-  setline(298);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 297
-  setline(297);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe859 = gc_frame_new();
-// compilenode returning *var_sys
+  int callframe916 = gc_frame_new();
   partcv[0] = 0;
-  Object call860 = callmethod(*var_sys, "environ",
-    1, partcv, params);
-  gc_frame_end(callframe859);
-// compilenode returning call860
-// compilenode returning call860
-  if (strlit861 == NULL) {
-    strlit861 = alloc_String("HOME");
-    gc_root(strlit861);
-  }
-// compilenode returning strlit861
-  params[0] = strlit861;
-  gc_frame_newslot(params[0]);
-  partcv[0] = 1;
-  Object idxres862 = callmethod(call860, "[]", 1, partcv, params);
-// compilenode returning idxres862
-  int op_slot_left_858 = gc_frame_newslot(idxres862);
-  if (strlit863 == NULL) {
-    strlit863 = alloc_String("/.local/lib/grace/modules/");
-    gc_root(strlit863);
-  }
-// compilenode returning strlit863
-  int op_slot_right_858 = gc_frame_newslot(strlit863);
-  params[0] = strlit863;
-  partcv[0] = 1;
-  Object opresult865 = callmethod(idxres862, "++", 1, partcv, params);
-// compilenode returning opresult865
-  *var_usrDir = opresult865;
-  if (opresult865 == undefined)
+  Object call917 = callmethodflags(self, "getBuildPath", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe916);
+// compilenode returning call917
+  *var_buildPath = call917;
+  if (call917 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-    gc_frame_newslot(done);
-    if855 = done;
-  }
-// compilenode returning if855
-// Begin line 300
-  setline(300);
+// Begin line 296
+  setline(296);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 299
-  setline(299);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe867 = gc_frame_new();
-// compilenode returning *var_sys
-  partcv[0] = 0;
-  Object call868 = callmethod(*var_sys, "environ",
-    1, partcv, params);
-  gc_frame_end(callframe867);
-// compilenode returning call868
-// compilenode returning call868
-  if (strlit869 == NULL) {
-    strlit869 = alloc_String("PATH");
-    gc_root(strlit869);
-  }
-// compilenode returning strlit869
-  params[0] = strlit869;
-  gc_frame_newslot(params[0]);
-  partcv[0] = 1;
-  Object idxres870 = callmethod(call868, "[]", 1, partcv, params);
-// compilenode returning idxres870
-  *var_paths = idxres870;
-  if (idxres870 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 301
-  setline(301);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 300
-  setline(300);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit872 == NULL) {
-    strlit872 = alloc_String("PATHS = ");
-    gc_root(strlit872);
-  }
-// compilenode returning strlit872
-  int op_slot_left_871 = gc_frame_newslot(strlit872);
-// compilenode returning *var_paths
-  int op_slot_right_871 = gc_frame_newslot(*var_paths);
-  params[0] = *var_paths;
-  partcv[0] = 1;
-  Object opresult874 = callmethod(strlit872, "++", 1, partcv, params);
-// compilenode returning opresult874
-  params[0] = opresult874;
-  Object call875 = gracelib_print(NULL, 1,  params);
-// compilenode returning call875
-// Begin line 301
-  setline(301);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe876 = gc_frame_new();
-  partcv[0] = 0;
-  Object call877 = callmethodflags(self, "getBuildPath", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe876);
-// compilenode returning call877
-  *var_buildPath = call877;
-  if (call877 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 303
-  setline(303);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe878 = gc_frame_new();
-// Begin line 302
-  setline(302);
+  int callframe918 = gc_frame_new();
+// Begin line 295
+  setline(295);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_buildPath
-  int op_slot_left_881 = gc_frame_newslot(*var_buildPath);
-  if (strlit882 == NULL) {
-    strlit882 = alloc_String("/minigrace ");
-    gc_root(strlit882);
+  int op_slot_left_921 = gc_frame_newslot(*var_buildPath);
+  if (strlit922 == NULL) {
+    strlit922 = alloc_String("/minigrace ");
+    gc_root(strlit922);
   }
-// compilenode returning strlit882
-  int op_slot_right_881 = gc_frame_newslot(strlit882);
-  params[0] = strlit882;
+// compilenode returning strlit922
+  int op_slot_right_921 = gc_frame_newslot(strlit922);
+  params[0] = strlit922;
   partcv[0] = 1;
-  Object opresult884 = callmethod(*var_buildPath, "++", 1, partcv, params);
-// compilenode returning opresult884
-  int op_slot_left_880 = gc_frame_newslot(opresult884);
+  Object opresult924 = callmethod(*var_buildPath, "++", 1, partcv, params);
+// compilenode returning opresult924
+  int op_slot_left_920 = gc_frame_newslot(opresult924);
 // compilenode returning *var_usrDir
-  int op_slot_right_880 = gc_frame_newslot(*var_usrDir);
+  int op_slot_right_920 = gc_frame_newslot(*var_usrDir);
   params[0] = *var_usrDir;
   partcv[0] = 1;
-  Object opresult886 = callmethod(opresult884, "++", 1, partcv, params);
-// compilenode returning opresult886
-  int op_slot_left_879 = gc_frame_newslot(opresult886);
-  int callframe887 = gc_frame_new();
+  Object opresult926 = callmethod(opresult924, "++", 1, partcv, params);
+// compilenode returning opresult926
+  int op_slot_left_919 = gc_frame_newslot(opresult926);
+  int callframe927 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call888 = callmethod(*var_file, "address",
+  Object call928 = callmethod(*var_file, "address",
     1, partcv, params);
-  gc_frame_end(callframe887);
-// compilenode returning call888
-// compilenode returning call888
-  int op_slot_right_879 = gc_frame_newslot(call888);
-  params[0] = call888;
+  gc_frame_end(callframe927);
+// compilenode returning call928
+// compilenode returning call928
+  int op_slot_right_919 = gc_frame_newslot(call928);
+  params[0] = call928;
   partcv[0] = 1;
-  Object opresult890 = callmethod(opresult886, "++", 1, partcv, params);
-// compilenode returning opresult890
-  gc_frame_newslot(opresult890);
+  Object opresult930 = callmethod(opresult926, "++", 1, partcv, params);
+// compilenode returning opresult930
+  gc_frame_newslot(opresult930);
 // compilenode returning *var_io
-  params[0] = opresult890;
+  params[0] = opresult930;
   partcv[0] = 1;
-  Object call891 = callmethod(*var_io, "system",
+  Object call931 = callmethod(*var_io, "system",
     1, partcv, params);
-  gc_frame_end(callframe878);
-// compilenode returning call891
-// Begin line 303
-  setline(303);
+  gc_frame_end(callframe918);
+// compilenode returning call931
+// Begin line 296
+  setline(296);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool892 = alloc_Boolean(1);
-// compilenode returning bool892
-  return bool892;
+  Object bool932 = alloc_Boolean(1);
+// compilenode returning bool932
+  return bool932;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager__apply909(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply949(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -6973,24 +7090,24 @@ Object meth_PackageManager__apply909(Object realself, int nparts, int *argcv, Ob
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_count
-  int op_slot_left_910 = gc_frame_newslot(*var_count);
-  int callframe911 = gc_frame_new();
+  int op_slot_left_950 = gc_frame_newslot(*var_count);
+  int callframe951 = gc_frame_new();
 // compilenode returning *var_address
   partcv[0] = 0;
-  Object call912 = callmethod(*var_address, "size",
+  Object call952 = callmethod(*var_address, "size",
     1, partcv, params);
-  gc_frame_end(callframe911);
-// compilenode returning call912
-// compilenode returning call912
-  int op_slot_right_910 = gc_frame_newslot(call912);
-  params[0] = call912;
+  gc_frame_end(callframe951);
+// compilenode returning call952
+// compilenode returning call952
+  int op_slot_right_950 = gc_frame_newslot(call952);
+  params[0] = call952;
   partcv[0] = 1;
-  Object opresult914 = callmethod(*var_count, "<=", 1, partcv, params);
-// compilenode returning opresult914
+  Object opresult954 = callmethod(*var_count, "<=", 1, partcv, params);
+// compilenode returning opresult954
   gc_frame_end(frame);
-  return opresult914;
+  return opresult954;
 }
-Object meth_PackageManager__apply917(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply957(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -7014,22 +7131,22 @@ Object meth_PackageManager__apply917(Object realself, int nparts, int *argcv, Ob
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 315
-  setline(315);
+// Begin line 308
+  setline(308);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 314
-  setline(314);
+// Begin line 307
+  setline(307);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_nextPath
-  int op_slot_left_918 = gc_frame_newslot(*var_nextPath);
-// Begin line 315
-  setline(315);
+  int op_slot_left_958 = gc_frame_newslot(*var_nextPath);
+// Begin line 308
+  setline(308);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 314
-  setline(314);
+// Begin line 307
+  setline(307);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_address
@@ -7037,23 +7154,23 @@ Object meth_PackageManager__apply917(Object realself, int nparts, int *argcv, Ob
   params[0] = *var_count;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres919 = callmethod(*var_address, "[]", 1, partcv, params);
-// compilenode returning idxres919
-  int op_slot_right_918 = gc_frame_newslot(idxres919);
-  params[0] = idxres919;
+  Object idxres959 = callmethod(*var_address, "[]", 1, partcv, params);
+// compilenode returning idxres959
+  int op_slot_right_958 = gc_frame_newslot(idxres959);
+  params[0] = idxres959;
   partcv[0] = 1;
-  Object opresult921 = callmethod(*var_nextPath, "++", 1, partcv, params);
-// compilenode returning opresult921
-  *var_nextPath = opresult921;
-  if (opresult921 == undefined)
+  Object opresult961 = callmethod(*var_nextPath, "++", 1, partcv, params);
+// compilenode returning opresult961
+  *var_nextPath = opresult961;
+  if (opresult961 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 319
-  setline(319);
+// Begin line 312
+  setline(312);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 315
-  setline(315);
+// Begin line 308
+  setline(308);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_address
@@ -7061,84 +7178,84 @@ Object meth_PackageManager__apply917(Object realself, int nparts, int *argcv, Ob
   params[0] = *var_count;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres925 = callmethod(*var_address, "[]", 1, partcv, params);
-// compilenode returning idxres925
-  int op_slot_left_924 = gc_frame_newslot(idxres925);
-  if (strlit926 == NULL) {
-    strlit926 = alloc_String("/");
-    gc_root(strlit926);
+  Object idxres965 = callmethod(*var_address, "[]", 1, partcv, params);
+// compilenode returning idxres965
+  int op_slot_left_964 = gc_frame_newslot(idxres965);
+  if (strlit966 == NULL) {
+    strlit966 = alloc_String("/");
+    gc_root(strlit966);
   }
-// compilenode returning strlit926
-  int op_slot_right_924 = gc_frame_newslot(strlit926);
-  params[0] = strlit926;
+// compilenode returning strlit966
+  int op_slot_right_964 = gc_frame_newslot(strlit966);
+  params[0] = strlit966;
   partcv[0] = 1;
-  Object opresult928 = callmethod(idxres925, "==", 1, partcv, params);
-// compilenode returning opresult928
-  Object if923 = done;
-  if (istrue(opresult928)) {
-// Begin line 317
-  setline(317);
+  Object opresult968 = callmethod(idxres965, "==", 1, partcv, params);
+// compilenode returning opresult968
+  Object if963 = done;
+  if (istrue(opresult968)) {
+// Begin line 310
+  setline(310);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 316
-  setline(316);
+// Begin line 309
+  setline(309);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_toMake
-  int op_slot_left_929 = gc_frame_newslot(*var_toMake);
+  int op_slot_left_969 = gc_frame_newslot(*var_toMake);
 // compilenode returning *var_nextPath
-  int op_slot_right_929 = gc_frame_newslot(*var_nextPath);
+  int op_slot_right_969 = gc_frame_newslot(*var_nextPath);
   params[0] = *var_nextPath;
   partcv[0] = 1;
-  Object opresult931 = callmethod(*var_toMake, "++", 1, partcv, params);
-// compilenode returning opresult931
-  *var_toMake = opresult931;
-  if (opresult931 == undefined)
+  Object opresult971 = callmethod(*var_toMake, "++", 1, partcv, params);
+// compilenode returning opresult971
+  *var_toMake = opresult971;
+  if (opresult971 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 318
-  setline(318);
+// Begin line 311
+  setline(311);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 317
-  setline(317);
+// Begin line 310
+  setline(310);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit933 == NULL) {
-    strlit933 = alloc_String("");
-    gc_root(strlit933);
+  if (strlit973 == NULL) {
+    strlit973 = alloc_String("");
+    gc_root(strlit973);
   }
-// compilenode returning strlit933
-  *var_nextPath = strlit933;
-  if (strlit933 == undefined)
+// compilenode returning strlit973
+  *var_nextPath = strlit973;
+  if (strlit973 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if923 = done;
+    if963 = done;
   } else {
   }
-// compilenode returning if923
-// Begin line 319
-  setline(319);
+// compilenode returning if963
+// Begin line 312
+  setline(312);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count
-  int op_slot_left_935 = gc_frame_newslot(*var_count);
-  Object num936 = alloc_Float64(1);
-// compilenode returning num936
-  int op_slot_right_935 = gc_frame_newslot(num936);
-  params[0] = num936;
+  int op_slot_left_975 = gc_frame_newslot(*var_count);
+  Object num976 = alloc_Float64(1);
+// compilenode returning num976
+  int op_slot_right_975 = gc_frame_newslot(num976);
+  params[0] = num976;
   partcv[0] = 1;
-  Object sum938 = callmethod(*var_count, "+", 1, partcv, params);
-// compilenode returning sum938
-  *var_count = sum938;
-  if (sum938 == undefined)
+  Object sum978 = callmethod(*var_count, "+", 1, partcv, params);
+// compilenode returning sum978
+  *var_count = sum978;
+  if (sum978 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_createDirectory893(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_createDirectory933(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 14, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(6, getclosureframe(closure));
@@ -7174,280 +7291,280 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 4, "toMake");
   Object *var_count = &(stackframe->slots[5]);
   setframeelementname(stackframe, 5, "count");
-// Begin line 309
-  setline(309);
+// Begin line 302
+  setline(302);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 308
-  setline(308);
+// Begin line 301
+  setline(301);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object array894 = alloc_BuiltinList();
+  Object array934 = alloc_BuiltinList();
   gc_pause();
   gc_unpause();
-// compilenode returning array894
-  *var_dir = array894;
-  if (array894 == undefined)
+// compilenode returning array934
+  *var_dir = array934;
+  if (array934 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 310
-  setline(310);
+// Begin line 303
+  setline(303);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 309
-  setline(309);
+// Begin line 302
+  setline(302);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit895 == NULL) {
-    strlit895 = alloc_String("");
-    gc_root(strlit895);
+  if (strlit935 == NULL) {
+    strlit935 = alloc_String("");
+    gc_root(strlit935);
   }
-// compilenode returning strlit895
-  *var_nextPath = strlit895;
-  if (strlit895 == undefined)
+// compilenode returning strlit935
+  *var_nextPath = strlit935;
+  if (strlit935 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 311
-  setline(311);
+// Begin line 304
+  setline(304);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 310
-  setline(310);
+// Begin line 303
+  setline(303);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit896 == NULL) {
-    strlit896 = alloc_String("");
-    gc_root(strlit896);
+  if (strlit936 == NULL) {
+    strlit936 = alloc_String("");
+    gc_root(strlit936);
   }
-// compilenode returning strlit896
-  *var_toMake = strlit896;
-  if (strlit896 == undefined)
+// compilenode returning strlit936
+  *var_toMake = strlit936;
+  if (strlit936 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 312
-  setline(312);
+// Begin line 305
+  setline(305);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 311
-  setline(311);
+// Begin line 304
+  setline(304);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num897 = alloc_Float64(1);
-// compilenode returning num897
-  *var_count = num897;
-  if (num897 == undefined)
+  Object num937 = alloc_Float64(1);
+// compilenode returning num937
+  *var_count = num937;
+  if (num937 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 313
-  setline(313);
+// Begin line 306
+  setline(306);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 312
-  setline(312);
+// Begin line 305
+  setline(305);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit900 == NULL) {
-    strlit900 = alloc_String("Directory being evaluated ");
-    gc_root(strlit900);
+  if (strlit940 == NULL) {
+    strlit940 = alloc_String("Directory being evaluated ");
+    gc_root(strlit940);
   }
-// compilenode returning strlit900
-  int op_slot_left_899 = gc_frame_newslot(strlit900);
+// compilenode returning strlit940
+  int op_slot_left_939 = gc_frame_newslot(strlit940);
 // compilenode returning *var_address
-  int op_slot_right_899 = gc_frame_newslot(*var_address);
+  int op_slot_right_939 = gc_frame_newslot(*var_address);
   params[0] = *var_address;
   partcv[0] = 1;
-  Object opresult902 = callmethod(strlit900, "++", 1, partcv, params);
-// compilenode returning opresult902
-  int op_slot_left_898 = gc_frame_newslot(opresult902);
-  if (strlit903 == NULL) {
-    strlit903 = alloc_String("");
-    gc_root(strlit903);
-  }
-// compilenode returning strlit903
-  int op_slot_right_898 = gc_frame_newslot(strlit903);
-  params[0] = strlit903;
-  partcv[0] = 1;
-  Object opresult905 = callmethod(opresult902, "++", 1, partcv, params);
-// compilenode returning opresult905
-  params[0] = opresult905;
-  Object call906 = gracelib_print(NULL, 1,  params);
-// compilenode returning call906
-// Begin line 321
-  setline(321);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe907 = gc_frame_new();
-// Begin line 313
-  setline(313);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block908 = alloc_Block(NULL, NULL, "PackageManager", 313);
-  gc_frame_newslot(block908);
-  block_savedest(block908);
-  Object closure909 = createclosure(3, "_apply");
-setclosureframe(closure909, stackframe);
-  addtoclosure(closure909, var_count);
-  addtoclosure(closure909, var_address);
-  addtoclosure(closure909, selfslot);
-  struct UserObject *uo909 = (struct UserObject*)block908;
-  uo909->data[0] = (Object)closure909;
-  Method *meth_meth_PackageManager__apply909 = addmethod2pos(block908, "_apply", &meth_PackageManager__apply909, 0);
-int argcv_meth_PackageManager__apply909[] = {0};
-meth_meth_PackageManager__apply909->type = alloc_MethodType(1, argcv_meth_PackageManager__apply909);
-  meth_meth_PackageManager__apply909->definitionModule = modulename;
-  meth_meth_PackageManager__apply909->definitionLine = 302;
-// compilenode returning block908
-  gc_frame_newslot(block908);
-// Begin line 321
-  setline(321);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block916 = alloc_Block(NULL, NULL, "PackageManager", 321);
-  gc_frame_newslot(block916);
-  block_savedest(block916);
-  Object closure917 = createclosure(5, "_apply");
-setclosureframe(closure917, stackframe);
-  addtoclosure(closure917, var_nextPath);
-  addtoclosure(closure917, var_address);
-  addtoclosure(closure917, var_count);
-  addtoclosure(closure917, var_toMake);
-  addtoclosure(closure917, selfslot);
-  struct UserObject *uo917 = (struct UserObject*)block916;
-  uo917->data[0] = (Object)closure917;
-  Method *meth_meth_PackageManager__apply917 = addmethod2pos(block916, "_apply", &meth_PackageManager__apply917, 0);
-int argcv_meth_PackageManager__apply917[] = {0};
-meth_meth_PackageManager__apply917->type = alloc_MethodType(1, argcv_meth_PackageManager__apply917);
-  meth_meth_PackageManager__apply917->definitionModule = modulename;
-  meth_meth_PackageManager__apply917->definitionLine = 313;
-// compilenode returning block916
-  gc_frame_newslot(block916);
-  params[0] = block908;
-  params[1] = block916;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call941 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe907);
-// compilenode returning call941
-// Begin line 321
-  setline(321);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+  Object opresult942 = callmethod(strlit940, "++", 1, partcv, params);
+// compilenode returning opresult942
+  int op_slot_left_938 = gc_frame_newslot(opresult942);
   if (strlit943 == NULL) {
-    strlit943 = alloc_String("Creating directory ");
+    strlit943 = alloc_String("");
     gc_root(strlit943);
   }
 // compilenode returning strlit943
-  int op_slot_left_942 = gc_frame_newslot(strlit943);
-// compilenode returning *var_toMake
-  int op_slot_right_942 = gc_frame_newslot(*var_toMake);
-  params[0] = *var_toMake;
+  int op_slot_right_938 = gc_frame_newslot(strlit943);
+  params[0] = strlit943;
   partcv[0] = 1;
-  Object opresult945 = callmethod(strlit943, "++", 1, partcv, params);
+  Object opresult945 = callmethod(opresult942, "++", 1, partcv, params);
 // compilenode returning opresult945
   params[0] = opresult945;
   Object call946 = gracelib_print(NULL, 1,  params);
 // compilenode returning call946
-// Begin line 326
-  setline(326);
+// Begin line 314
+  setline(314);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 322
-  setline(322);
+  int callframe947 = gc_frame_new();
+// Begin line 306
+  setline(306);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe948 = gc_frame_new();
-  int callframe949 = gc_frame_new();
+  Object block948 = alloc_Block(NULL, NULL, "PackageManager", 306);
+  gc_frame_newslot(block948);
+  block_savedest(block948);
+  Object closure949 = createclosure(3, "_apply");
+setclosureframe(closure949, stackframe);
+  addtoclosure(closure949, var_count);
+  addtoclosure(closure949, var_address);
+  addtoclosure(closure949, selfslot);
+  struct UserObject *uo949 = (struct UserObject*)block948;
+  uo949->data[0] = (Object)closure949;
+  Method *meth_meth_PackageManager__apply949 = addmethod2pos(block948, "_apply", &meth_PackageManager__apply949, 0);
+int argcv_meth_PackageManager__apply949[] = {0};
+meth_meth_PackageManager__apply949->type = alloc_MethodType(1, argcv_meth_PackageManager__apply949);
+  meth_meth_PackageManager__apply949->definitionModule = modulename;
+  meth_meth_PackageManager__apply949->definitionLine = 295;
+// compilenode returning block948
+  gc_frame_newslot(block948);
+// Begin line 314
+  setline(314);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block956 = alloc_Block(NULL, NULL, "PackageManager", 314);
+  gc_frame_newslot(block956);
+  block_savedest(block956);
+  Object closure957 = createclosure(5, "_apply");
+setclosureframe(closure957, stackframe);
+  addtoclosure(closure957, var_nextPath);
+  addtoclosure(closure957, var_address);
+  addtoclosure(closure957, var_count);
+  addtoclosure(closure957, var_toMake);
+  addtoclosure(closure957, selfslot);
+  struct UserObject *uo957 = (struct UserObject*)block956;
+  uo957->data[0] = (Object)closure957;
+  Method *meth_meth_PackageManager__apply957 = addmethod2pos(block956, "_apply", &meth_PackageManager__apply957, 0);
+int argcv_meth_PackageManager__apply957[] = {0};
+meth_meth_PackageManager__apply957->type = alloc_MethodType(1, argcv_meth_PackageManager__apply957);
+  meth_meth_PackageManager__apply957->definitionModule = modulename;
+  meth_meth_PackageManager__apply957->definitionLine = 306;
+// compilenode returning block956
+  gc_frame_newslot(block956);
+  params[0] = block948;
+  params[1] = block956;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call981 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe947);
+// compilenode returning call981
+// Begin line 314
+  setline(314);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit983 == NULL) {
+    strlit983 = alloc_String("Creating directory ");
+    gc_root(strlit983);
+  }
+// compilenode returning strlit983
+  int op_slot_left_982 = gc_frame_newslot(strlit983);
+// compilenode returning *var_toMake
+  int op_slot_right_982 = gc_frame_newslot(*var_toMake);
+  params[0] = *var_toMake;
+  partcv[0] = 1;
+  Object opresult985 = callmethod(strlit983, "++", 1, partcv, params);
+// compilenode returning opresult985
+  params[0] = opresult985;
+  Object call986 = gracelib_print(NULL, 1,  params);
+// compilenode returning call986
+// Begin line 319
+  setline(319);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 315
+  setline(315);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe988 = gc_frame_new();
+  int callframe989 = gc_frame_new();
 // compilenode returning *var_toMake
   gc_frame_newslot(*var_toMake);
 // compilenode returning *var_io
   params[0] = *var_toMake;
   partcv[0] = 1;
-  Object call950 = callmethod(*var_io, "exists",
+  Object call990 = callmethod(*var_io, "exists",
     1, partcv, params);
-  gc_frame_end(callframe949);
-// compilenode returning call950
+  gc_frame_end(callframe989);
+// compilenode returning call990
   partcv[0] = 0;
-  Object call951 = callmethod(call950, "prefix!",
+  Object call991 = callmethod(call990, "prefix!",
     1, partcv, params);
-  gc_frame_end(callframe948);
-// compilenode returning call951
-  Object if947 = done;
-  if (istrue(call951)) {
-// Begin line 324
-  setline(324);
+  gc_frame_end(callframe988);
+// compilenode returning call991
+  Object if987 = done;
+  if (istrue(call991)) {
+// Begin line 317
+  setline(317);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe952 = gc_frame_new();
-// Begin line 323
-  setline(323);
+  int callframe992 = gc_frame_new();
+// Begin line 316
+  setline(316);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit954 == NULL) {
-    strlit954 = alloc_String("mkdir -p ");
-    gc_root(strlit954);
+  if (strlit994 == NULL) {
+    strlit994 = alloc_String("mkdir -p ");
+    gc_root(strlit994);
   }
-// compilenode returning strlit954
-  int op_slot_left_953 = gc_frame_newslot(strlit954);
+// compilenode returning strlit994
+  int op_slot_left_993 = gc_frame_newslot(strlit994);
 // compilenode returning *var_toMake
-  int op_slot_right_953 = gc_frame_newslot(*var_toMake);
+  int op_slot_right_993 = gc_frame_newslot(*var_toMake);
   params[0] = *var_toMake;
   partcv[0] = 1;
-  Object opresult956 = callmethod(strlit954, "++", 1, partcv, params);
-// compilenode returning opresult956
-  gc_frame_newslot(opresult956);
+  Object opresult996 = callmethod(strlit994, "++", 1, partcv, params);
+// compilenode returning opresult996
+  gc_frame_newslot(opresult996);
 // compilenode returning *var_io
-  params[0] = opresult956;
+  params[0] = opresult996;
   partcv[0] = 1;
-  Object call957 = callmethod(*var_io, "system",
+  Object call997 = callmethod(*var_io, "system",
     1, partcv, params);
-  gc_frame_end(callframe952);
-// compilenode returning call957
-// Begin line 325
-  setline(325);
+  gc_frame_end(callframe992);
+// compilenode returning call997
+// Begin line 318
+  setline(318);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 324
-  setline(324);
+// Begin line 317
+  setline(317);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit960 == NULL) {
-    strlit960 = alloc_String("made directory ");
-    gc_root(strlit960);
+  if (strlit1000 == NULL) {
+    strlit1000 = alloc_String("made directory ");
+    gc_root(strlit1000);
   }
-// compilenode returning strlit960
-  int op_slot_left_959 = gc_frame_newslot(strlit960);
+// compilenode returning strlit1000
+  int op_slot_left_999 = gc_frame_newslot(strlit1000);
 // compilenode returning *var_toMake
-  int op_slot_right_959 = gc_frame_newslot(*var_toMake);
+  int op_slot_right_999 = gc_frame_newslot(*var_toMake);
   params[0] = *var_toMake;
   partcv[0] = 1;
-  Object opresult962 = callmethod(strlit960, "++", 1, partcv, params);
-// compilenode returning opresult962
-  int op_slot_left_958 = gc_frame_newslot(opresult962);
-  if (strlit963 == NULL) {
-    strlit963 = alloc_String("");
-    gc_root(strlit963);
+  Object opresult1002 = callmethod(strlit1000, "++", 1, partcv, params);
+// compilenode returning opresult1002
+  int op_slot_left_998 = gc_frame_newslot(opresult1002);
+  if (strlit1003 == NULL) {
+    strlit1003 = alloc_String("");
+    gc_root(strlit1003);
   }
-// compilenode returning strlit963
-  int op_slot_right_958 = gc_frame_newslot(strlit963);
-  params[0] = strlit963;
+// compilenode returning strlit1003
+  int op_slot_right_998 = gc_frame_newslot(strlit1003);
+  params[0] = strlit1003;
   partcv[0] = 1;
-  Object opresult965 = callmethod(opresult962, "++", 1, partcv, params);
-// compilenode returning opresult965
-  params[0] = opresult965;
-  Object call966 = gracelib_print(NULL, 1,  params);
-// compilenode returning call966
-    gc_frame_newslot(call966);
-    if947 = call966;
+  Object opresult1005 = callmethod(opresult1002, "++", 1, partcv, params);
+// compilenode returning opresult1005
+  params[0] = opresult1005;
+  Object call1006 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1006
+    gc_frame_newslot(call1006);
+    if987 = call1006;
   } else {
   }
-// compilenode returning if947
-// Begin line 327
-  setline(327);
+// compilenode returning if987
+// Begin line 320
+  setline(320);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe967 = gc_frame_new();
-// Begin line 326
-  setline(326);
+  int callframe1007 = gc_frame_new();
+// Begin line 319
+  setline(319);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_toMake
@@ -7455,17 +7572,17 @@ meth_meth_PackageManager__apply917->type = alloc_MethodType(1, argcv_meth_Packag
 // compilenode returning *var_dir
   params[0] = *var_toMake;
   partcv[0] = 1;
-  Object call968 = callmethod(*var_dir, "push",
+  Object call1008 = callmethod(*var_dir, "push",
     1, partcv, params);
-  gc_frame_end(callframe967);
-// compilenode returning call968
-// Begin line 328
-  setline(328);
+  gc_frame_end(callframe1007);
+// compilenode returning call1008
+// Begin line 321
+  setline(321);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe969 = gc_frame_new();
-// Begin line 327
-  setline(327);
+  int callframe1009 = gc_frame_new();
+// Begin line 320
+  setline(320);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_nextPath
@@ -7473,16 +7590,16 @@ meth_meth_PackageManager__apply917->type = alloc_MethodType(1, argcv_meth_Packag
 // compilenode returning *var_dir
   params[0] = *var_nextPath;
   partcv[0] = 1;
-  Object call970 = callmethod(*var_dir, "push",
+  Object call1010 = callmethod(*var_dir, "push",
     1, partcv, params);
-  gc_frame_end(callframe969);
-// compilenode returning call970
-// Begin line 329
-  setline(329);
+  gc_frame_end(callframe1009);
+// compilenode returning call1010
+// Begin line 322
+  setline(322);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 328
-  setline(328);
+// Begin line 321
+  setline(321);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_dir
@@ -7491,7 +7608,7 @@ meth_meth_PackageManager__apply917->type = alloc_MethodType(1, argcv_meth_Packag
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager__apply977(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1017(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -7514,24 +7631,24 @@ Object meth_PackageManager__apply977(Object realself, int nparts, int *argcv, Ob
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_curPos
-  int op_slot_left_978 = gc_frame_newslot(*var_curPos);
-  int callframe979 = gc_frame_new();
+  int op_slot_left_1018 = gc_frame_newslot(*var_curPos);
+  int callframe1019 = gc_frame_new();
 // compilenode returning *var_data
   partcv[0] = 0;
-  Object call980 = callmethod(*var_data, "size",
+  Object call1020 = callmethod(*var_data, "size",
     1, partcv, params);
-  gc_frame_end(callframe979);
-// compilenode returning call980
-// compilenode returning call980
-  int op_slot_right_978 = gc_frame_newslot(call980);
-  params[0] = call980;
+  gc_frame_end(callframe1019);
+// compilenode returning call1020
+// compilenode returning call1020
+  int op_slot_right_1018 = gc_frame_newslot(call1020);
+  params[0] = call1020;
   partcv[0] = 1;
-  Object opresult982 = callmethod(*var_curPos, "<=", 1, partcv, params);
-// compilenode returning opresult982
+  Object opresult1022 = callmethod(*var_curPos, "<=", 1, partcv, params);
+// compilenode returning opresult1022
   gc_frame_end(frame);
-  return opresult982;
+  return opresult1022;
 }
-Object meth_PackageManager__apply989(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1029(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -7554,48 +7671,48 @@ Object meth_PackageManager__apply989(Object realself, int nparts, int *argcv, Ob
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_curPos
-  int op_slot_left_991 = gc_frame_newslot(*var_curPos);
-  int callframe992 = gc_frame_new();
+  int op_slot_left_1031 = gc_frame_newslot(*var_curPos);
+  int callframe1032 = gc_frame_new();
 // compilenode returning *var_data
   partcv[0] = 0;
-  Object call993 = callmethod(*var_data, "size",
+  Object call1033 = callmethod(*var_data, "size",
     1, partcv, params);
-  gc_frame_end(callframe992);
-// compilenode returning call993
-// compilenode returning call993
-  int op_slot_right_991 = gc_frame_newslot(call993);
-  params[0] = call993;
+  gc_frame_end(callframe1032);
+// compilenode returning call1033
+// compilenode returning call1033
+  int op_slot_right_1031 = gc_frame_newslot(call1033);
+  params[0] = call1033;
   partcv[0] = 1;
-  Object opresult995 = callmethod(*var_curPos, "<=", 1, partcv, params);
-// compilenode returning opresult995
-  int op_slot_left_990 = gc_frame_newslot(opresult995);
+  Object opresult1035 = callmethod(*var_curPos, "<=", 1, partcv, params);
+// compilenode returning opresult1035
+  int op_slot_left_1030 = gc_frame_newslot(opresult1035);
 // compilenode returning *var_data
 // compilenode returning *var_curPos
   params[0] = *var_curPos;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres997 = callmethod(*var_data, "[]", 1, partcv, params);
-// compilenode returning idxres997
-  int op_slot_left_996 = gc_frame_newslot(idxres997);
-  if (strlit998 == NULL) {
-    strlit998 = alloc_String("""\x0a""");
-    gc_root(strlit998);
+  Object idxres1037 = callmethod(*var_data, "[]", 1, partcv, params);
+// compilenode returning idxres1037
+  int op_slot_left_1036 = gc_frame_newslot(idxres1037);
+  if (strlit1038 == NULL) {
+    strlit1038 = alloc_String("""\x0a""");
+    gc_root(strlit1038);
   }
-// compilenode returning strlit998
-  int op_slot_right_996 = gc_frame_newslot(strlit998);
-  params[0] = strlit998;
+// compilenode returning strlit1038
+  int op_slot_right_1036 = gc_frame_newslot(strlit1038);
+  params[0] = strlit1038;
   partcv[0] = 1;
-  Object opresult1000 = callmethod(idxres997, "!=", 1, partcv, params);
-// compilenode returning opresult1000
-  int op_slot_right_990 = gc_frame_newslot(opresult1000);
-  params[0] = opresult1000;
+  Object opresult1040 = callmethod(idxres1037, "!=", 1, partcv, params);
+// compilenode returning opresult1040
+  int op_slot_right_1030 = gc_frame_newslot(opresult1040);
+  params[0] = opresult1040;
   partcv[0] = 1;
-  Object opresult1002 = callmethod(opresult995, "&&", 1, partcv, params);
-// compilenode returning opresult1002
+  Object opresult1042 = callmethod(opresult1035, "&&", 1, partcv, params);
+// compilenode returning opresult1042
   gc_frame_end(frame);
-  return opresult1002;
+  return opresult1042;
 }
-Object meth_PackageManager__apply1005(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1045(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -7616,27 +7733,27 @@ Object meth_PackageManager__apply1005(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 338
-  setline(338);
+// Begin line 331
+  setline(331);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1006 = gc_frame_newslot(*var_curPos);
-  Object num1007 = alloc_Float64(1);
-// compilenode returning num1007
-  int op_slot_right_1006 = gc_frame_newslot(num1007);
-  params[0] = num1007;
+  int op_slot_left_1046 = gc_frame_newslot(*var_curPos);
+  Object num1047 = alloc_Float64(1);
+// compilenode returning num1047
+  int op_slot_right_1046 = gc_frame_newslot(num1047);
+  params[0] = num1047;
   partcv[0] = 1;
-  Object sum1009 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1009
-  *var_curPos = sum1009;
-  if (sum1009 == undefined)
+  Object sum1049 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1049
+  *var_curPos = sum1049;
+  if (sum1049 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager__apply985(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1025(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -7662,12 +7779,12 @@ Object meth_PackageManager__apply985(Object realself, int nparts, int *argcv, Ob
   if (methodInheritingObject) curarg++;
   Object *var_line = &(stackframe->slots[1]);
   setframeelementname(stackframe, 1, "line");
-// Begin line 337
-  setline(337);
+// Begin line 330
+  setline(330);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 336
-  setline(336);
+// Begin line 329
+  setline(329);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -7675,154 +7792,154 @@ Object meth_PackageManager__apply985(Object realself, int nparts, int *argcv, Ob
   if (*var_curPos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 340
-  setline(340);
+// Begin line 333
+  setline(333);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe987 = gc_frame_new();
-// Begin line 337
-  setline(337);
+  int callframe1027 = gc_frame_new();
+// Begin line 330
+  setline(330);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block988 = alloc_Block(NULL, NULL, "PackageManager", 337);
-  gc_frame_newslot(block988);
-  block_savedest(block988);
-  Object closure989 = createclosure(3, "_apply");
-setclosureframe(closure989, stackframe);
-  addtoclosure(closure989, var_curPos);
-  addtoclosure(closure989, var_data);
-  addtoclosure(closure989, selfslot);
-  struct UserObject *uo989 = (struct UserObject*)block988;
-  uo989->data[0] = (Object)closure989;
-  Method *meth_meth_PackageManager__apply989 = addmethod2pos(block988, "_apply", &meth_PackageManager__apply989, 0);
-int argcv_meth_PackageManager__apply989[] = {0};
-meth_meth_PackageManager__apply989->type = alloc_MethodType(1, argcv_meth_PackageManager__apply989);
-  meth_meth_PackageManager__apply989->definitionModule = modulename;
-  meth_meth_PackageManager__apply989->definitionLine = 335;
-// compilenode returning block988
-  gc_frame_newslot(block988);
-// Begin line 340
-  setline(340);
+  Object block1028 = alloc_Block(NULL, NULL, "PackageManager", 330);
+  gc_frame_newslot(block1028);
+  block_savedest(block1028);
+  Object closure1029 = createclosure(3, "_apply");
+setclosureframe(closure1029, stackframe);
+  addtoclosure(closure1029, var_curPos);
+  addtoclosure(closure1029, var_data);
+  addtoclosure(closure1029, selfslot);
+  struct UserObject *uo1029 = (struct UserObject*)block1028;
+  uo1029->data[0] = (Object)closure1029;
+  Method *meth_meth_PackageManager__apply1029 = addmethod2pos(block1028, "_apply", &meth_PackageManager__apply1029, 0);
+int argcv_meth_PackageManager__apply1029[] = {0};
+meth_meth_PackageManager__apply1029->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1029);
+  meth_meth_PackageManager__apply1029->definitionModule = modulename;
+  meth_meth_PackageManager__apply1029->definitionLine = 328;
+// compilenode returning block1028
+  gc_frame_newslot(block1028);
+// Begin line 333
+  setline(333);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1004 = alloc_Block(NULL, NULL, "PackageManager", 340);
-  gc_frame_newslot(block1004);
-  block_savedest(block1004);
-  Object closure1005 = createclosure(2, "_apply");
-setclosureframe(closure1005, stackframe);
-  addtoclosure(closure1005, var_curPos);
-  addtoclosure(closure1005, selfslot);
-  struct UserObject *uo1005 = (struct UserObject*)block1004;
-  uo1005->data[0] = (Object)closure1005;
-  Method *meth_meth_PackageManager__apply1005 = addmethod2pos(block1004, "_apply", &meth_PackageManager__apply1005, 0);
-int argcv_meth_PackageManager__apply1005[] = {0};
-meth_meth_PackageManager__apply1005->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1005);
-  meth_meth_PackageManager__apply1005->definitionModule = modulename;
-  meth_meth_PackageManager__apply1005->definitionLine = 337;
-// compilenode returning block1004
-  gc_frame_newslot(block1004);
-  params[0] = block988;
-  params[1] = block1004;
+  Object block1044 = alloc_Block(NULL, NULL, "PackageManager", 333);
+  gc_frame_newslot(block1044);
+  block_savedest(block1044);
+  Object closure1045 = createclosure(2, "_apply");
+setclosureframe(closure1045, stackframe);
+  addtoclosure(closure1045, var_curPos);
+  addtoclosure(closure1045, selfslot);
+  struct UserObject *uo1045 = (struct UserObject*)block1044;
+  uo1045->data[0] = (Object)closure1045;
+  Method *meth_meth_PackageManager__apply1045 = addmethod2pos(block1044, "_apply", &meth_PackageManager__apply1045, 0);
+int argcv_meth_PackageManager__apply1045[] = {0};
+meth_meth_PackageManager__apply1045->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1045);
+  meth_meth_PackageManager__apply1045->definitionModule = modulename;
+  meth_meth_PackageManager__apply1045->definitionLine = 330;
+// compilenode returning block1044
+  gc_frame_newslot(block1044);
+  params[0] = block1028;
+  params[1] = block1044;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1012 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe987);
-// compilenode returning call1012
-// Begin line 341
-  setline(341);
+  Object call1052 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1027);
+// compilenode returning call1052
+// Begin line 334
+  setline(334);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1013 = gc_frame_new();
-// Begin line 340
-  setline(340);
+  int callframe1053 = gc_frame_new();
+// Begin line 333
+  setline(333);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_startPos
   gc_frame_newslot(*var_startPos);
 // compilenode returning *var_curPos
-  int op_slot_left_1014 = gc_frame_newslot(*var_curPos);
-  Object num1015 = alloc_Float64(1);
-// compilenode returning num1015
-  int op_slot_right_1014 = gc_frame_newslot(num1015);
-  params[0] = num1015;
+  int op_slot_left_1054 = gc_frame_newslot(*var_curPos);
+  Object num1055 = alloc_Float64(1);
+// compilenode returning num1055
+  int op_slot_right_1054 = gc_frame_newslot(num1055);
+  params[0] = num1055;
   partcv[0] = 1;
-  Object diff1017 = callmethod(*var_curPos, "-", 1, partcv, params);
-// compilenode returning diff1017
-  gc_frame_newslot(diff1017);
+  Object diff1057 = callmethod(*var_curPos, "-", 1, partcv, params);
+// compilenode returning diff1057
+  gc_frame_newslot(diff1057);
 // compilenode returning *var_data
   params[0] = *var_startPos;
-  params[1] = diff1017;
+  params[1] = diff1057;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1018 = callmethod(*var_data, "substringFrom()to",
+  Object call1058 = callmethod(*var_data, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1013);
-// compilenode returning call1018
-  *var_line = call1018;
-  if (call1018 == undefined)
+  gc_frame_end(callframe1053);
+// compilenode returning call1058
+  *var_line = call1058;
+  if (call1058 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 344
-  setline(344);
+// Begin line 337
+  setline(337);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 341
-  setline(341);
+// Begin line 334
+  setline(334);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1020 = gc_frame_new();
-  int callframe1021 = gc_frame_new();
+  int callframe1060 = gc_frame_new();
+  int callframe1061 = gc_frame_new();
 // compilenode returning *var_line
   gc_frame_newslot(*var_line);
   params[0] = *var_line;
   partcv[0] = 1;
-  Object call1022 = callmethodflags(self, "processLine", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1021);
-// compilenode returning call1022
+  Object call1062 = callmethodflags(self, "processLine", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1061);
+// compilenode returning call1062
   partcv[0] = 0;
-  Object call1023 = callmethod(call1022, "prefix!",
+  Object call1063 = callmethod(call1062, "prefix!",
     1, partcv, params);
-  gc_frame_end(callframe1020);
-// compilenode returning call1023
-  Object if1019 = done;
-  if (istrue(call1023)) {
-// Begin line 343
-  setline(343);
+  gc_frame_end(callframe1060);
+// compilenode returning call1063
+  Object if1059 = done;
+  if (istrue(call1063)) {
+// Begin line 336
+  setline(336);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_done
   block_return(realself, *var_done);
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1019 = undefined;
+    if1059 = undefined;
   } else {
   }
-// compilenode returning if1019
-// Begin line 345
-  setline(345);
+// compilenode returning if1059
+// Begin line 338
+  setline(338);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 344
-  setline(344);
+// Begin line 337
+  setline(337);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1024 = gc_frame_newslot(*var_curPos);
-  Object num1025 = alloc_Float64(1);
-// compilenode returning num1025
-  int op_slot_right_1024 = gc_frame_newslot(num1025);
-  params[0] = num1025;
+  int op_slot_left_1064 = gc_frame_newslot(*var_curPos);
+  Object num1065 = alloc_Float64(1);
+// compilenode returning num1065
+  int op_slot_right_1064 = gc_frame_newslot(num1065);
+  params[0] = num1065;
   partcv[0] = 1;
-  Object sum1027 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1027
-  *var_curPos = sum1027;
-  if (sum1027 == undefined)
+  Object sum1067 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1067
+  *var_curPos = sum1067;
+  if (sum1067 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_parseFile971(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_parseFile1011(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 15, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(5, getclosureframe(closure));
@@ -7856,42 +7973,42 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "curPos");
   Object *var_startPos = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "startPos");
-// Begin line 333
-  setline(333);
+// Begin line 326
+  setline(326);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 332
-  setline(332);
+// Begin line 325
+  setline(325);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe972 = gc_frame_new();
+  int callframe1012 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call973 = callmethod(*var_file, "data",
+  Object call1013 = callmethod(*var_file, "data",
     1, partcv, params);
-  gc_frame_end(callframe972);
-// compilenode returning call973
-// compilenode returning call973
-  *var_data = call973;
-  if (call973 == undefined)
+  gc_frame_end(callframe1012);
+// compilenode returning call1013
+// compilenode returning call1013
+  *var_data = call1013;
+  if (call1013 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 333
-  setline(333);
+// Begin line 326
+  setline(326);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num974 = alloc_Float64(1);
-// compilenode returning num974
-  *var_curPos = num974;
-  if (num974 == undefined)
+  Object num1014 = alloc_Float64(1);
+// compilenode returning num1014
+  *var_curPos = num1014;
+  if (num1014 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 335
-  setline(335);
+// Begin line 328
+  setline(328);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 334
-  setline(334);
+// Begin line 327
+  setline(327);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -7899,66 +8016,66 @@ if (argcv && argcv[0] > 1)
   if (*var_curPos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 346
-  setline(346);
+// Begin line 339
+  setline(339);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe975 = gc_frame_new();
-// Begin line 335
-  setline(335);
+  int callframe1015 = gc_frame_new();
+// Begin line 328
+  setline(328);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block976 = alloc_Block(NULL, NULL, "PackageManager", 335);
-  gc_frame_newslot(block976);
-  block_savedest(block976);
-  Object closure977 = createclosure(3, "_apply");
-setclosureframe(closure977, stackframe);
-  addtoclosure(closure977, var_curPos);
-  addtoclosure(closure977, var_data);
-  addtoclosure(closure977, selfslot);
-  struct UserObject *uo977 = (struct UserObject*)block976;
-  uo977->data[0] = (Object)closure977;
-  Method *meth_meth_PackageManager__apply977 = addmethod2pos(block976, "_apply", &meth_PackageManager__apply977, 0);
-int argcv_meth_PackageManager__apply977[] = {0};
-meth_meth_PackageManager__apply977->type = alloc_MethodType(1, argcv_meth_PackageManager__apply977);
-  meth_meth_PackageManager__apply977->definitionModule = modulename;
-  meth_meth_PackageManager__apply977->definitionLine = 332;
-// compilenode returning block976
-  gc_frame_newslot(block976);
-// Begin line 346
-  setline(346);
+  Object block1016 = alloc_Block(NULL, NULL, "PackageManager", 328);
+  gc_frame_newslot(block1016);
+  block_savedest(block1016);
+  Object closure1017 = createclosure(3, "_apply");
+setclosureframe(closure1017, stackframe);
+  addtoclosure(closure1017, var_curPos);
+  addtoclosure(closure1017, var_data);
+  addtoclosure(closure1017, selfslot);
+  struct UserObject *uo1017 = (struct UserObject*)block1016;
+  uo1017->data[0] = (Object)closure1017;
+  Method *meth_meth_PackageManager__apply1017 = addmethod2pos(block1016, "_apply", &meth_PackageManager__apply1017, 0);
+int argcv_meth_PackageManager__apply1017[] = {0};
+meth_meth_PackageManager__apply1017->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1017);
+  meth_meth_PackageManager__apply1017->definitionModule = modulename;
+  meth_meth_PackageManager__apply1017->definitionLine = 325;
+// compilenode returning block1016
+  gc_frame_newslot(block1016);
+// Begin line 339
+  setline(339);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block984 = alloc_Block(NULL, NULL, "PackageManager", 346);
-  gc_frame_newslot(block984);
-  block_savedest(block984);
-  Object closure985 = createclosure(5, "_apply");
-setclosureframe(closure985, stackframe);
-  addtoclosure(closure985, var_curPos);
-  addtoclosure(closure985, var_startPos);
-  addtoclosure(closure985, var_data);
-  addtoclosure(closure985, var_done);
-  addtoclosure(closure985, selfslot);
-  struct UserObject *uo985 = (struct UserObject*)block984;
-  uo985->data[0] = (Object)closure985;
-  Method *meth_meth_PackageManager__apply985 = addmethod2pos(block984, "_apply", &meth_PackageManager__apply985, 0);
-int argcv_meth_PackageManager__apply985[] = {0};
-meth_meth_PackageManager__apply985->type = alloc_MethodType(1, argcv_meth_PackageManager__apply985);
-  meth_meth_PackageManager__apply985->definitionModule = modulename;
-  meth_meth_PackageManager__apply985->definitionLine = 335;
-// compilenode returning block984
-  gc_frame_newslot(block984);
-  params[0] = block976;
-  params[1] = block984;
+  Object block1024 = alloc_Block(NULL, NULL, "PackageManager", 339);
+  gc_frame_newslot(block1024);
+  block_savedest(block1024);
+  Object closure1025 = createclosure(5, "_apply");
+setclosureframe(closure1025, stackframe);
+  addtoclosure(closure1025, var_curPos);
+  addtoclosure(closure1025, var_startPos);
+  addtoclosure(closure1025, var_data);
+  addtoclosure(closure1025, var_done);
+  addtoclosure(closure1025, selfslot);
+  struct UserObject *uo1025 = (struct UserObject*)block1024;
+  uo1025->data[0] = (Object)closure1025;
+  Method *meth_meth_PackageManager__apply1025 = addmethod2pos(block1024, "_apply", &meth_PackageManager__apply1025, 0);
+int argcv_meth_PackageManager__apply1025[] = {0};
+meth_meth_PackageManager__apply1025->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1025);
+  meth_meth_PackageManager__apply1025->definitionModule = modulename;
+  meth_meth_PackageManager__apply1025->definitionLine = 328;
+// compilenode returning block1024
+  gc_frame_newslot(block1024);
+  params[0] = block1016;
+  params[1] = block1024;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1030 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe975);
-// compilenode returning call1030
+  Object call1070 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1015);
+// compilenode returning call1070
   gc_frame_end(frame);
-  return call1030;
+  return call1070;
 }
-Object meth_PackageManager_processLine1031(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_processLine1071(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(2, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "processLine");
@@ -7983,61 +8100,242 @@ if (argcv && argcv[0] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 364
-  setline(364);
+// Begin line 357
+  setline(357);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 342
+  setline(342);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1074 = gc_frame_new();
+// compilenode returning *var_line
+  partcv[0] = 0;
+  Object call1075 = callmethod(*var_line, "size",
+    1, partcv, params);
+  gc_frame_end(callframe1074);
+// compilenode returning call1075
+// compilenode returning call1075
+  int op_slot_left_1073 = gc_frame_newslot(call1075);
+  Object num1076 = alloc_Float64(1);
+// compilenode returning num1076
+  int op_slot_right_1073 = gc_frame_newslot(num1076);
+  params[0] = num1076;
+  partcv[0] = 1;
+  Object opresult1078 = callmethod(call1075, ">", 1, partcv, params);
+// compilenode returning opresult1078
+  Object if1072 = done;
+  if (istrue(opresult1078)) {
+// Begin line 356
+  setline(356);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 343
+  setline(343);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_line
+  Object num1081 = alloc_Float64(1);
+// compilenode returning num1081
+  params[0] = num1081;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres1082 = callmethod(*var_line, "[]", 1, partcv, params);
+// compilenode returning idxres1082
+  int op_slot_left_1080 = gc_frame_newslot(idxres1082);
+  if (strlit1083 == NULL) {
+    strlit1083 = alloc_String("#");
+    gc_root(strlit1083);
+  }
+// compilenode returning strlit1083
+  int op_slot_right_1080 = gc_frame_newslot(strlit1083);
+  params[0] = strlit1083;
+  partcv[0] = 1;
+  Object opresult1085 = callmethod(idxres1082, "==", 1, partcv, params);
+// compilenode returning opresult1085
+  Object if1079 = done;
+  if (istrue(opresult1085)) {
+// Begin line 345
+  setline(345);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 344
+  setline(344);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object bool1086 = alloc_Boolean(1);
+// compilenode returning bool1086
+  return bool1086;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if1079 = undefined;
+  } else {
+// Begin line 349
+  setline(349);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 346
+  setline(346);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1090 = gc_frame_new();
+// compilenode returning *var_line
+  partcv[0] = 0;
+  Object call1091 = callmethod(*var_line, "size",
+    1, partcv, params);
+  gc_frame_end(callframe1090);
+// compilenode returning call1091
+// compilenode returning call1091
+  int op_slot_left_1089 = gc_frame_newslot(call1091);
+  Object num1092 = alloc_Float64(2);
+// compilenode returning num1092
+  int op_slot_right_1089 = gc_frame_newslot(num1092);
+  params[0] = num1092;
+  partcv[0] = 1;
+  Object opresult1094 = callmethod(call1091, ">", 1, partcv, params);
+// compilenode returning opresult1094
+  int op_slot_left_1088 = gc_frame_newslot(opresult1094);
+  int callframe1096 = gc_frame_new();
+  Object num1097 = alloc_Float64(1);
+// compilenode returning num1097
+  gc_frame_newslot(num1097);
+  Object num1098 = alloc_Float64(2);
+// compilenode returning num1098
+  gc_frame_newslot(num1098);
+// compilenode returning *var_line
+  params[0] = num1097;
+  params[1] = num1098;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call1099 = callmethod(*var_line, "substringFrom()to",
+    2, partcv, params);
+  gc_frame_end(callframe1096);
+// compilenode returning call1099
+  int op_slot_left_1095 = gc_frame_newslot(call1099);
+  if (strlit1100 == NULL) {
+    strlit1100 = alloc_String("//");
+    gc_root(strlit1100);
+  }
+// compilenode returning strlit1100
+  int op_slot_right_1095 = gc_frame_newslot(strlit1100);
+  params[0] = strlit1100;
+  partcv[0] = 1;
+  Object opresult1102 = callmethod(call1099, "==", 1, partcv, params);
+// compilenode returning opresult1102
+  int op_slot_right_1088 = gc_frame_newslot(opresult1102);
+  params[0] = opresult1102;
+  partcv[0] = 1;
+  Object opresult1104 = callmethod(opresult1094, "&&", 1, partcv, params);
+// compilenode returning opresult1104
+  Object if1087 = done;
+  if (istrue(opresult1104)) {
+// Begin line 348
+  setline(348);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 347
+  setline(347);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object bool1105 = alloc_Boolean(1);
+// compilenode returning bool1105
+  return bool1105;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if1087 = undefined;
+  } else {
+// Begin line 353
+  setline(353);
   setmodule(modulename);
   setsource(originalSourceLines);
 // Begin line 349
   setline(349);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1034 = gc_frame_new();
+  int callframe1109 = gc_frame_new();
 // compilenode returning *var_line
   partcv[0] = 0;
-  Object call1035 = callmethod(*var_line, "size",
+  Object call1110 = callmethod(*var_line, "size",
     1, partcv, params);
-  gc_frame_end(callframe1034);
-// compilenode returning call1035
-// compilenode returning call1035
-  int op_slot_left_1033 = gc_frame_newslot(call1035);
-  Object num1036 = alloc_Float64(1);
-// compilenode returning num1036
-  int op_slot_right_1033 = gc_frame_newslot(num1036);
-  params[0] = num1036;
+  gc_frame_end(callframe1109);
+// compilenode returning call1110
+// compilenode returning call1110
+  int op_slot_left_1108 = gc_frame_newslot(call1110);
+  Object num1111 = alloc_Float64(6);
+// compilenode returning num1111
+  int op_slot_right_1108 = gc_frame_newslot(num1111);
+  params[0] = num1111;
   partcv[0] = 1;
-  Object opresult1038 = callmethod(call1035, ">", 1, partcv, params);
-// compilenode returning opresult1038
-  Object if1032 = done;
-  if (istrue(opresult1038)) {
-// Begin line 363
-  setline(363);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+  Object opresult1113 = callmethod(call1110, ">", 1, partcv, params);
+// compilenode returning opresult1113
+  int op_slot_left_1107 = gc_frame_newslot(opresult1113);
+  int callframe1115 = gc_frame_new();
+  Object num1116 = alloc_Float64(1);
+// compilenode returning num1116
+  gc_frame_newslot(num1116);
+  Object num1117 = alloc_Float64(7);
+// compilenode returning num1117
+  gc_frame_newslot(num1117);
+// compilenode returning *var_line
+  params[0] = num1116;
+  params[1] = num1117;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call1118 = callmethod(*var_line, "substringFrom()to",
+    2, partcv, params);
+  gc_frame_end(callframe1115);
+// compilenode returning call1118
+  int op_slot_left_1114 = gc_frame_newslot(call1118);
+  if (strlit1119 == NULL) {
+    strlit1119 = alloc_String("import ");
+    gc_root(strlit1119);
+  }
+// compilenode returning strlit1119
+  int op_slot_right_1114 = gc_frame_newslot(strlit1119);
+  params[0] = strlit1119;
+  partcv[0] = 1;
+  Object opresult1121 = callmethod(call1118, "==", 1, partcv, params);
+// compilenode returning opresult1121
+  int op_slot_right_1107 = gc_frame_newslot(opresult1121);
+  params[0] = opresult1121;
+  partcv[0] = 1;
+  Object opresult1123 = callmethod(opresult1113, "&&", 1, partcv, params);
+// compilenode returning opresult1123
+  Object if1106 = done;
+  if (istrue(opresult1123)) {
 // Begin line 350
   setline(350);
   setmodule(modulename);
   setsource(originalSourceLines);
+  int callframe1124 = gc_frame_new();
+  int callframe1125 = gc_frame_new();
+  Object num1126 = alloc_Float64(8);
+// compilenode returning num1126
+  gc_frame_newslot(num1126);
+  int callframe1127 = gc_frame_new();
 // compilenode returning *var_line
-  Object num1041 = alloc_Float64(1);
-// compilenode returning num1041
-  params[0] = num1041;
-  gc_frame_newslot(params[0]);
+  partcv[0] = 0;
+  Object call1128 = callmethod(*var_line, "size",
+    1, partcv, params);
+  gc_frame_end(callframe1127);
+// compilenode returning call1128
+// compilenode returning call1128
+  gc_frame_newslot(call1128);
+// compilenode returning *var_line
+  params[0] = num1126;
+  params[1] = call1128;
   partcv[0] = 1;
-  Object idxres1042 = callmethod(*var_line, "[]", 1, partcv, params);
-// compilenode returning idxres1042
-  int op_slot_left_1040 = gc_frame_newslot(idxres1042);
-  if (strlit1043 == NULL) {
-    strlit1043 = alloc_String("#");
-    gc_root(strlit1043);
-  }
-// compilenode returning strlit1043
-  int op_slot_right_1040 = gc_frame_newslot(strlit1043);
-  params[0] = strlit1043;
+  partcv[1] = 1;
+  Object call1129 = callmethod(*var_line, "substringFrom()to",
+    2, partcv, params);
+  gc_frame_end(callframe1125);
+// compilenode returning call1129
+  gc_frame_newslot(call1129);
+  params[0] = call1129;
   partcv[0] = 1;
-  Object opresult1045 = callmethod(idxres1042, "==", 1, partcv, params);
-// compilenode returning opresult1045
-  Object if1039 = done;
-  if (istrue(opresult1045)) {
+  Object call1130 = callmethodflags(self, "parseImport", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1124);
+// compilenode returning call1130
 // Begin line 352
   setline(352);
   setmodule(modulename);
@@ -8046,12 +8344,12 @@ if (argcv && argcv[0] > 1)
   setline(351);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool1046 = alloc_Boolean(1);
-// compilenode returning bool1046
-  return bool1046;
+  Object bool1131 = alloc_Boolean(1);
+// compilenode returning bool1131
+  return bool1131;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1039 = undefined;
+    if1106 = undefined;
   } else {
 // Begin line 356
   setline(356);
@@ -8061,57 +8359,57 @@ if (argcv && argcv[0] > 1)
   setline(353);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1050 = gc_frame_new();
+  int callframe1135 = gc_frame_new();
 // compilenode returning *var_line
   partcv[0] = 0;
-  Object call1051 = callmethod(*var_line, "size",
+  Object call1136 = callmethod(*var_line, "size",
     1, partcv, params);
-  gc_frame_end(callframe1050);
-// compilenode returning call1051
-// compilenode returning call1051
-  int op_slot_left_1049 = gc_frame_newslot(call1051);
-  Object num1052 = alloc_Float64(2);
-// compilenode returning num1052
-  int op_slot_right_1049 = gc_frame_newslot(num1052);
-  params[0] = num1052;
+  gc_frame_end(callframe1135);
+// compilenode returning call1136
+// compilenode returning call1136
+  int op_slot_left_1134 = gc_frame_newslot(call1136);
+  Object num1137 = alloc_Float64(7);
+// compilenode returning num1137
+  int op_slot_right_1134 = gc_frame_newslot(num1137);
+  params[0] = num1137;
   partcv[0] = 1;
-  Object opresult1054 = callmethod(call1051, ">", 1, partcv, params);
-// compilenode returning opresult1054
-  int op_slot_left_1048 = gc_frame_newslot(opresult1054);
-  int callframe1056 = gc_frame_new();
-  Object num1057 = alloc_Float64(1);
-// compilenode returning num1057
-  gc_frame_newslot(num1057);
-  Object num1058 = alloc_Float64(2);
-// compilenode returning num1058
-  gc_frame_newslot(num1058);
+  Object opresult1139 = callmethod(call1136, ">", 1, partcv, params);
+// compilenode returning opresult1139
+  int op_slot_left_1133 = gc_frame_newslot(opresult1139);
+  int callframe1141 = gc_frame_new();
+  Object num1142 = alloc_Float64(1);
+// compilenode returning num1142
+  gc_frame_newslot(num1142);
+  Object num1143 = alloc_Float64(8);
+// compilenode returning num1143
+  gc_frame_newslot(num1143);
 // compilenode returning *var_line
-  params[0] = num1057;
-  params[1] = num1058;
+  params[0] = num1142;
+  params[1] = num1143;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1059 = callmethod(*var_line, "substringFrom()to",
+  Object call1144 = callmethod(*var_line, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1056);
-// compilenode returning call1059
-  int op_slot_left_1055 = gc_frame_newslot(call1059);
-  if (strlit1060 == NULL) {
-    strlit1060 = alloc_String("//");
-    gc_root(strlit1060);
+  gc_frame_end(callframe1141);
+// compilenode returning call1144
+  int op_slot_left_1140 = gc_frame_newslot(call1144);
+  if (strlit1145 == NULL) {
+    strlit1145 = alloc_String("dialect ");
+    gc_root(strlit1145);
   }
-// compilenode returning strlit1060
-  int op_slot_right_1055 = gc_frame_newslot(strlit1060);
-  params[0] = strlit1060;
+// compilenode returning strlit1145
+  int op_slot_right_1140 = gc_frame_newslot(strlit1145);
+  params[0] = strlit1145;
   partcv[0] = 1;
-  Object opresult1062 = callmethod(call1059, "==", 1, partcv, params);
-// compilenode returning opresult1062
-  int op_slot_right_1048 = gc_frame_newslot(opresult1062);
-  params[0] = opresult1062;
+  Object opresult1147 = callmethod(call1144, "==", 1, partcv, params);
+// compilenode returning opresult1147
+  int op_slot_right_1133 = gc_frame_newslot(opresult1147);
+  params[0] = opresult1147;
   partcv[0] = 1;
-  Object opresult1064 = callmethod(opresult1054, "&&", 1, partcv, params);
-// compilenode returning opresult1064
-  Object if1047 = done;
-  if (istrue(opresult1064)) {
+  Object opresult1149 = callmethod(opresult1139, "&&", 1, partcv, params);
+// compilenode returning opresult1149
+  Object if1132 = done;
+  if (istrue(opresult1149)) {
 // Begin line 355
   setline(355);
   setmodule(modulename);
@@ -8120,229 +8418,48 @@ if (argcv && argcv[0] > 1)
   setline(354);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool1065 = alloc_Boolean(1);
-// compilenode returning bool1065
-  return bool1065;
+  Object bool1150 = alloc_Boolean(1);
+// compilenode returning bool1150
+  return bool1150;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1047 = undefined;
+    if1132 = undefined;
   } else {
-// Begin line 360
-  setline(360);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 356
-  setline(356);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1069 = gc_frame_new();
-// compilenode returning *var_line
-  partcv[0] = 0;
-  Object call1070 = callmethod(*var_line, "size",
-    1, partcv, params);
-  gc_frame_end(callframe1069);
-// compilenode returning call1070
-// compilenode returning call1070
-  int op_slot_left_1068 = gc_frame_newslot(call1070);
-  Object num1071 = alloc_Float64(6);
-// compilenode returning num1071
-  int op_slot_right_1068 = gc_frame_newslot(num1071);
-  params[0] = num1071;
-  partcv[0] = 1;
-  Object opresult1073 = callmethod(call1070, ">", 1, partcv, params);
-// compilenode returning opresult1073
-  int op_slot_left_1067 = gc_frame_newslot(opresult1073);
-  int callframe1075 = gc_frame_new();
-  Object num1076 = alloc_Float64(1);
-// compilenode returning num1076
-  gc_frame_newslot(num1076);
-  Object num1077 = alloc_Float64(7);
-// compilenode returning num1077
-  gc_frame_newslot(num1077);
-// compilenode returning *var_line
-  params[0] = num1076;
-  params[1] = num1077;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1078 = callmethod(*var_line, "substringFrom()to",
-    2, partcv, params);
-  gc_frame_end(callframe1075);
-// compilenode returning call1078
-  int op_slot_left_1074 = gc_frame_newslot(call1078);
-  if (strlit1079 == NULL) {
-    strlit1079 = alloc_String("import ");
-    gc_root(strlit1079);
   }
-// compilenode returning strlit1079
-  int op_slot_right_1074 = gc_frame_newslot(strlit1079);
-  params[0] = strlit1079;
-  partcv[0] = 1;
-  Object opresult1081 = callmethod(call1078, "==", 1, partcv, params);
-// compilenode returning opresult1081
-  int op_slot_right_1067 = gc_frame_newslot(opresult1081);
-  params[0] = opresult1081;
-  partcv[0] = 1;
-  Object opresult1083 = callmethod(opresult1073, "&&", 1, partcv, params);
-// compilenode returning opresult1083
-  Object if1066 = done;
-  if (istrue(opresult1083)) {
-// Begin line 357
-  setline(357);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1084 = gc_frame_new();
-  int callframe1085 = gc_frame_new();
-  Object num1086 = alloc_Float64(8);
-// compilenode returning num1086
-  gc_frame_newslot(num1086);
-  int callframe1087 = gc_frame_new();
-// compilenode returning *var_line
-  partcv[0] = 0;
-  Object call1088 = callmethod(*var_line, "size",
-    1, partcv, params);
-  gc_frame_end(callframe1087);
-// compilenode returning call1088
-// compilenode returning call1088
-  gc_frame_newslot(call1088);
-// compilenode returning *var_line
-  params[0] = num1086;
-  params[1] = call1088;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1089 = callmethod(*var_line, "substringFrom()to",
-    2, partcv, params);
-  gc_frame_end(callframe1085);
-// compilenode returning call1089
-  gc_frame_newslot(call1089);
-  params[0] = call1089;
-  partcv[0] = 1;
-  Object call1090 = callmethodflags(self, "parseImport", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1084);
-// compilenode returning call1090
-// Begin line 359
-  setline(359);
-  setmodule(modulename);
-  setsource(originalSourceLines);
+// compilenode returning if1132
+    gc_frame_newslot(if1132);
+    if1106 = if1132;
+  }
+// compilenode returning if1106
+    gc_frame_newslot(if1106);
+    if1087 = if1106;
+  }
+// compilenode returning if1087
+    gc_frame_newslot(if1087);
+    if1079 = if1087;
+  }
+// compilenode returning if1079
+    gc_frame_newslot(if1079);
+    if1072 = if1079;
+  } else {
+  }
+// compilenode returning if1072
 // Begin line 358
   setline(358);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool1091 = alloc_Boolean(1);
-// compilenode returning bool1091
-  return bool1091;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if1066 = undefined;
-  } else {
-// Begin line 363
-  setline(363);
+// Begin line 357
+  setline(357);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 360
-  setline(360);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1095 = gc_frame_new();
-// compilenode returning *var_line
-  partcv[0] = 0;
-  Object call1096 = callmethod(*var_line, "size",
-    1, partcv, params);
-  gc_frame_end(callframe1095);
-// compilenode returning call1096
-// compilenode returning call1096
-  int op_slot_left_1094 = gc_frame_newslot(call1096);
-  Object num1097 = alloc_Float64(7);
-// compilenode returning num1097
-  int op_slot_right_1094 = gc_frame_newslot(num1097);
-  params[0] = num1097;
-  partcv[0] = 1;
-  Object opresult1099 = callmethod(call1096, ">", 1, partcv, params);
-// compilenode returning opresult1099
-  int op_slot_left_1093 = gc_frame_newslot(opresult1099);
-  int callframe1101 = gc_frame_new();
-  Object num1102 = alloc_Float64(1);
-// compilenode returning num1102
-  gc_frame_newslot(num1102);
-  Object num1103 = alloc_Float64(8);
-// compilenode returning num1103
-  gc_frame_newslot(num1103);
-// compilenode returning *var_line
-  params[0] = num1102;
-  params[1] = num1103;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1104 = callmethod(*var_line, "substringFrom()to",
-    2, partcv, params);
-  gc_frame_end(callframe1101);
-// compilenode returning call1104
-  int op_slot_left_1100 = gc_frame_newslot(call1104);
-  if (strlit1105 == NULL) {
-    strlit1105 = alloc_String("dialect ");
-    gc_root(strlit1105);
-  }
-// compilenode returning strlit1105
-  int op_slot_right_1100 = gc_frame_newslot(strlit1105);
-  params[0] = strlit1105;
-  partcv[0] = 1;
-  Object opresult1107 = callmethod(call1104, "==", 1, partcv, params);
-// compilenode returning opresult1107
-  int op_slot_right_1093 = gc_frame_newslot(opresult1107);
-  params[0] = opresult1107;
-  partcv[0] = 1;
-  Object opresult1109 = callmethod(opresult1099, "&&", 1, partcv, params);
-// compilenode returning opresult1109
-  Object if1092 = done;
-  if (istrue(opresult1109)) {
-// Begin line 362
-  setline(362);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 361
-  setline(361);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool1110 = alloc_Boolean(1);
-// compilenode returning bool1110
-  return bool1110;
-// compilenode returning undefined
-    gc_frame_newslot(undefined);
-    if1092 = undefined;
-  } else {
-  }
-// compilenode returning if1092
-    gc_frame_newslot(if1092);
-    if1066 = if1092;
-  }
-// compilenode returning if1066
-    gc_frame_newslot(if1066);
-    if1047 = if1066;
-  }
-// compilenode returning if1047
-    gc_frame_newslot(if1047);
-    if1039 = if1047;
-  }
-// compilenode returning if1039
-    gc_frame_newslot(if1039);
-    if1032 = if1039;
-  } else {
-  }
-// compilenode returning if1032
-// Begin line 365
-  setline(365);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 364
-  setline(364);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object bool1111 = alloc_Boolean(0);
-// compilenode returning bool1111
-  return bool1111;
+  Object bool1151 = alloc_Boolean(0);
+// compilenode returning bool1151
+  return bool1151;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager__apply1126(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1166(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -8365,94 +8482,94 @@ Object meth_PackageManager__apply1126(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_curPos
-  int op_slot_left_1128 = gc_frame_newslot(*var_curPos);
-  int callframe1129 = gc_frame_new();
+  int op_slot_left_1168 = gc_frame_newslot(*var_curPos);
+  int callframe1169 = gc_frame_new();
 // compilenode returning *var_line
   partcv[0] = 0;
-  Object call1130 = callmethod(*var_line, "size",
+  Object call1170 = callmethod(*var_line, "size",
     1, partcv, params);
-  gc_frame_end(callframe1129);
-// compilenode returning call1130
-// compilenode returning call1130
-  int op_slot_right_1128 = gc_frame_newslot(call1130);
-  params[0] = call1130;
+  gc_frame_end(callframe1169);
+// compilenode returning call1170
+// compilenode returning call1170
+  int op_slot_right_1168 = gc_frame_newslot(call1170);
+  params[0] = call1170;
   partcv[0] = 1;
-  Object opresult1132 = callmethod(*var_curPos, "<", 1, partcv, params);
-// compilenode returning opresult1132
-  int op_slot_left_1127 = gc_frame_newslot(opresult1132);
-  int callframe1133 = gc_frame_new();
+  Object opresult1172 = callmethod(*var_curPos, "<", 1, partcv, params);
+// compilenode returning opresult1172
+  int op_slot_left_1167 = gc_frame_newslot(opresult1172);
+  int callframe1173 = gc_frame_new();
 // compilenode returning *var_line
 // compilenode returning *var_curPos
-  int op_slot_left_1136 = gc_frame_newslot(*var_curPos);
-  Object num1137 = alloc_Float64(1);
-// compilenode returning num1137
-  int op_slot_right_1136 = gc_frame_newslot(num1137);
-  params[0] = num1137;
+  int op_slot_left_1176 = gc_frame_newslot(*var_curPos);
+  Object num1177 = alloc_Float64(1);
+// compilenode returning num1177
+  int op_slot_right_1176 = gc_frame_newslot(num1177);
+  params[0] = num1177;
   partcv[0] = 1;
-  Object sum1139 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1139
-  params[0] = sum1139;
+  Object sum1179 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1179
+  params[0] = sum1179;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1140 = callmethod(*var_line, "[]", 1, partcv, params);
-// compilenode returning idxres1140
-  int op_slot_left_1135 = gc_frame_newslot(idxres1140);
-  if (strlit1141 == NULL) {
-    strlit1141 = alloc_String("""\x22""");
-    gc_root(strlit1141);
+  Object idxres1180 = callmethod(*var_line, "[]", 1, partcv, params);
+// compilenode returning idxres1180
+  int op_slot_left_1175 = gc_frame_newslot(idxres1180);
+  if (strlit1181 == NULL) {
+    strlit1181 = alloc_String("""\x22""");
+    gc_root(strlit1181);
   }
-// compilenode returning strlit1141
-  int op_slot_right_1135 = gc_frame_newslot(strlit1141);
-  params[0] = strlit1141;
+// compilenode returning strlit1181
+  int op_slot_right_1175 = gc_frame_newslot(strlit1181);
+  params[0] = strlit1181;
   partcv[0] = 1;
-  Object opresult1143 = callmethod(idxres1140, "==", 1, partcv, params);
-// compilenode returning opresult1143
-  int op_slot_left_1134 = gc_frame_newslot(opresult1143);
+  Object opresult1183 = callmethod(idxres1180, "==", 1, partcv, params);
+// compilenode returning opresult1183
+  int op_slot_left_1174 = gc_frame_newslot(opresult1183);
 // compilenode returning *var_line
 // compilenode returning *var_curPos
-  int op_slot_left_1145 = gc_frame_newslot(*var_curPos);
-  Object num1146 = alloc_Float64(1);
-// compilenode returning num1146
-  int op_slot_right_1145 = gc_frame_newslot(num1146);
-  params[0] = num1146;
+  int op_slot_left_1185 = gc_frame_newslot(*var_curPos);
+  Object num1186 = alloc_Float64(1);
+// compilenode returning num1186
+  int op_slot_right_1185 = gc_frame_newslot(num1186);
+  params[0] = num1186;
   partcv[0] = 1;
-  Object sum1148 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1148
-  params[0] = sum1148;
+  Object sum1188 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1188
+  params[0] = sum1188;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1149 = callmethod(*var_line, "[]", 1, partcv, params);
-// compilenode returning idxres1149
-  int op_slot_left_1144 = gc_frame_newslot(idxres1149);
-  if (strlit1150 == NULL) {
-    strlit1150 = alloc_String(" ");
-    gc_root(strlit1150);
+  Object idxres1189 = callmethod(*var_line, "[]", 1, partcv, params);
+// compilenode returning idxres1189
+  int op_slot_left_1184 = gc_frame_newslot(idxres1189);
+  if (strlit1190 == NULL) {
+    strlit1190 = alloc_String(" ");
+    gc_root(strlit1190);
   }
-// compilenode returning strlit1150
-  int op_slot_right_1144 = gc_frame_newslot(strlit1150);
-  params[0] = strlit1150;
+// compilenode returning strlit1190
+  int op_slot_right_1184 = gc_frame_newslot(strlit1190);
+  params[0] = strlit1190;
   partcv[0] = 1;
-  Object opresult1152 = callmethod(idxres1149, "==", 1, partcv, params);
-// compilenode returning opresult1152
-  int op_slot_right_1134 = gc_frame_newslot(opresult1152);
-  params[0] = opresult1152;
+  Object opresult1192 = callmethod(idxres1189, "==", 1, partcv, params);
+// compilenode returning opresult1192
+  int op_slot_right_1174 = gc_frame_newslot(opresult1192);
+  params[0] = opresult1192;
   partcv[0] = 1;
-  Object opresult1154 = callmethod(opresult1143, "||", 1, partcv, params);
-// compilenode returning opresult1154
+  Object opresult1194 = callmethod(opresult1183, "||", 1, partcv, params);
+// compilenode returning opresult1194
   partcv[0] = 0;
-  Object call1155 = callmethod(opresult1154, "prefix!",
+  Object call1195 = callmethod(opresult1194, "prefix!",
     1, partcv, params);
-  gc_frame_end(callframe1133);
-// compilenode returning call1155
-  int op_slot_right_1127 = gc_frame_newslot(call1155);
-  params[0] = call1155;
+  gc_frame_end(callframe1173);
+// compilenode returning call1195
+  int op_slot_right_1167 = gc_frame_newslot(call1195);
+  params[0] = call1195;
   partcv[0] = 1;
-  Object opresult1157 = callmethod(opresult1132, "&&", 1, partcv, params);
-// compilenode returning opresult1157
+  Object opresult1197 = callmethod(opresult1172, "&&", 1, partcv, params);
+// compilenode returning opresult1197
   gc_frame_end(frame);
-  return opresult1157;
+  return opresult1197;
 }
-Object meth_PackageManager__apply1160(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1200(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -8473,31 +8590,31 @@ Object meth_PackageManager__apply1160(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 376
-  setline(376);
+// Begin line 369
+  setline(369);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 375
-  setline(375);
+// Begin line 368
+  setline(368);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1161 = gc_frame_newslot(*var_curPos);
-  Object num1162 = alloc_Float64(1);
-// compilenode returning num1162
-  int op_slot_right_1161 = gc_frame_newslot(num1162);
-  params[0] = num1162;
+  int op_slot_left_1201 = gc_frame_newslot(*var_curPos);
+  Object num1202 = alloc_Float64(1);
+// compilenode returning num1202
+  int op_slot_right_1201 = gc_frame_newslot(num1202);
+  params[0] = num1202;
   partcv[0] = 1;
-  Object sum1164 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1164
-  *var_curPos = sum1164;
-  if (sum1164 == undefined)
+  Object sum1204 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1204
+  *var_curPos = sum1204;
+  if (sum1204 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_parseImport1112(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_parseImport1152(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 17, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(5, getclosureframe(closure));
@@ -8532,26 +8649,26 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "startPos");
   Object *var_nextImport = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "nextImport");
-// Begin line 369
-  setline(369);
+// Begin line 362
+  setline(362);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 368
-  setline(368);
+// Begin line 361
+  setline(361);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1113 = alloc_Float64(1);
-// compilenode returning num1113
-  *var_curPos = num1113;
-  if (num1113 == undefined)
+  Object num1153 = alloc_Float64(1);
+// compilenode returning num1153
+  *var_curPos = num1153;
+  if (num1153 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 370
-  setline(370);
+// Begin line 363
+  setline(363);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 369
-  setline(369);
+// Begin line 362
+  setline(362);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -8559,30 +8676,30 @@ if (argcv && argcv[0] > 1)
   if (*var_curPos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 371
-  setline(371);
+// Begin line 364
+  setline(364);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 370
-  setline(370);
+// Begin line 363
+  setline(363);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1114 == NULL) {
-    strlit1114 = alloc_String("");
-    gc_root(strlit1114);
+  if (strlit1154 == NULL) {
+    strlit1154 = alloc_String("");
+    gc_root(strlit1154);
   }
-// compilenode returning strlit1114
-  *var_nextImport = strlit1114;
-  if (strlit1114 == undefined)
+// compilenode returning strlit1154
+  *var_nextImport = strlit1154;
+  if (strlit1154 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 372
-  setline(372);
+// Begin line 365
+  setline(365);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1115 = gc_frame_new();
-// Begin line 371
-  setline(371);
+  int callframe1155 = gc_frame_new();
+// Begin line 364
+  setline(364);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_line
@@ -8592,40 +8709,40 @@ if (argcv && argcv[0] > 1)
   params[0] = *var_line;
   params[1] = *var_curPos;
   partcv[0] = 2;
-  Object call1116 = callmethodflags(self, "skipWhiteSpace", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1115);
-// compilenode returning call1116
-  *var_curPos = call1116;
-  if (call1116 == undefined)
+  Object call1156 = callmethodflags(self, "skipWhiteSpace", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1155);
+// compilenode returning call1156
+  *var_curPos = call1156;
+  if (call1156 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 373
-  setline(373);
+// Begin line 366
+  setline(366);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 372
-  setline(372);
+// Begin line 365
+  setline(365);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1118 = gc_frame_newslot(*var_curPos);
-  Object num1119 = alloc_Float64(1);
-// compilenode returning num1119
-  int op_slot_right_1118 = gc_frame_newslot(num1119);
-  params[0] = num1119;
+  int op_slot_left_1158 = gc_frame_newslot(*var_curPos);
+  Object num1159 = alloc_Float64(1);
+// compilenode returning num1159
+  int op_slot_right_1158 = gc_frame_newslot(num1159);
+  params[0] = num1159;
   partcv[0] = 1;
-  Object sum1121 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1121
-  *var_curPos = sum1121;
-  if (sum1121 == undefined)
+  Object sum1161 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1161
+  *var_curPos = sum1161;
+  if (sum1161 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 374
-  setline(374);
+// Begin line 367
+  setline(367);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 373
-  setline(373);
+// Begin line 366
+  setline(366);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -8633,66 +8750,66 @@ if (argcv && argcv[0] > 1)
   if (*var_curPos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 377
-  setline(377);
+// Begin line 370
+  setline(370);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1124 = gc_frame_new();
-// Begin line 374
-  setline(374);
+  int callframe1164 = gc_frame_new();
+// Begin line 367
+  setline(367);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1125 = alloc_Block(NULL, NULL, "PackageManager", 374);
-  gc_frame_newslot(block1125);
-  block_savedest(block1125);
-  Object closure1126 = createclosure(3, "_apply");
-setclosureframe(closure1126, stackframe);
-  addtoclosure(closure1126, var_curPos);
-  addtoclosure(closure1126, var_line);
-  addtoclosure(closure1126, selfslot);
-  struct UserObject *uo1126 = (struct UserObject*)block1125;
-  uo1126->data[0] = (Object)closure1126;
-  Method *meth_meth_PackageManager__apply1126 = addmethod2pos(block1125, "_apply", &meth_PackageManager__apply1126, 0);
-int argcv_meth_PackageManager__apply1126[] = {0};
-meth_meth_PackageManager__apply1126->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1126);
-  meth_meth_PackageManager__apply1126->definitionModule = modulename;
-  meth_meth_PackageManager__apply1126->definitionLine = 360;
-// compilenode returning block1125
-  gc_frame_newslot(block1125);
-// Begin line 377
-  setline(377);
+  Object block1165 = alloc_Block(NULL, NULL, "PackageManager", 367);
+  gc_frame_newslot(block1165);
+  block_savedest(block1165);
+  Object closure1166 = createclosure(3, "_apply");
+setclosureframe(closure1166, stackframe);
+  addtoclosure(closure1166, var_curPos);
+  addtoclosure(closure1166, var_line);
+  addtoclosure(closure1166, selfslot);
+  struct UserObject *uo1166 = (struct UserObject*)block1165;
+  uo1166->data[0] = (Object)closure1166;
+  Method *meth_meth_PackageManager__apply1166 = addmethod2pos(block1165, "_apply", &meth_PackageManager__apply1166, 0);
+int argcv_meth_PackageManager__apply1166[] = {0};
+meth_meth_PackageManager__apply1166->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1166);
+  meth_meth_PackageManager__apply1166->definitionModule = modulename;
+  meth_meth_PackageManager__apply1166->definitionLine = 353;
+// compilenode returning block1165
+  gc_frame_newslot(block1165);
+// Begin line 370
+  setline(370);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1159 = alloc_Block(NULL, NULL, "PackageManager", 377);
-  gc_frame_newslot(block1159);
-  block_savedest(block1159);
-  Object closure1160 = createclosure(2, "_apply");
-setclosureframe(closure1160, stackframe);
-  addtoclosure(closure1160, var_curPos);
-  addtoclosure(closure1160, selfslot);
-  struct UserObject *uo1160 = (struct UserObject*)block1159;
-  uo1160->data[0] = (Object)closure1160;
-  Method *meth_meth_PackageManager__apply1160 = addmethod2pos(block1159, "_apply", &meth_PackageManager__apply1160, 0);
-int argcv_meth_PackageManager__apply1160[] = {0};
-meth_meth_PackageManager__apply1160->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1160);
-  meth_meth_PackageManager__apply1160->definitionModule = modulename;
-  meth_meth_PackageManager__apply1160->definitionLine = 374;
-// compilenode returning block1159
-  gc_frame_newslot(block1159);
-  params[0] = block1125;
-  params[1] = block1159;
+  Object block1199 = alloc_Block(NULL, NULL, "PackageManager", 370);
+  gc_frame_newslot(block1199);
+  block_savedest(block1199);
+  Object closure1200 = createclosure(2, "_apply");
+setclosureframe(closure1200, stackframe);
+  addtoclosure(closure1200, var_curPos);
+  addtoclosure(closure1200, selfslot);
+  struct UserObject *uo1200 = (struct UserObject*)block1199;
+  uo1200->data[0] = (Object)closure1200;
+  Method *meth_meth_PackageManager__apply1200 = addmethod2pos(block1199, "_apply", &meth_PackageManager__apply1200, 0);
+int argcv_meth_PackageManager__apply1200[] = {0};
+meth_meth_PackageManager__apply1200->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1200);
+  meth_meth_PackageManager__apply1200->definitionModule = modulename;
+  meth_meth_PackageManager__apply1200->definitionLine = 367;
+// compilenode returning block1199
+  gc_frame_newslot(block1199);
+  params[0] = block1165;
+  params[1] = block1199;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1167 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1124);
-// compilenode returning call1167
-// Begin line 378
-  setline(378);
+  Object call1207 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1164);
+// compilenode returning call1207
+// Begin line 371
+  setline(371);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1168 = gc_frame_new();
-// Begin line 377
-  setline(377);
+  int callframe1208 = gc_frame_new();
+// Begin line 370
+  setline(370);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_startPos
@@ -8704,70 +8821,70 @@ meth_meth_PackageManager__apply1160->type = alloc_MethodType(1, argcv_meth_Packa
   params[1] = *var_curPos;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1169 = callmethod(*var_line, "substringFrom()to",
+  Object call1209 = callmethod(*var_line, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1168);
-// compilenode returning call1169
-  *var_nextImport = call1169;
-  if (call1169 == undefined)
+  gc_frame_end(callframe1208);
+// compilenode returning call1209
+  *var_nextImport = call1209;
+  if (call1209 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 382
-  setline(382);
+// Begin line 375
+  setline(375);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 378
-  setline(378);
+// Begin line 371
+  setline(371);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1172 = gc_frame_new();
-  int callframe1173 = gc_frame_new();
+  int callframe1212 = gc_frame_new();
+  int callframe1213 = gc_frame_new();
 // compilenode returning *var_nextImport
   gc_frame_newslot(*var_nextImport);
 // compilenode returning *var_imported
   params[0] = *var_nextImport;
   partcv[0] = 1;
-  Object call1174 = callmethod(*var_imported, "contains",
+  Object call1214 = callmethod(*var_imported, "contains",
     1, partcv, params);
-  gc_frame_end(callframe1173);
-// compilenode returning call1174
+  gc_frame_end(callframe1213);
+// compilenode returning call1214
   partcv[0] = 0;
-  Object call1175 = callmethod(call1174, "prefix!",
+  Object call1215 = callmethod(call1214, "prefix!",
     1, partcv, params);
-  gc_frame_end(callframe1172);
-// compilenode returning call1175
-  Object if1171 = done;
-  if (istrue(call1175)) {
-// Begin line 380
-  setline(380);
+  gc_frame_end(callframe1212);
+// compilenode returning call1215
+  Object if1211 = done;
+  if (istrue(call1215)) {
+// Begin line 373
+  setline(373);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 379
-  setline(379);
+// Begin line 372
+  setline(372);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1177 == NULL) {
-    strlit1177 = alloc_String("next import = ");
-    gc_root(strlit1177);
+  if (strlit1217 == NULL) {
+    strlit1217 = alloc_String("next import = ");
+    gc_root(strlit1217);
   }
-// compilenode returning strlit1177
-  int op_slot_left_1176 = gc_frame_newslot(strlit1177);
+// compilenode returning strlit1217
+  int op_slot_left_1216 = gc_frame_newslot(strlit1217);
 // compilenode returning *var_nextImport
-  int op_slot_right_1176 = gc_frame_newslot(*var_nextImport);
+  int op_slot_right_1216 = gc_frame_newslot(*var_nextImport);
   params[0] = *var_nextImport;
   partcv[0] = 1;
-  Object opresult1179 = callmethod(strlit1177, "++", 1, partcv, params);
-// compilenode returning opresult1179
-  params[0] = opresult1179;
-  Object call1180 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1180
-// Begin line 381
-  setline(381);
+  Object opresult1219 = callmethod(strlit1217, "++", 1, partcv, params);
+// compilenode returning opresult1219
+  params[0] = opresult1219;
+  Object call1220 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1220
+// Begin line 374
+  setline(374);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1181 = gc_frame_new();
-// Begin line 380
-  setline(380);
+  int callframe1221 = gc_frame_new();
+// Begin line 373
+  setline(373);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_nextImport
@@ -8775,19 +8892,19 @@ meth_meth_PackageManager__apply1160->type = alloc_MethodType(1, argcv_meth_Packa
 // compilenode returning *var_toProcess
   params[0] = *var_nextImport;
   partcv[0] = 1;
-  Object call1182 = callmethod(*var_toProcess, "push",
+  Object call1222 = callmethod(*var_toProcess, "push",
     1, partcv, params);
-  gc_frame_end(callframe1181);
-// compilenode returning call1182
-    gc_frame_newslot(call1182);
-    if1171 = call1182;
+  gc_frame_end(callframe1221);
+// compilenode returning call1222
+    gc_frame_newslot(call1222);
+    if1211 = call1222;
   } else {
   }
-// compilenode returning if1171
+// compilenode returning if1211
   gc_frame_end(frame);
-  return if1171;
+  return if1211;
 }
-Object meth_PackageManager__apply1186(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1226(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -8810,48 +8927,48 @@ Object meth_PackageManager__apply1186(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_count2
-  int op_slot_left_1188 = gc_frame_newslot(*var_count2);
-  int callframe1189 = gc_frame_new();
+  int op_slot_left_1228 = gc_frame_newslot(*var_count2);
+  int callframe1229 = gc_frame_new();
 // compilenode returning *var_line
   partcv[0] = 0;
-  Object call1190 = callmethod(*var_line, "size",
+  Object call1230 = callmethod(*var_line, "size",
     1, partcv, params);
-  gc_frame_end(callframe1189);
-// compilenode returning call1190
-// compilenode returning call1190
-  int op_slot_right_1188 = gc_frame_newslot(call1190);
-  params[0] = call1190;
+  gc_frame_end(callframe1229);
+// compilenode returning call1230
+// compilenode returning call1230
+  int op_slot_right_1228 = gc_frame_newslot(call1230);
+  params[0] = call1230;
   partcv[0] = 1;
-  Object opresult1192 = callmethod(*var_count2, "<=", 1, partcv, params);
-// compilenode returning opresult1192
-  int op_slot_left_1187 = gc_frame_newslot(opresult1192);
+  Object opresult1232 = callmethod(*var_count2, "<=", 1, partcv, params);
+// compilenode returning opresult1232
+  int op_slot_left_1227 = gc_frame_newslot(opresult1232);
 // compilenode returning *var_line
 // compilenode returning *var_count2
   params[0] = *var_count2;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1194 = callmethod(*var_line, "[]", 1, partcv, params);
-// compilenode returning idxres1194
-  int op_slot_left_1193 = gc_frame_newslot(idxres1194);
-  if (strlit1195 == NULL) {
-    strlit1195 = alloc_String("Could not retrieve ");
-    gc_root(strlit1195);
+  Object idxres1234 = callmethod(*var_line, "[]", 1, partcv, params);
+// compilenode returning idxres1234
+  int op_slot_left_1233 = gc_frame_newslot(idxres1234);
+  if (strlit1235 == NULL) {
+    strlit1235 = alloc_String("Could not retrieve ");
+    gc_root(strlit1235);
   }
-// compilenode returning strlit1195
-  int op_slot_right_1193 = gc_frame_newslot(strlit1195);
-  params[0] = strlit1195;
+// compilenode returning strlit1235
+  int op_slot_right_1233 = gc_frame_newslot(strlit1235);
+  params[0] = strlit1235;
   partcv[0] = 1;
-  Object opresult1197 = callmethod(idxres1194, "==", 1, partcv, params);
-// compilenode returning opresult1197
-  int op_slot_right_1187 = gc_frame_newslot(opresult1197);
-  params[0] = opresult1197;
+  Object opresult1237 = callmethod(idxres1234, "==", 1, partcv, params);
+// compilenode returning opresult1237
+  int op_slot_right_1227 = gc_frame_newslot(opresult1237);
+  params[0] = opresult1237;
   partcv[0] = 1;
-  Object opresult1199 = callmethod(opresult1192, "&&", 1, partcv, params);
-// compilenode returning opresult1199
+  Object opresult1239 = callmethod(opresult1232, "&&", 1, partcv, params);
+// compilenode returning opresult1239
   gc_frame_end(frame);
-  return opresult1199;
+  return opresult1239;
 }
-Object meth_PackageManager__apply1202(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1242(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -8872,31 +8989,31 @@ Object meth_PackageManager__apply1202(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 388
-  setline(388);
+// Begin line 381
+  setline(381);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 387
-  setline(387);
+// Begin line 380
+  setline(380);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count2
-  int op_slot_left_1203 = gc_frame_newslot(*var_count2);
-  Object num1204 = alloc_Float64(1);
-// compilenode returning num1204
-  int op_slot_right_1203 = gc_frame_newslot(num1204);
-  params[0] = num1204;
+  int op_slot_left_1243 = gc_frame_newslot(*var_count2);
+  Object num1244 = alloc_Float64(1);
+// compilenode returning num1244
+  int op_slot_right_1243 = gc_frame_newslot(num1244);
+  params[0] = num1244;
   partcv[0] = 1;
-  Object sum1206 = callmethod(*var_count2, "+", 1, partcv, params);
-// compilenode returning sum1206
-  *var_count2 = sum1206;
-  if (sum1206 == undefined)
+  Object sum1246 = callmethod(*var_count2, "+", 1, partcv, params);
+// compilenode returning sum1246
+  *var_count2 = sum1246;
+  if (sum1246 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_skipWhiteSpace1183(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_skipWhiteSpace1223(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(4, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "skipWhiteSpace");
@@ -8926,12 +9043,12 @@ if (argcv && argcv[0] > 2)
   if (methodInheritingObject) curarg++;
   Object *var_count2 = &(stackframe->slots[3]);
   setframeelementname(stackframe, 3, "count2");
-// Begin line 386
-  setline(386);
+// Begin line 379
+  setline(379);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 385
-  setline(385);
+// Begin line 378
+  setline(378);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count
@@ -8939,68 +9056,68 @@ if (argcv && argcv[0] > 2)
   if (*var_count == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 389
-  setline(389);
+// Begin line 382
+  setline(382);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1184 = gc_frame_new();
-// Begin line 386
-  setline(386);
+  int callframe1224 = gc_frame_new();
+// Begin line 379
+  setline(379);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1185 = alloc_Block(NULL, NULL, "PackageManager", 386);
-  gc_frame_newslot(block1185);
-  block_savedest(block1185);
-  Object closure1186 = createclosure(3, "_apply");
-setclosureframe(closure1186, stackframe);
-  addtoclosure(closure1186, var_count2);
-  addtoclosure(closure1186, var_line);
-  addtoclosure(closure1186, selfslot);
-  struct UserObject *uo1186 = (struct UserObject*)block1185;
-  uo1186->data[0] = (Object)closure1186;
-  Method *meth_meth_PackageManager__apply1186 = addmethod2pos(block1185, "_apply", &meth_PackageManager__apply1186, 0);
-int argcv_meth_PackageManager__apply1186[] = {0};
-meth_meth_PackageManager__apply1186->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1186);
-  meth_meth_PackageManager__apply1186->definitionModule = modulename;
-  meth_meth_PackageManager__apply1186->definitionLine = 374;
-// compilenode returning block1185
-  gc_frame_newslot(block1185);
-// Begin line 389
-  setline(389);
+  Object block1225 = alloc_Block(NULL, NULL, "PackageManager", 379);
+  gc_frame_newslot(block1225);
+  block_savedest(block1225);
+  Object closure1226 = createclosure(3, "_apply");
+setclosureframe(closure1226, stackframe);
+  addtoclosure(closure1226, var_count2);
+  addtoclosure(closure1226, var_line);
+  addtoclosure(closure1226, selfslot);
+  struct UserObject *uo1226 = (struct UserObject*)block1225;
+  uo1226->data[0] = (Object)closure1226;
+  Method *meth_meth_PackageManager__apply1226 = addmethod2pos(block1225, "_apply", &meth_PackageManager__apply1226, 0);
+int argcv_meth_PackageManager__apply1226[] = {0};
+meth_meth_PackageManager__apply1226->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1226);
+  meth_meth_PackageManager__apply1226->definitionModule = modulename;
+  meth_meth_PackageManager__apply1226->definitionLine = 367;
+// compilenode returning block1225
+  gc_frame_newslot(block1225);
+// Begin line 382
+  setline(382);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1201 = alloc_Block(NULL, NULL, "PackageManager", 389);
-  gc_frame_newslot(block1201);
-  block_savedest(block1201);
-  Object closure1202 = createclosure(2, "_apply");
-setclosureframe(closure1202, stackframe);
-  addtoclosure(closure1202, var_count2);
-  addtoclosure(closure1202, selfslot);
-  struct UserObject *uo1202 = (struct UserObject*)block1201;
-  uo1202->data[0] = (Object)closure1202;
-  Method *meth_meth_PackageManager__apply1202 = addmethod2pos(block1201, "_apply", &meth_PackageManager__apply1202, 0);
-int argcv_meth_PackageManager__apply1202[] = {0};
-meth_meth_PackageManager__apply1202->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1202);
-  meth_meth_PackageManager__apply1202->definitionModule = modulename;
-  meth_meth_PackageManager__apply1202->definitionLine = 386;
-// compilenode returning block1201
-  gc_frame_newslot(block1201);
-  params[0] = block1185;
-  params[1] = block1201;
+  Object block1241 = alloc_Block(NULL, NULL, "PackageManager", 382);
+  gc_frame_newslot(block1241);
+  block_savedest(block1241);
+  Object closure1242 = createclosure(2, "_apply");
+setclosureframe(closure1242, stackframe);
+  addtoclosure(closure1242, var_count2);
+  addtoclosure(closure1242, selfslot);
+  struct UserObject *uo1242 = (struct UserObject*)block1241;
+  uo1242->data[0] = (Object)closure1242;
+  Method *meth_meth_PackageManager__apply1242 = addmethod2pos(block1241, "_apply", &meth_PackageManager__apply1242, 0);
+int argcv_meth_PackageManager__apply1242[] = {0};
+meth_meth_PackageManager__apply1242->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1242);
+  meth_meth_PackageManager__apply1242->definitionModule = modulename;
+  meth_meth_PackageManager__apply1242->definitionLine = 379;
+// compilenode returning block1241
+  gc_frame_newslot(block1241);
+  params[0] = block1225;
+  params[1] = block1241;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1209 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1184);
-// compilenode returning call1209
-// Begin line 389
-  setline(389);
+  Object call1249 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1224);
+// compilenode returning call1249
+// Begin line 382
+  setline(382);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count2
   gc_frame_end(frame);
   return *var_count2;
 }
-Object meth_PackageManager_displayHelp1210(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_displayHelp1250(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(1, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "displayHelp");
@@ -9020,58 +9137,58 @@ if (argcv && argcv[0] > 0)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 394
-  setline(394);
+// Begin line 387
+  setline(387);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 393
-  setline(393);
+// Begin line 386
+  setline(386);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1211 == NULL) {
-    strlit1211 = alloc_String("Available options are:");
-    gc_root(strlit1211);
+  if (strlit1251 == NULL) {
+    strlit1251 = alloc_String("Available options are:");
+    gc_root(strlit1251);
   }
-// compilenode returning strlit1211
-  params[0] = strlit1211;
-  Object call1212 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1212
-// Begin line 395
-  setline(395);
+// compilenode returning strlit1251
+  params[0] = strlit1251;
+  Object call1252 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1252
+// Begin line 388
+  setline(388);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 394
-  setline(394);
+// Begin line 387
+  setline(387);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1213 == NULL) {
-    strlit1213 = alloc_String("-get [url] to fetch a package located at a given url");
-    gc_root(strlit1213);
+  if (strlit1253 == NULL) {
+    strlit1253 = alloc_String("-get [url] to fetch a package located at a given url");
+    gc_root(strlit1253);
   }
-// compilenode returning strlit1213
-  params[0] = strlit1213;
-  Object call1214 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1214
-// Begin line 396
-  setline(396);
+// compilenode returning strlit1253
+  params[0] = strlit1253;
+  Object call1254 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1254
+// Begin line 389
+  setline(389);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 395
-  setline(395);
+// Begin line 388
+  setline(388);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1215 == NULL) {
-    strlit1215 = alloc_String("-list to display currenly installed packages");
-    gc_root(strlit1215);
+  if (strlit1255 == NULL) {
+    strlit1255 = alloc_String("-list to display currenly installed packages");
+    gc_root(strlit1255);
   }
-// compilenode returning strlit1215
-  params[0] = strlit1215;
-  Object call1216 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1216
+// compilenode returning strlit1255
+  params[0] = strlit1255;
+  Object call1256 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1256
   gc_frame_end(frame);
-  return call1216;
+  return call1256;
 }
-Object meth_PackageManager_printMessage1217(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_printMessage1257(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 20, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -9099,38 +9216,38 @@ if (argcv && argcv[0] > 1)
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 402
-  setline(402);
+// Begin line 395
+  setline(395);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 399
-  setline(399);
+// Begin line 392
+  setline(392);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_verbose
-  Object if1218 = done;
+  Object if1258 = done;
   if (istrue(*var_verbose)) {
-// Begin line 401
-  setline(401);
+// Begin line 394
+  setline(394);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 400
-  setline(400);
+// Begin line 393
+  setline(393);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_message
   params[0] = *var_message;
-  Object call1219 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1219
-    gc_frame_newslot(call1219);
-    if1218 = call1219;
+  Object call1259 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1259
+    gc_frame_newslot(call1259);
+    if1258 = call1259;
   } else {
   }
-// compilenode returning if1218
+// compilenode returning if1258
   gc_frame_end(frame);
-  return if1218;
+  return if1258;
 }
-Object meth_PackageManager__apply1282(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1322(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -9151,26 +9268,26 @@ Object meth_PackageManager__apply1282(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-  int callframe1284 = gc_frame_new();
+  int callframe1324 = gc_frame_new();
 // compilenode returning *var_imported
   partcv[0] = 0;
-  Object call1285 = callmethod(*var_imported, "size",
+  Object call1325 = callmethod(*var_imported, "size",
     1, partcv, params);
-  gc_frame_end(callframe1284);
-// compilenode returning call1285
-// compilenode returning call1285
-  int op_slot_left_1283 = gc_frame_newslot(call1285);
-  Object num1286 = alloc_Float64(0);
-// compilenode returning num1286
-  int op_slot_right_1283 = gc_frame_newslot(num1286);
-  params[0] = num1286;
+  gc_frame_end(callframe1324);
+// compilenode returning call1325
+// compilenode returning call1325
+  int op_slot_left_1323 = gc_frame_newslot(call1325);
+  Object num1326 = alloc_Float64(0);
+// compilenode returning num1326
+  int op_slot_right_1323 = gc_frame_newslot(num1326);
+  params[0] = num1326;
   partcv[0] = 1;
-  Object opresult1288 = callmethod(call1285, ">", 1, partcv, params);
-// compilenode returning opresult1288
+  Object opresult1328 = callmethod(call1325, ">", 1, partcv, params);
+// compilenode returning opresult1328
   gc_frame_end(frame);
-  return opresult1288;
+  return opresult1328;
 }
-Object meth_PackageManager__apply1291(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1331(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -9196,138 +9313,138 @@ Object meth_PackageManager__apply1291(Object realself, int nparts, int *argcv, O
   if (methodInheritingObject) curarg++;
   Object *var_curImport = &(stackframe->slots[1]);
   setframeelementname(stackframe, 1, "curImport");
-// Begin line 420
-  setline(420);
+// Begin line 413
+  setline(413);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 419
-  setline(419);
+// Begin line 412
+  setline(412);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1292 = gc_frame_new();
+  int callframe1332 = gc_frame_new();
 // compilenode returning *var_imported
   partcv[0] = 0;
-  Object call1293 = callmethod(*var_imported, "pop",
+  Object call1333 = callmethod(*var_imported, "pop",
     1, partcv, params);
-  gc_frame_end(callframe1292);
-// compilenode returning call1293
-// compilenode returning call1293
-  *var_curImport = call1293;
-  if (call1293 == undefined)
+  gc_frame_end(callframe1332);
+// compilenode returning call1333
+// compilenode returning call1333
+  *var_curImport = call1333;
+  if (call1333 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 421
-  setline(421);
+// Begin line 414
+  setline(414);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1294 = gc_frame_new();
-// Begin line 420
-  setline(420);
+  int callframe1334 = gc_frame_new();
+// Begin line 413
+  setline(413);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1299 == NULL) {
-    strlit1299 = alloc_String("");
-    gc_root(strlit1299);
+  if (strlit1339 == NULL) {
+    strlit1339 = alloc_String("");
+    gc_root(strlit1339);
   }
-// compilenode returning strlit1299
-  int op_slot_left_1298 = gc_frame_newslot(strlit1299);
+// compilenode returning strlit1339
+  int op_slot_left_1338 = gc_frame_newslot(strlit1339);
 // compilenode returning *var_name
-  int op_slot_right_1298 = gc_frame_newslot(*var_name);
+  int op_slot_right_1338 = gc_frame_newslot(*var_name);
   params[0] = *var_name;
   partcv[0] = 1;
-  Object opresult1301 = callmethod(strlit1299, "++", 1, partcv, params);
-// compilenode returning opresult1301
-  int op_slot_left_1297 = gc_frame_newslot(opresult1301);
-  if (strlit1302 == NULL) {
-    strlit1302 = alloc_String("/");
-    gc_root(strlit1302);
+  Object opresult1341 = callmethod(strlit1339, "++", 1, partcv, params);
+// compilenode returning opresult1341
+  int op_slot_left_1337 = gc_frame_newslot(opresult1341);
+  if (strlit1342 == NULL) {
+    strlit1342 = alloc_String("/");
+    gc_root(strlit1342);
   }
-// compilenode returning strlit1302
-  int op_slot_right_1297 = gc_frame_newslot(strlit1302);
-  params[0] = strlit1302;
+// compilenode returning strlit1342
+  int op_slot_right_1337 = gc_frame_newslot(strlit1342);
+  params[0] = strlit1342;
   partcv[0] = 1;
-  Object opresult1304 = callmethod(opresult1301, "++", 1, partcv, params);
-// compilenode returning opresult1304
-  int op_slot_left_1296 = gc_frame_newslot(opresult1304);
-  int callframe1305 = gc_frame_new();
-  int callframe1306 = gc_frame_new();
+  Object opresult1344 = callmethod(opresult1341, "++", 1, partcv, params);
+// compilenode returning opresult1344
+  int op_slot_left_1336 = gc_frame_newslot(opresult1344);
+  int callframe1345 = gc_frame_new();
+  int callframe1346 = gc_frame_new();
 // compilenode returning *var_curImport
   partcv[0] = 0;
-  Object call1307 = callmethod(*var_curImport, "address",
+  Object call1347 = callmethod(*var_curImport, "address",
     1, partcv, params);
-  gc_frame_end(callframe1306);
-// compilenode returning call1307
-// compilenode returning call1307
-  gc_frame_newslot(call1307);
-  params[0] = call1307;
+  gc_frame_end(callframe1346);
+// compilenode returning call1347
+// compilenode returning call1347
+  gc_frame_newslot(call1347);
+  params[0] = call1347;
   partcv[0] = 1;
-  Object call1308 = callmethodflags(self, "removeContainingDir", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1305);
-// compilenode returning call1308
-  int op_slot_right_1296 = gc_frame_newslot(call1308);
-  params[0] = call1308;
+  Object call1348 = callmethodflags(self, "removeContainingDir", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1345);
+// compilenode returning call1348
+  int op_slot_right_1336 = gc_frame_newslot(call1348);
+  params[0] = call1348;
   partcv[0] = 1;
-  Object opresult1310 = callmethod(opresult1304, "++", 1, partcv, params);
-// compilenode returning opresult1310
-  int op_slot_left_1295 = gc_frame_newslot(opresult1310);
-  if (strlit1311 == NULL) {
-    strlit1311 = alloc_String("");
-    gc_root(strlit1311);
+  Object opresult1350 = callmethod(opresult1344, "++", 1, partcv, params);
+// compilenode returning opresult1350
+  int op_slot_left_1335 = gc_frame_newslot(opresult1350);
+  if (strlit1351 == NULL) {
+    strlit1351 = alloc_String("");
+    gc_root(strlit1351);
   }
-// compilenode returning strlit1311
-  int op_slot_right_1295 = gc_frame_newslot(strlit1311);
-  params[0] = strlit1311;
+// compilenode returning strlit1351
+  int op_slot_right_1335 = gc_frame_newslot(strlit1351);
+  params[0] = strlit1351;
   partcv[0] = 1;
-  Object opresult1313 = callmethod(opresult1310, "++", 1, partcv, params);
-// compilenode returning opresult1313
-  gc_frame_newslot(opresult1313);
-  if (strlit1314 == NULL) {
-    strlit1314 = alloc_String("w");
-    gc_root(strlit1314);
+  Object opresult1353 = callmethod(opresult1350, "++", 1, partcv, params);
+// compilenode returning opresult1353
+  gc_frame_newslot(opresult1353);
+  if (strlit1354 == NULL) {
+    strlit1354 = alloc_String("w");
+    gc_root(strlit1354);
   }
-// compilenode returning strlit1314
-  gc_frame_newslot(strlit1314);
+// compilenode returning strlit1354
+  gc_frame_newslot(strlit1354);
 // compilenode returning *var_io
-  params[0] = opresult1313;
-  params[1] = strlit1314;
+  params[0] = opresult1353;
+  params[1] = strlit1354;
   partcv[0] = 2;
-  Object call1315 = callmethod(*var_io, "open",
+  Object call1355 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe1294);
-// compilenode returning call1315
-  *var_toWrite = call1315;
-  if (call1315 == undefined)
+  gc_frame_end(callframe1334);
+// compilenode returning call1355
+  *var_toWrite = call1355;
+  if (call1355 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 422
-  setline(422);
+// Begin line 415
+  setline(415);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1317 = gc_frame_new();
-// Begin line 421
-  setline(421);
+  int callframe1357 = gc_frame_new();
+// Begin line 414
+  setline(414);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1318 = gc_frame_new();
+  int callframe1358 = gc_frame_new();
 // compilenode returning *var_curImport
   partcv[0] = 0;
-  Object call1319 = callmethod(*var_curImport, "data",
+  Object call1359 = callmethod(*var_curImport, "data",
     1, partcv, params);
-  gc_frame_end(callframe1318);
-// compilenode returning call1319
-// compilenode returning call1319
-  gc_frame_newslot(call1319);
+  gc_frame_end(callframe1358);
+// compilenode returning call1359
+// compilenode returning call1359
+  gc_frame_newslot(call1359);
 // compilenode returning *var_toWrite
-  params[0] = call1319;
+  params[0] = call1359;
   partcv[0] = 1;
-  Object call1320 = callmethod(*var_toWrite, "write",
+  Object call1360 = callmethod(*var_toWrite, "write",
     1, partcv, params);
-  gc_frame_end(callframe1317);
-// compilenode returning call1320
+  gc_frame_end(callframe1357);
+// compilenode returning call1360
   gc_frame_end(frame);
-  return call1320;
+  return call1360;
 }
-Object meth_PackageManager_bundle1220(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_bundle1260(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 21, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(8, getclosureframe(closure));
@@ -9370,347 +9487,347 @@ if (argcv && argcv[0] > 2)
   setframeelementname(stackframe, 6, "openData");
   Object *var_toWrite = &(stackframe->slots[7]);
   setframeelementname(stackframe, 7, "toWrite");
-// Begin line 409
-  setline(409);
+// Begin line 402
+  setline(402);
   setmodule(modulename);
   setsource(originalSourceLines);
+// Begin line 401
+  setline(401);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object array1261 = alloc_BuiltinList();
+  gc_pause();
+  gc_unpause();
+// compilenode returning array1261
+  *var_imported = array1261;
+  if (array1261 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 402
+  setline(402);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1263 = gc_frame_new();
+// compilenode returning *var_toBundle
+  gc_frame_newslot(*var_toBundle);
+  params[0] = *var_toBundle;
+  partcv[0] = 1;
+  Object call1264 = callmethodflags(self, "getContainingDirectory", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1263);
+// compilenode returning call1264
+  *var_bundlePath = call1264;
+  if (call1264 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 404
+  setline(404);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1266 = gc_frame_new();
+// Begin line 403
+  setline(403);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit1269 == NULL) {
+    strlit1269 = alloc_String("");
+    gc_root(strlit1269);
+  }
+// compilenode returning strlit1269
+  int op_slot_left_1268 = gc_frame_newslot(strlit1269);
+// compilenode returning *var_name
+  int op_slot_right_1268 = gc_frame_newslot(*var_name);
+  params[0] = *var_name;
+  partcv[0] = 1;
+  Object opresult1271 = callmethod(strlit1269, "++", 1, partcv, params);
+// compilenode returning opresult1271
+  int op_slot_left_1267 = gc_frame_newslot(opresult1271);
+  if (strlit1272 == NULL) {
+    strlit1272 = alloc_String("/");
+    gc_root(strlit1272);
+  }
+// compilenode returning strlit1272
+  int op_slot_right_1267 = gc_frame_newslot(strlit1272);
+  params[0] = strlit1272;
+  partcv[0] = 1;
+  Object opresult1274 = callmethod(opresult1271, "++", 1, partcv, params);
+// compilenode returning opresult1274
+  gc_frame_newslot(opresult1274);
+  params[0] = opresult1274;
+  partcv[0] = 1;
+  Object call1275 = callmethodflags(self, "createDirectory", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1266);
+// compilenode returning call1275
+  *var_newDir = call1275;
+  if (call1275 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 404
+  setline(404);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1276 = gc_frame_new();
+// compilenode returning *var_toBundle
+  gc_frame_newslot(*var_toBundle);
+  params[0] = *var_toBundle;
+  partcv[0] = 1;
+  Object call1277 = callmethodflags(self, "removeContainingDir", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1276);
+// compilenode returning call1277
+  *var_newFileName = call1277;
+  if (call1277 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 405
+  setline(405);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1278 = gc_frame_new();
+  if (strlit1281 == NULL) {
+    strlit1281 = alloc_String("");
+    gc_root(strlit1281);
+  }
+// compilenode returning strlit1281
+  int op_slot_left_1280 = gc_frame_newslot(strlit1281);
+// compilenode returning *var_toBundle
+  int op_slot_right_1280 = gc_frame_newslot(*var_toBundle);
+  params[0] = *var_toBundle;
+  partcv[0] = 1;
+  Object opresult1283 = callmethod(strlit1281, "++", 1, partcv, params);
+// compilenode returning opresult1283
+  int op_slot_left_1279 = gc_frame_newslot(opresult1283);
+  if (strlit1284 == NULL) {
+    strlit1284 = alloc_String("");
+    gc_root(strlit1284);
+  }
+// compilenode returning strlit1284
+  int op_slot_right_1279 = gc_frame_newslot(strlit1284);
+  params[0] = strlit1284;
+  partcv[0] = 1;
+  Object opresult1286 = callmethod(opresult1283, "++", 1, partcv, params);
+// compilenode returning opresult1286
+  gc_frame_newslot(opresult1286);
+  if (strlit1287 == NULL) {
+    strlit1287 = alloc_String("r");
+    gc_root(strlit1287);
+  }
+// compilenode returning strlit1287
+  gc_frame_newslot(strlit1287);
+// compilenode returning *var_io
+  params[0] = opresult1286;
+  params[1] = strlit1287;
+  partcv[0] = 2;
+  Object call1288 = callmethod(*var_io, "open",
+    1, partcv, params);
+  gc_frame_end(callframe1278);
+// compilenode returning call1288
+  *var_toOpen = call1288;
+  if (call1288 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 407
+  setline(407);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 406
+  setline(406);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1289 = gc_frame_new();
+// compilenode returning *var_toOpen
+  partcv[0] = 0;
+  Object call1290 = callmethod(*var_toOpen, "read",
+    1, partcv, params);
+  gc_frame_end(callframe1289);
+// compilenode returning call1290
+// compilenode returning call1290
+  *var_openData = call1290;
+  if (call1290 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
 // Begin line 408
   setline(408);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object array1221 = alloc_BuiltinList();
-  gc_pause();
-  gc_unpause();
-// compilenode returning array1221
-  *var_imported = array1221;
-  if (array1221 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 409
-  setline(409);
+  int callframe1291 = gc_frame_new();
+// Begin line 407
+  setline(407);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1223 = gc_frame_new();
-// compilenode returning *var_toBundle
-  gc_frame_newslot(*var_toBundle);
-  params[0] = *var_toBundle;
-  partcv[0] = 1;
-  Object call1224 = callmethodflags(self, "getContainingDirectory", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1223);
-// compilenode returning call1224
-  *var_bundlePath = call1224;
-  if (call1224 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 411
-  setline(411);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1226 = gc_frame_new();
-// Begin line 410
-  setline(410);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit1229 == NULL) {
-    strlit1229 = alloc_String("");
-    gc_root(strlit1229);
+  if (strlit1296 == NULL) {
+    strlit1296 = alloc_String("");
+    gc_root(strlit1296);
   }
-// compilenode returning strlit1229
-  int op_slot_left_1228 = gc_frame_newslot(strlit1229);
+// compilenode returning strlit1296
+  int op_slot_left_1295 = gc_frame_newslot(strlit1296);
 // compilenode returning *var_name
-  int op_slot_right_1228 = gc_frame_newslot(*var_name);
+  int op_slot_right_1295 = gc_frame_newslot(*var_name);
   params[0] = *var_name;
   partcv[0] = 1;
-  Object opresult1231 = callmethod(strlit1229, "++", 1, partcv, params);
-// compilenode returning opresult1231
-  int op_slot_left_1227 = gc_frame_newslot(opresult1231);
-  if (strlit1232 == NULL) {
-    strlit1232 = alloc_String("/");
-    gc_root(strlit1232);
+  Object opresult1298 = callmethod(strlit1296, "++", 1, partcv, params);
+// compilenode returning opresult1298
+  int op_slot_left_1294 = gc_frame_newslot(opresult1298);
+  if (strlit1299 == NULL) {
+    strlit1299 = alloc_String("/");
+    gc_root(strlit1299);
   }
-// compilenode returning strlit1232
-  int op_slot_right_1227 = gc_frame_newslot(strlit1232);
-  params[0] = strlit1232;
+// compilenode returning strlit1299
+  int op_slot_right_1294 = gc_frame_newslot(strlit1299);
+  params[0] = strlit1299;
   partcv[0] = 1;
-  Object opresult1234 = callmethod(opresult1231, "++", 1, partcv, params);
-// compilenode returning opresult1234
-  gc_frame_newslot(opresult1234);
-  params[0] = opresult1234;
-  partcv[0] = 1;
-  Object call1235 = callmethodflags(self, "createDirectory", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1226);
-// compilenode returning call1235
-  *var_newDir = call1235;
-  if (call1235 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 411
-  setline(411);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1236 = gc_frame_new();
-// compilenode returning *var_toBundle
-  gc_frame_newslot(*var_toBundle);
-  params[0] = *var_toBundle;
-  partcv[0] = 1;
-  Object call1237 = callmethodflags(self, "removeContainingDir", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1236);
-// compilenode returning call1237
-  *var_newFileName = call1237;
-  if (call1237 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 412
-  setline(412);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1238 = gc_frame_new();
-  if (strlit1241 == NULL) {
-    strlit1241 = alloc_String("");
-    gc_root(strlit1241);
-  }
-// compilenode returning strlit1241
-  int op_slot_left_1240 = gc_frame_newslot(strlit1241);
-// compilenode returning *var_toBundle
-  int op_slot_right_1240 = gc_frame_newslot(*var_toBundle);
-  params[0] = *var_toBundle;
-  partcv[0] = 1;
-  Object opresult1243 = callmethod(strlit1241, "++", 1, partcv, params);
-// compilenode returning opresult1243
-  int op_slot_left_1239 = gc_frame_newslot(opresult1243);
-  if (strlit1244 == NULL) {
-    strlit1244 = alloc_String("");
-    gc_root(strlit1244);
-  }
-// compilenode returning strlit1244
-  int op_slot_right_1239 = gc_frame_newslot(strlit1244);
-  params[0] = strlit1244;
-  partcv[0] = 1;
-  Object opresult1246 = callmethod(opresult1243, "++", 1, partcv, params);
-// compilenode returning opresult1246
-  gc_frame_newslot(opresult1246);
-  if (strlit1247 == NULL) {
-    strlit1247 = alloc_String("r");
-    gc_root(strlit1247);
-  }
-// compilenode returning strlit1247
-  gc_frame_newslot(strlit1247);
-// compilenode returning *var_io
-  params[0] = opresult1246;
-  params[1] = strlit1247;
-  partcv[0] = 2;
-  Object call1248 = callmethod(*var_io, "open",
-    1, partcv, params);
-  gc_frame_end(callframe1238);
-// compilenode returning call1248
-  *var_toOpen = call1248;
-  if (call1248 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 414
-  setline(414);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 413
-  setline(413);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1249 = gc_frame_new();
-// compilenode returning *var_toOpen
-  partcv[0] = 0;
-  Object call1250 = callmethod(*var_toOpen, "read",
-    1, partcv, params);
-  gc_frame_end(callframe1249);
-// compilenode returning call1250
-// compilenode returning call1250
-  *var_openData = call1250;
-  if (call1250 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 415
-  setline(415);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1251 = gc_frame_new();
-// Begin line 414
-  setline(414);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit1256 == NULL) {
-    strlit1256 = alloc_String("");
-    gc_root(strlit1256);
-  }
-// compilenode returning strlit1256
-  int op_slot_left_1255 = gc_frame_newslot(strlit1256);
-// compilenode returning *var_name
-  int op_slot_right_1255 = gc_frame_newslot(*var_name);
-  params[0] = *var_name;
-  partcv[0] = 1;
-  Object opresult1258 = callmethod(strlit1256, "++", 1, partcv, params);
-// compilenode returning opresult1258
-  int op_slot_left_1254 = gc_frame_newslot(opresult1258);
-  if (strlit1259 == NULL) {
-    strlit1259 = alloc_String("/");
-    gc_root(strlit1259);
-  }
-// compilenode returning strlit1259
-  int op_slot_right_1254 = gc_frame_newslot(strlit1259);
-  params[0] = strlit1259;
-  partcv[0] = 1;
-  Object opresult1261 = callmethod(opresult1258, "++", 1, partcv, params);
-// compilenode returning opresult1261
-  int op_slot_left_1253 = gc_frame_newslot(opresult1261);
+  Object opresult1301 = callmethod(opresult1298, "++", 1, partcv, params);
+// compilenode returning opresult1301
+  int op_slot_left_1293 = gc_frame_newslot(opresult1301);
 // compilenode returning *var_newFileName
-  int op_slot_right_1253 = gc_frame_newslot(*var_newFileName);
+  int op_slot_right_1293 = gc_frame_newslot(*var_newFileName);
   params[0] = *var_newFileName;
   partcv[0] = 1;
-  Object opresult1263 = callmethod(opresult1261, "++", 1, partcv, params);
-// compilenode returning opresult1263
-  int op_slot_left_1252 = gc_frame_newslot(opresult1263);
-  if (strlit1264 == NULL) {
-    strlit1264 = alloc_String("");
-    gc_root(strlit1264);
+  Object opresult1303 = callmethod(opresult1301, "++", 1, partcv, params);
+// compilenode returning opresult1303
+  int op_slot_left_1292 = gc_frame_newslot(opresult1303);
+  if (strlit1304 == NULL) {
+    strlit1304 = alloc_String("");
+    gc_root(strlit1304);
   }
-// compilenode returning strlit1264
-  int op_slot_right_1252 = gc_frame_newslot(strlit1264);
-  params[0] = strlit1264;
+// compilenode returning strlit1304
+  int op_slot_right_1292 = gc_frame_newslot(strlit1304);
+  params[0] = strlit1304;
   partcv[0] = 1;
-  Object opresult1266 = callmethod(opresult1263, "++", 1, partcv, params);
-// compilenode returning opresult1266
-  gc_frame_newslot(opresult1266);
-  if (strlit1267 == NULL) {
-    strlit1267 = alloc_String("w");
-    gc_root(strlit1267);
+  Object opresult1306 = callmethod(opresult1303, "++", 1, partcv, params);
+// compilenode returning opresult1306
+  gc_frame_newslot(opresult1306);
+  if (strlit1307 == NULL) {
+    strlit1307 = alloc_String("w");
+    gc_root(strlit1307);
   }
-// compilenode returning strlit1267
-  gc_frame_newslot(strlit1267);
+// compilenode returning strlit1307
+  gc_frame_newslot(strlit1307);
 // compilenode returning *var_io
-  params[0] = opresult1266;
-  params[1] = strlit1267;
+  params[0] = opresult1306;
+  params[1] = strlit1307;
   partcv[0] = 2;
-  Object call1268 = callmethod(*var_io, "open",
+  Object call1308 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe1251);
-// compilenode returning call1268
-  *var_toWrite = call1268;
-  if (call1268 == undefined)
+  gc_frame_end(callframe1291);
+// compilenode returning call1308
+  *var_toWrite = call1308;
+  if (call1308 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 415
-  setline(415);
+// Begin line 408
+  setline(408);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1269 = gc_frame_new();
+  int callframe1309 = gc_frame_new();
 // compilenode returning *var_openData
   gc_frame_newslot(*var_openData);
 // compilenode returning *var_toWrite
   params[0] = *var_openData;
   partcv[0] = 1;
-  Object call1270 = callmethod(*var_toWrite, "write",
+  Object call1310 = callmethod(*var_toWrite, "write",
     1, partcv, params);
-  gc_frame_end(callframe1269);
-// compilenode returning call1270
-// Begin line 417
-  setline(417);
+  gc_frame_end(callframe1309);
+// compilenode returning call1310
+// Begin line 410
+  setline(410);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1271 = gc_frame_new();
-// Begin line 416
-  setline(416);
+  int callframe1311 = gc_frame_new();
+// Begin line 409
+  setline(409);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_toBundle
   gc_frame_newslot(*var_toBundle);
   params[0] = *var_toBundle;
   partcv[0] = 1;
-  Object call1272 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1271);
-// compilenode returning call1272
-// Begin line 417
-  setline(417);
+  Object call1312 = callmethodflags(self, "fetchImports", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1311);
+// compilenode returning call1312
+// Begin line 410
+  setline(410);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1274 == NULL) {
-    strlit1274 = alloc_String("Imported size = ");
-    gc_root(strlit1274);
+  if (strlit1314 == NULL) {
+    strlit1314 = alloc_String("Imported size = ");
+    gc_root(strlit1314);
   }
-// compilenode returning strlit1274
-  int op_slot_left_1273 = gc_frame_newslot(strlit1274);
-  int callframe1275 = gc_frame_new();
+// compilenode returning strlit1314
+  int op_slot_left_1313 = gc_frame_newslot(strlit1314);
+  int callframe1315 = gc_frame_new();
 // compilenode returning *var_imported
   partcv[0] = 0;
-  Object call1276 = callmethod(*var_imported, "size",
+  Object call1316 = callmethod(*var_imported, "size",
     1, partcv, params);
-  gc_frame_end(callframe1275);
-// compilenode returning call1276
-// compilenode returning call1276
-  int op_slot_right_1273 = gc_frame_newslot(call1276);
-  params[0] = call1276;
+  gc_frame_end(callframe1315);
+// compilenode returning call1316
+// compilenode returning call1316
+  int op_slot_right_1313 = gc_frame_newslot(call1316);
+  params[0] = call1316;
   partcv[0] = 1;
-  Object opresult1278 = callmethod(strlit1274, "++", 1, partcv, params);
-// compilenode returning opresult1278
-  params[0] = opresult1278;
-  Object call1279 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1279
-// Begin line 423
-  setline(423);
+  Object opresult1318 = callmethod(strlit1314, "++", 1, partcv, params);
+// compilenode returning opresult1318
+  params[0] = opresult1318;
+  Object call1319 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1319
+// Begin line 416
+  setline(416);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1280 = gc_frame_new();
-// Begin line 418
-  setline(418);
+  int callframe1320 = gc_frame_new();
+// Begin line 411
+  setline(411);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1281 = alloc_Block(NULL, NULL, "PackageManager", 418);
-  gc_frame_newslot(block1281);
-  block_savedest(block1281);
-  Object closure1282 = createclosure(2, "_apply");
-setclosureframe(closure1282, stackframe);
-  addtoclosure(closure1282, var_imported);
-  addtoclosure(closure1282, selfslot);
-  struct UserObject *uo1282 = (struct UserObject*)block1281;
-  uo1282->data[0] = (Object)closure1282;
-  Method *meth_meth_PackageManager__apply1282 = addmethod2pos(block1281, "_apply", &meth_PackageManager__apply1282, 0);
-int argcv_meth_PackageManager__apply1282[] = {0};
-meth_meth_PackageManager__apply1282->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1282);
-  meth_meth_PackageManager__apply1282->definitionModule = modulename;
-  meth_meth_PackageManager__apply1282->definitionLine = 417;
-// compilenode returning block1281
-  gc_frame_newslot(block1281);
-// Begin line 423
-  setline(423);
+  Object block1321 = alloc_Block(NULL, NULL, "PackageManager", 411);
+  gc_frame_newslot(block1321);
+  block_savedest(block1321);
+  Object closure1322 = createclosure(2, "_apply");
+setclosureframe(closure1322, stackframe);
+  addtoclosure(closure1322, var_imported);
+  addtoclosure(closure1322, selfslot);
+  struct UserObject *uo1322 = (struct UserObject*)block1321;
+  uo1322->data[0] = (Object)closure1322;
+  Method *meth_meth_PackageManager__apply1322 = addmethod2pos(block1321, "_apply", &meth_PackageManager__apply1322, 0);
+int argcv_meth_PackageManager__apply1322[] = {0};
+meth_meth_PackageManager__apply1322->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1322);
+  meth_meth_PackageManager__apply1322->definitionModule = modulename;
+  meth_meth_PackageManager__apply1322->definitionLine = 410;
+// compilenode returning block1321
+  gc_frame_newslot(block1321);
+// Begin line 416
+  setline(416);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1290 = alloc_Block(NULL, NULL, "PackageManager", 423);
-  gc_frame_newslot(block1290);
-  block_savedest(block1290);
-  Object closure1291 = createclosure(5, "_apply");
-setclosureframe(closure1291, stackframe);
-  addtoclosure(closure1291, var_imported);
-  addtoclosure(closure1291, var_name);
-  addtoclosure(closure1291, var_io);
-  addtoclosure(closure1291, var_toWrite);
-  addtoclosure(closure1291, selfslot);
-  struct UserObject *uo1291 = (struct UserObject*)block1290;
-  uo1291->data[0] = (Object)closure1291;
-  Method *meth_meth_PackageManager__apply1291 = addmethod2pos(block1290, "_apply", &meth_PackageManager__apply1291, 0);
-int argcv_meth_PackageManager__apply1291[] = {0};
-meth_meth_PackageManager__apply1291->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1291);
-  meth_meth_PackageManager__apply1291->definitionModule = modulename;
-  meth_meth_PackageManager__apply1291->definitionLine = 418;
-// compilenode returning block1290
-  gc_frame_newslot(block1290);
-  params[0] = block1281;
-  params[1] = block1290;
+  Object block1330 = alloc_Block(NULL, NULL, "PackageManager", 416);
+  gc_frame_newslot(block1330);
+  block_savedest(block1330);
+  Object closure1331 = createclosure(5, "_apply");
+setclosureframe(closure1331, stackframe);
+  addtoclosure(closure1331, var_imported);
+  addtoclosure(closure1331, var_name);
+  addtoclosure(closure1331, var_io);
+  addtoclosure(closure1331, var_toWrite);
+  addtoclosure(closure1331, selfslot);
+  struct UserObject *uo1331 = (struct UserObject*)block1330;
+  uo1331->data[0] = (Object)closure1331;
+  Method *meth_meth_PackageManager__apply1331 = addmethod2pos(block1330, "_apply", &meth_PackageManager__apply1331, 0);
+int argcv_meth_PackageManager__apply1331[] = {0};
+meth_meth_PackageManager__apply1331->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1331);
+  meth_meth_PackageManager__apply1331->definitionModule = modulename;
+  meth_meth_PackageManager__apply1331->definitionLine = 411;
+// compilenode returning block1330
+  gc_frame_newslot(block1330);
+  params[0] = block1321;
+  params[1] = block1330;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1322 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1280);
-// compilenode returning call1322
+  Object call1362 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1320);
+// compilenode returning call1362
   gc_frame_end(frame);
-  return call1322;
+  return call1362;
 }
-Object meth_PackageManager__apply1392(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1432(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -9736,24 +9853,24 @@ Object meth_PackageManager__apply1392(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 438
-  setline(438);
+// Begin line 431
+  setline(431);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1393 = gc_frame_new();
+  int callframe1433 = gc_frame_new();
 // compilenode returning *var_d
   gc_frame_newslot(*var_d);
 // compilenode returning *var_out
   params[0] = *var_d;
   partcv[0] = 1;
-  Object call1394 = callmethod(*var_out, "write",
+  Object call1434 = callmethod(*var_out, "write",
     1, partcv, params);
-  gc_frame_end(callframe1393);
-// compilenode returning call1394
+  gc_frame_end(callframe1433);
+// compilenode returning call1434
   gc_frame_end(frame);
-  return call1394;
+  return call1434;
 }
-Object meth_PackageManager__apply1328(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1368(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(6, getclosureframe(closure));
@@ -9789,153 +9906,153 @@ Object meth_PackageManager__apply1328(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 4, "toWrite");
   Object *var_out = &(stackframe->slots[5]);
   setframeelementname(stackframe, 5, "out");
-// Begin line 442
-  setline(442);
+// Begin line 435
+  setline(435);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 428
-  setline(428);
+// Begin line 421
+  setline(421);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1331 = gc_frame_new();
+  int callframe1371 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call1332 = callmethod(*var_file, "size",
+  Object call1372 = callmethod(*var_file, "size",
     1, partcv, params);
-  gc_frame_end(callframe1331);
-// compilenode returning call1332
-// compilenode returning call1332
-  int op_slot_left_1330 = gc_frame_newslot(call1332);
-  Object num1333 = alloc_Float64(4);
-// compilenode returning num1333
-  int op_slot_right_1330 = gc_frame_newslot(num1333);
-  params[0] = num1333;
+  gc_frame_end(callframe1371);
+// compilenode returning call1372
+// compilenode returning call1372
+  int op_slot_left_1370 = gc_frame_newslot(call1372);
+  Object num1373 = alloc_Float64(4);
+// compilenode returning num1373
+  int op_slot_right_1370 = gc_frame_newslot(num1373);
+  params[0] = num1373;
   partcv[0] = 1;
-  Object opresult1335 = callmethod(call1332, ">", 1, partcv, params);
-// compilenode returning opresult1335
-  Object if1329 = done;
-  if (istrue(opresult1335)) {
-// Begin line 441
-  setline(441);
+  Object opresult1375 = callmethod(call1372, ">", 1, partcv, params);
+// compilenode returning opresult1375
+  Object if1369 = done;
+  if (istrue(opresult1375)) {
+// Begin line 434
+  setline(434);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 429
-  setline(429);
+// Begin line 422
+  setline(422);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1338 = gc_frame_new();
-  int callframe1340 = gc_frame_new();
+  int callframe1378 = gc_frame_new();
+  int callframe1380 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call1341 = callmethod(*var_file, "size",
+  Object call1381 = callmethod(*var_file, "size",
     1, partcv, params);
-  gc_frame_end(callframe1340);
-// compilenode returning call1341
-// compilenode returning call1341
-  int op_slot_left_1339 = gc_frame_newslot(call1341);
-  Object num1342 = alloc_Float64(5);
-// compilenode returning num1342
-  int op_slot_right_1339 = gc_frame_newslot(num1342);
-  params[0] = num1342;
+  gc_frame_end(callframe1380);
+// compilenode returning call1381
+// compilenode returning call1381
+  int op_slot_left_1379 = gc_frame_newslot(call1381);
+  Object num1382 = alloc_Float64(5);
+// compilenode returning num1382
+  int op_slot_right_1379 = gc_frame_newslot(num1382);
+  params[0] = num1382;
   partcv[0] = 1;
-  Object diff1344 = callmethod(call1341, "-", 1, partcv, params);
-// compilenode returning diff1344
-  gc_frame_newslot(diff1344);
-  int callframe1345 = gc_frame_new();
+  Object diff1384 = callmethod(call1381, "-", 1, partcv, params);
+// compilenode returning diff1384
+  gc_frame_newslot(diff1384);
+  int callframe1385 = gc_frame_new();
 // compilenode returning *var_file
   partcv[0] = 0;
-  Object call1346 = callmethod(*var_file, "size",
+  Object call1386 = callmethod(*var_file, "size",
     1, partcv, params);
-  gc_frame_end(callframe1345);
-// compilenode returning call1346
-// compilenode returning call1346
-  gc_frame_newslot(call1346);
+  gc_frame_end(callframe1385);
+// compilenode returning call1386
+// compilenode returning call1386
+  gc_frame_newslot(call1386);
 // compilenode returning *var_file
-  params[0] = diff1344;
-  params[1] = call1346;
+  params[0] = diff1384;
+  params[1] = call1386;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1347 = callmethod(*var_file, "substringFrom()to",
+  Object call1387 = callmethod(*var_file, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1338);
-// compilenode returning call1347
-  int op_slot_left_1337 = gc_frame_newslot(call1347);
-  if (strlit1348 == NULL) {
-    strlit1348 = alloc_String(".grace");
-    gc_root(strlit1348);
+  gc_frame_end(callframe1378);
+// compilenode returning call1387
+  int op_slot_left_1377 = gc_frame_newslot(call1387);
+  if (strlit1388 == NULL) {
+    strlit1388 = alloc_String(".grace");
+    gc_root(strlit1388);
   }
-// compilenode returning strlit1348
-  int op_slot_right_1337 = gc_frame_newslot(strlit1348);
-  params[0] = strlit1348;
+// compilenode returning strlit1388
+  int op_slot_right_1377 = gc_frame_newslot(strlit1388);
+  params[0] = strlit1388;
   partcv[0] = 1;
-  Object opresult1350 = callmethod(call1347, "==", 1, partcv, params);
-// compilenode returning opresult1350
-  Object if1336 = done;
-  if (istrue(opresult1350)) {
-// Begin line 430
-  setline(430);
+  Object opresult1390 = callmethod(call1387, "==", 1, partcv, params);
+// compilenode returning opresult1390
+  Object if1376 = done;
+  if (istrue(opresult1390)) {
+// Begin line 423
+  setline(423);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1351 = gc_frame_new();
+  int callframe1391 = gc_frame_new();
 // compilenode returning *var_address
-  int op_slot_left_1353 = gc_frame_newslot(*var_address);
-  if (strlit1354 == NULL) {
-    strlit1354 = alloc_String("/");
-    gc_root(strlit1354);
+  int op_slot_left_1393 = gc_frame_newslot(*var_address);
+  if (strlit1394 == NULL) {
+    strlit1394 = alloc_String("/");
+    gc_root(strlit1394);
   }
-// compilenode returning strlit1354
-  int op_slot_right_1353 = gc_frame_newslot(strlit1354);
-  params[0] = strlit1354;
+// compilenode returning strlit1394
+  int op_slot_right_1393 = gc_frame_newslot(strlit1394);
+  params[0] = strlit1394;
   partcv[0] = 1;
-  Object opresult1356 = callmethod(*var_address, "++", 1, partcv, params);
-// compilenode returning opresult1356
-  int op_slot_left_1352 = gc_frame_newslot(opresult1356);
+  Object opresult1396 = callmethod(*var_address, "++", 1, partcv, params);
+// compilenode returning opresult1396
+  int op_slot_left_1392 = gc_frame_newslot(opresult1396);
 // compilenode returning *var_file
-  int op_slot_right_1352 = gc_frame_newslot(*var_file);
+  int op_slot_right_1392 = gc_frame_newslot(*var_file);
   params[0] = *var_file;
   partcv[0] = 1;
-  Object opresult1358 = callmethod(opresult1356, "++", 1, partcv, params);
-// compilenode returning opresult1358
-  gc_frame_newslot(opresult1358);
-  if (strlit1359 == NULL) {
-    strlit1359 = alloc_String("r");
-    gc_root(strlit1359);
+  Object opresult1398 = callmethod(opresult1396, "++", 1, partcv, params);
+// compilenode returning opresult1398
+  gc_frame_newslot(opresult1398);
+  if (strlit1399 == NULL) {
+    strlit1399 = alloc_String("r");
+    gc_root(strlit1399);
   }
-// compilenode returning strlit1359
-  gc_frame_newslot(strlit1359);
+// compilenode returning strlit1399
+  gc_frame_newslot(strlit1399);
 // compilenode returning *var_io
-  params[0] = opresult1358;
-  params[1] = strlit1359;
+  params[0] = opresult1398;
+  params[1] = strlit1399;
   partcv[0] = 2;
-  Object call1360 = callmethod(*var_io, "open",
+  Object call1400 = callmethod(*var_io, "open",
     1, partcv, params);
-  gc_frame_end(callframe1351);
-// compilenode returning call1360
-  *var_open = call1360;
-  if (call1360 == undefined)
+  gc_frame_end(callframe1391);
+// compilenode returning call1400
+  *var_open = call1400;
+  if (call1400 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 431
-  setline(431);
+// Begin line 424
+  setline(424);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1361 = gc_frame_new();
+  int callframe1401 = gc_frame_new();
 // compilenode returning *var_open
   partcv[0] = 0;
-  Object call1362 = callmethod(*var_open, "read",
+  Object call1402 = callmethod(*var_open, "read",
     1, partcv, params);
-  gc_frame_end(callframe1361);
-// compilenode returning call1362
-// compilenode returning call1362
-  *var_readFile = call1362;
-  if (call1362 == undefined)
+  gc_frame_end(callframe1401);
+// compilenode returning call1402
+// compilenode returning call1402
+  *var_readFile = call1402;
+  if (call1402 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 432
-  setline(432);
+// Begin line 425
+  setline(425);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1363 = gc_frame_new();
+  int callframe1403 = gc_frame_new();
 // compilenode returning *var_readFile
   gc_frame_newslot(*var_readFile);
 // compilenode returning *var_address
@@ -9946,167 +10063,167 @@ Object meth_PackageManager__apply1328(Object realself, int nparts, int *argcv, O
   params[1] = *var_address;
   params[2] = *var_prefix;
   partcv[0] = 3;
-  Object call1364 = callmethodflags(self, "parseAndPrefix", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1363);
-// compilenode returning call1364
-  *var_toWrite = call1364;
-  if (call1364 == undefined)
+  Object call1404 = callmethodflags(self, "parseAndPrefix", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1403);
+// compilenode returning call1404
+  *var_toWrite = call1404;
+  if (call1404 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 426
+  setline(426);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1405 = gc_frame_new();
+// compilenode returning *var_open
+  partcv[0] = 0;
+  Object call1406 = callmethod(*var_open, "close",
+    1, partcv, params);
+  gc_frame_end(callframe1405);
+// compilenode returning call1406
+// compilenode returning call1406
+// Begin line 429
+  setline(429);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1407 = gc_frame_new();
+// Begin line 428
+  setline(428);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit1411 == NULL) {
+    strlit1411 = alloc_String("rm ");
+    gc_root(strlit1411);
+  }
+// compilenode returning strlit1411
+  int op_slot_left_1410 = gc_frame_newslot(strlit1411);
+// compilenode returning *var_address
+  int op_slot_right_1410 = gc_frame_newslot(*var_address);
+  params[0] = *var_address;
+  partcv[0] = 1;
+  Object opresult1413 = callmethod(strlit1411, "++", 1, partcv, params);
+// compilenode returning opresult1413
+  int op_slot_left_1409 = gc_frame_newslot(opresult1413);
+  if (strlit1414 == NULL) {
+    strlit1414 = alloc_String("/");
+    gc_root(strlit1414);
+  }
+// compilenode returning strlit1414
+  int op_slot_right_1409 = gc_frame_newslot(strlit1414);
+  params[0] = strlit1414;
+  partcv[0] = 1;
+  Object opresult1416 = callmethod(opresult1413, "++", 1, partcv, params);
+// compilenode returning opresult1416
+  int op_slot_left_1408 = gc_frame_newslot(opresult1416);
+// compilenode returning *var_file
+  int op_slot_right_1408 = gc_frame_newslot(*var_file);
+  params[0] = *var_file;
+  partcv[0] = 1;
+  Object opresult1418 = callmethod(opresult1416, "++", 1, partcv, params);
+// compilenode returning opresult1418
+  gc_frame_newslot(opresult1418);
+// compilenode returning *var_io
+  params[0] = opresult1418;
+  partcv[0] = 1;
+  Object call1419 = callmethod(*var_io, "system",
+    1, partcv, params);
+  gc_frame_end(callframe1407);
+// compilenode returning call1419
+// Begin line 429
+  setline(429);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1420 = gc_frame_new();
+// compilenode returning *var_address
+  int op_slot_left_1422 = gc_frame_newslot(*var_address);
+  if (strlit1423 == NULL) {
+    strlit1423 = alloc_String("/");
+    gc_root(strlit1423);
+  }
+// compilenode returning strlit1423
+  int op_slot_right_1422 = gc_frame_newslot(strlit1423);
+  params[0] = strlit1423;
+  partcv[0] = 1;
+  Object opresult1425 = callmethod(*var_address, "++", 1, partcv, params);
+// compilenode returning opresult1425
+  int op_slot_left_1421 = gc_frame_newslot(opresult1425);
+// compilenode returning *var_file
+  int op_slot_right_1421 = gc_frame_newslot(*var_file);
+  params[0] = *var_file;
+  partcv[0] = 1;
+  Object opresult1427 = callmethod(opresult1425, "++", 1, partcv, params);
+// compilenode returning opresult1427
+  gc_frame_newslot(opresult1427);
+  if (strlit1428 == NULL) {
+    strlit1428 = alloc_String("w");
+    gc_root(strlit1428);
+  }
+// compilenode returning strlit1428
+  gc_frame_newslot(strlit1428);
+// compilenode returning *var_io
+  params[0] = opresult1427;
+  params[1] = strlit1428;
+  partcv[0] = 2;
+  Object call1429 = callmethod(*var_io, "open",
+    1, partcv, params);
+  gc_frame_end(callframe1420);
+// compilenode returning call1429
+  *var_out = call1429;
+  if (call1429 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
 // Begin line 433
   setline(433);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1365 = gc_frame_new();
-// compilenode returning *var_open
-  partcv[0] = 0;
-  Object call1366 = callmethod(*var_open, "close",
-    1, partcv, params);
-  gc_frame_end(callframe1365);
-// compilenode returning call1366
-// compilenode returning call1366
-// Begin line 436
-  setline(436);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1367 = gc_frame_new();
-// Begin line 435
-  setline(435);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  if (strlit1371 == NULL) {
-    strlit1371 = alloc_String("rm ");
-    gc_root(strlit1371);
-  }
-// compilenode returning strlit1371
-  int op_slot_left_1370 = gc_frame_newslot(strlit1371);
-// compilenode returning *var_address
-  int op_slot_right_1370 = gc_frame_newslot(*var_address);
-  params[0] = *var_address;
-  partcv[0] = 1;
-  Object opresult1373 = callmethod(strlit1371, "++", 1, partcv, params);
-// compilenode returning opresult1373
-  int op_slot_left_1369 = gc_frame_newslot(opresult1373);
-  if (strlit1374 == NULL) {
-    strlit1374 = alloc_String("/");
-    gc_root(strlit1374);
-  }
-// compilenode returning strlit1374
-  int op_slot_right_1369 = gc_frame_newslot(strlit1374);
-  params[0] = strlit1374;
-  partcv[0] = 1;
-  Object opresult1376 = callmethod(opresult1373, "++", 1, partcv, params);
-// compilenode returning opresult1376
-  int op_slot_left_1368 = gc_frame_newslot(opresult1376);
-// compilenode returning *var_file
-  int op_slot_right_1368 = gc_frame_newslot(*var_file);
-  params[0] = *var_file;
-  partcv[0] = 1;
-  Object opresult1378 = callmethod(opresult1376, "++", 1, partcv, params);
-// compilenode returning opresult1378
-  gc_frame_newslot(opresult1378);
-// compilenode returning *var_io
-  params[0] = opresult1378;
-  partcv[0] = 1;
-  Object call1379 = callmethod(*var_io, "system",
-    1, partcv, params);
-  gc_frame_end(callframe1367);
-// compilenode returning call1379
-// Begin line 436
-  setline(436);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1380 = gc_frame_new();
-// compilenode returning *var_address
-  int op_slot_left_1382 = gc_frame_newslot(*var_address);
-  if (strlit1383 == NULL) {
-    strlit1383 = alloc_String("/");
-    gc_root(strlit1383);
-  }
-// compilenode returning strlit1383
-  int op_slot_right_1382 = gc_frame_newslot(strlit1383);
-  params[0] = strlit1383;
-  partcv[0] = 1;
-  Object opresult1385 = callmethod(*var_address, "++", 1, partcv, params);
-// compilenode returning opresult1385
-  int op_slot_left_1381 = gc_frame_newslot(opresult1385);
-// compilenode returning *var_file
-  int op_slot_right_1381 = gc_frame_newslot(*var_file);
-  params[0] = *var_file;
-  partcv[0] = 1;
-  Object opresult1387 = callmethod(opresult1385, "++", 1, partcv, params);
-// compilenode returning opresult1387
-  gc_frame_newslot(opresult1387);
-  if (strlit1388 == NULL) {
-    strlit1388 = alloc_String("w");
-    gc_root(strlit1388);
-  }
-// compilenode returning strlit1388
-  gc_frame_newslot(strlit1388);
-// compilenode returning *var_io
-  params[0] = opresult1387;
-  params[1] = strlit1388;
-  partcv[0] = 2;
-  Object call1389 = callmethod(*var_io, "open",
-    1, partcv, params);
-  gc_frame_end(callframe1380);
-// compilenode returning call1389
-  *var_out = call1389;
-  if (call1389 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 440
-  setline(440);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1390 = gc_frame_new();
-// Begin line 437
-  setline(437);
+  int callframe1430 = gc_frame_new();
+// Begin line 430
+  setline(430);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_toWrite
   gc_frame_newslot(*var_toWrite);
-// Begin line 440
-  setline(440);
+// Begin line 433
+  setline(433);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1391 = alloc_Block(NULL, NULL, "PackageManager", 440);
-  gc_frame_newslot(block1391);
-  block_savedest(block1391);
-  Object closure1392 = createclosure(2, "_apply");
-setclosureframe(closure1392, stackframe);
-  addtoclosure(closure1392, var_out);
-  addtoclosure(closure1392, selfslot);
-  struct UserObject *uo1392 = (struct UserObject*)block1391;
-  uo1392->data[0] = (Object)closure1392;
-  Method *meth_meth_PackageManager__apply1392 = addmethod2pos(block1391, "_apply", &meth_PackageManager__apply1392, 0);
-int argcv_meth_PackageManager__apply1392[] = {1};
-meth_meth_PackageManager__apply1392->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1392);
-  meth_meth_PackageManager__apply1392->definitionModule = modulename;
-  meth_meth_PackageManager__apply1392->definitionLine = 433;
-// compilenode returning block1391
-  gc_frame_newslot(block1391);
+  Object block1431 = alloc_Block(NULL, NULL, "PackageManager", 433);
+  gc_frame_newslot(block1431);
+  block_savedest(block1431);
+  Object closure1432 = createclosure(2, "_apply");
+setclosureframe(closure1432, stackframe);
+  addtoclosure(closure1432, var_out);
+  addtoclosure(closure1432, selfslot);
+  struct UserObject *uo1432 = (struct UserObject*)block1431;
+  uo1432->data[0] = (Object)closure1432;
+  Method *meth_meth_PackageManager__apply1432 = addmethod2pos(block1431, "_apply", &meth_PackageManager__apply1432, 0);
+int argcv_meth_PackageManager__apply1432[] = {1};
+meth_meth_PackageManager__apply1432->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1432);
+  meth_meth_PackageManager__apply1432->definitionModule = modulename;
+  meth_meth_PackageManager__apply1432->definitionLine = 426;
+// compilenode returning block1431
+  gc_frame_newslot(block1431);
   params[0] = *var_toWrite;
-  params[1] = block1391;
+  params[1] = block1431;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1396 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1390);
-// compilenode returning call1396
-    gc_frame_newslot(call1396);
-    if1336 = call1396;
+  Object call1436 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1430);
+// compilenode returning call1436
+    gc_frame_newslot(call1436);
+    if1376 = call1436;
   } else {
   }
-// compilenode returning if1336
-    gc_frame_newslot(if1336);
-    if1329 = if1336;
+// compilenode returning if1376
+    gc_frame_newslot(if1376);
+    if1369 = if1376;
   } else {
   }
-// compilenode returning if1329
+// compilenode returning if1369
   gc_frame_end(frame);
-  return if1329;
+  return if1369;
 }
-Object meth_PackageManager_setImportDest1323(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_setImportDest1363(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 22, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(4, getclosureframe(closure));
@@ -10139,68 +10256,68 @@ if (argcv && argcv[0] > 2)
   if (methodInheritingObject) curarg++;
   Object *var_folder = &(stackframe->slots[3]);
   setframeelementname(stackframe, 3, "folder");
-// Begin line 426
-  setline(426);
+// Begin line 419
+  setline(419);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1324 = gc_frame_new();
+  int callframe1364 = gc_frame_new();
 // compilenode returning *var_address
   gc_frame_newslot(*var_address);
 // compilenode returning *var_io
   params[0] = *var_address;
   partcv[0] = 1;
-  Object call1325 = callmethod(*var_io, "getdir",
+  Object call1365 = callmethod(*var_io, "getdir",
     1, partcv, params);
-  gc_frame_end(callframe1324);
-// compilenode returning call1325
-  *var_folder = call1325;
-  if (call1325 == undefined)
+  gc_frame_end(callframe1364);
+// compilenode returning call1365
+  *var_folder = call1365;
+  if (call1365 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 446
-  setline(446);
+// Begin line 439
+  setline(439);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1326 = gc_frame_new();
-// Begin line 427
-  setline(427);
+  int callframe1366 = gc_frame_new();
+// Begin line 420
+  setline(420);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_folder
   gc_frame_newslot(*var_folder);
-// Begin line 446
-  setline(446);
+// Begin line 439
+  setline(439);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1327 = alloc_Block(NULL, NULL, "PackageManager", 446);
-  gc_frame_newslot(block1327);
-  block_savedest(block1327);
-  Object closure1328 = createclosure(4, "_apply");
-setclosureframe(closure1328, stackframe);
-  addtoclosure(closure1328, var_address);
-  addtoclosure(closure1328, var_io);
-  addtoclosure(closure1328, var_prefix);
-  addtoclosure(closure1328, selfslot);
-  struct UserObject *uo1328 = (struct UserObject*)block1327;
-  uo1328->data[0] = (Object)closure1328;
-  Method *meth_meth_PackageManager__apply1328 = addmethod2pos(block1327, "_apply", &meth_PackageManager__apply1328, 0);
-int argcv_meth_PackageManager__apply1328[] = {1};
-meth_meth_PackageManager__apply1328->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1328);
-  meth_meth_PackageManager__apply1328->definitionModule = modulename;
-  meth_meth_PackageManager__apply1328->definitionLine = 421;
-// compilenode returning block1327
-  gc_frame_newslot(block1327);
+  Object block1367 = alloc_Block(NULL, NULL, "PackageManager", 439);
+  gc_frame_newslot(block1367);
+  block_savedest(block1367);
+  Object closure1368 = createclosure(4, "_apply");
+setclosureframe(closure1368, stackframe);
+  addtoclosure(closure1368, var_address);
+  addtoclosure(closure1368, var_io);
+  addtoclosure(closure1368, var_prefix);
+  addtoclosure(closure1368, selfslot);
+  struct UserObject *uo1368 = (struct UserObject*)block1367;
+  uo1368->data[0] = (Object)closure1368;
+  Method *meth_meth_PackageManager__apply1368 = addmethod2pos(block1367, "_apply", &meth_PackageManager__apply1368, 0);
+int argcv_meth_PackageManager__apply1368[] = {1};
+meth_meth_PackageManager__apply1368->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1368);
+  meth_meth_PackageManager__apply1368->definitionModule = modulename;
+  meth_meth_PackageManager__apply1368->definitionLine = 414;
+// compilenode returning block1367
+  gc_frame_newslot(block1367);
   params[0] = *var_folder;
-  params[1] = block1327;
+  params[1] = block1367;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1398 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1326);
-// compilenode returning call1398
+  Object call1438 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1366);
+// compilenode returning call1438
   gc_frame_end(frame);
-  return call1398;
+  return call1438;
 }
-Object meth_PackageManager__apply1413(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1453(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -10223,24 +10340,24 @@ Object meth_PackageManager__apply1413(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_curPos
-  int op_slot_left_1414 = gc_frame_newslot(*var_curPos);
-  int callframe1415 = gc_frame_new();
+  int op_slot_left_1454 = gc_frame_newslot(*var_curPos);
+  int callframe1455 = gc_frame_new();
 // compilenode returning *var_readFile
   partcv[0] = 0;
-  Object call1416 = callmethod(*var_readFile, "size",
+  Object call1456 = callmethod(*var_readFile, "size",
     1, partcv, params);
-  gc_frame_end(callframe1415);
-// compilenode returning call1416
-// compilenode returning call1416
-  int op_slot_right_1414 = gc_frame_newslot(call1416);
-  params[0] = call1416;
+  gc_frame_end(callframe1455);
+// compilenode returning call1456
+// compilenode returning call1456
+  int op_slot_right_1454 = gc_frame_newslot(call1456);
+  params[0] = call1456;
   partcv[0] = 1;
-  Object opresult1418 = callmethod(*var_curPos, "<=", 1, partcv, params);
-// compilenode returning opresult1418
+  Object opresult1458 = callmethod(*var_curPos, "<=", 1, partcv, params);
+// compilenode returning opresult1458
   gc_frame_end(frame);
-  return opresult1418;
+  return opresult1458;
 }
-Object meth_PackageManager__apply1425(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1465(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -10263,48 +10380,48 @@ Object meth_PackageManager__apply1425(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_curPos
-  int op_slot_left_1427 = gc_frame_newslot(*var_curPos);
-  int callframe1428 = gc_frame_new();
+  int op_slot_left_1467 = gc_frame_newslot(*var_curPos);
+  int callframe1468 = gc_frame_new();
 // compilenode returning *var_readFile
   partcv[0] = 0;
-  Object call1429 = callmethod(*var_readFile, "size",
+  Object call1469 = callmethod(*var_readFile, "size",
     1, partcv, params);
-  gc_frame_end(callframe1428);
-// compilenode returning call1429
-// compilenode returning call1429
-  int op_slot_right_1427 = gc_frame_newslot(call1429);
-  params[0] = call1429;
+  gc_frame_end(callframe1468);
+// compilenode returning call1469
+// compilenode returning call1469
+  int op_slot_right_1467 = gc_frame_newslot(call1469);
+  params[0] = call1469;
   partcv[0] = 1;
-  Object opresult1431 = callmethod(*var_curPos, "<=", 1, partcv, params);
-// compilenode returning opresult1431
-  int op_slot_left_1426 = gc_frame_newslot(opresult1431);
+  Object opresult1471 = callmethod(*var_curPos, "<=", 1, partcv, params);
+// compilenode returning opresult1471
+  int op_slot_left_1466 = gc_frame_newslot(opresult1471);
 // compilenode returning *var_readFile
 // compilenode returning *var_curPos
   params[0] = *var_curPos;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1433 = callmethod(*var_readFile, "[]", 1, partcv, params);
-// compilenode returning idxres1433
-  int op_slot_left_1432 = gc_frame_newslot(idxres1433);
-  if (strlit1434 == NULL) {
-    strlit1434 = alloc_String("""\x0a""");
-    gc_root(strlit1434);
+  Object idxres1473 = callmethod(*var_readFile, "[]", 1, partcv, params);
+// compilenode returning idxres1473
+  int op_slot_left_1472 = gc_frame_newslot(idxres1473);
+  if (strlit1474 == NULL) {
+    strlit1474 = alloc_String("""\x0a""");
+    gc_root(strlit1474);
   }
-// compilenode returning strlit1434
-  int op_slot_right_1432 = gc_frame_newslot(strlit1434);
-  params[0] = strlit1434;
+// compilenode returning strlit1474
+  int op_slot_right_1472 = gc_frame_newslot(strlit1474);
+  params[0] = strlit1474;
   partcv[0] = 1;
-  Object opresult1436 = callmethod(idxres1433, "!=", 1, partcv, params);
-// compilenode returning opresult1436
-  int op_slot_right_1426 = gc_frame_newslot(opresult1436);
-  params[0] = opresult1436;
+  Object opresult1476 = callmethod(idxres1473, "!=", 1, partcv, params);
+// compilenode returning opresult1476
+  int op_slot_right_1466 = gc_frame_newslot(opresult1476);
+  params[0] = opresult1476;
   partcv[0] = 1;
-  Object opresult1438 = callmethod(opresult1431, "&&", 1, partcv, params);
-// compilenode returning opresult1438
+  Object opresult1478 = callmethod(opresult1471, "&&", 1, partcv, params);
+// compilenode returning opresult1478
   gc_frame_end(frame);
-  return opresult1438;
+  return opresult1478;
 }
-Object meth_PackageManager__apply1441(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1481(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -10325,27 +10442,27 @@ Object meth_PackageManager__apply1441(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 457
-  setline(457);
+// Begin line 450
+  setline(450);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1442 = gc_frame_newslot(*var_curPos);
-  Object num1443 = alloc_Float64(1);
-// compilenode returning num1443
-  int op_slot_right_1442 = gc_frame_newslot(num1443);
-  params[0] = num1443;
+  int op_slot_left_1482 = gc_frame_newslot(*var_curPos);
+  Object num1483 = alloc_Float64(1);
+// compilenode returning num1483
+  int op_slot_right_1482 = gc_frame_newslot(num1483);
+  params[0] = num1483;
   partcv[0] = 1;
-  Object sum1445 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1445
-  *var_curPos = sum1445;
-  if (sum1445 == undefined)
+  Object sum1485 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1485
+  *var_curPos = sum1485;
+  if (sum1485 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager__apply1466(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1506(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -10372,32 +10489,32 @@ Object meth_PackageManager__apply1466(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 463
-  setline(463);
+// Begin line 456
+  setline(456);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_line
-  int op_slot_left_1467 = gc_frame_newslot(*var_line);
+  int op_slot_left_1507 = gc_frame_newslot(*var_line);
 // compilenode returning *var_readFile
 // compilenode returning *var_b
   params[0] = *var_b;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1468 = callmethod(*var_readFile, "[]", 1, partcv, params);
-// compilenode returning idxres1468
-  int op_slot_right_1467 = gc_frame_newslot(idxres1468);
-  params[0] = idxres1468;
+  Object idxres1508 = callmethod(*var_readFile, "[]", 1, partcv, params);
+// compilenode returning idxres1508
+  int op_slot_right_1507 = gc_frame_newslot(idxres1508);
+  params[0] = idxres1508;
   partcv[0] = 1;
-  Object opresult1470 = callmethod(*var_line, "++", 1, partcv, params);
-// compilenode returning opresult1470
-  *var_line = opresult1470;
-  if (opresult1470 == undefined)
+  Object opresult1510 = callmethod(*var_line, "++", 1, partcv, params);
+// compilenode returning opresult1510
+  *var_line = opresult1510;
+  if (opresult1510 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager__apply1510(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1550(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -10420,78 +10537,78 @@ Object meth_PackageManager__apply1510(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_pos
-  int op_slot_left_1512 = gc_frame_newslot(*var_pos);
-  int callframe1513 = gc_frame_new();
+  int op_slot_left_1552 = gc_frame_newslot(*var_pos);
+  int callframe1553 = gc_frame_new();
 // compilenode returning *var_line
   partcv[0] = 0;
-  Object call1514 = callmethod(*var_line, "size",
+  Object call1554 = callmethod(*var_line, "size",
     1, partcv, params);
-  gc_frame_end(callframe1513);
-// compilenode returning call1514
-// compilenode returning call1514
-  int op_slot_right_1512 = gc_frame_newslot(call1514);
-  params[0] = call1514;
+  gc_frame_end(callframe1553);
+// compilenode returning call1554
+// compilenode returning call1554
+  int op_slot_right_1552 = gc_frame_newslot(call1554);
+  params[0] = call1554;
   partcv[0] = 1;
-  Object opresult1516 = callmethod(*var_pos, "<", 1, partcv, params);
-// compilenode returning opresult1516
-  int op_slot_left_1511 = gc_frame_newslot(opresult1516);
-  int callframe1517 = gc_frame_new();
+  Object opresult1556 = callmethod(*var_pos, "<", 1, partcv, params);
+// compilenode returning opresult1556
+  int op_slot_left_1551 = gc_frame_newslot(opresult1556);
+  int callframe1557 = gc_frame_new();
 // compilenode returning *var_line
 // compilenode returning *var_pos
   params[0] = *var_pos;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1520 = callmethod(*var_line, "[]", 1, partcv, params);
-// compilenode returning idxres1520
-  int op_slot_left_1519 = gc_frame_newslot(idxres1520);
-  if (strlit1521 == NULL) {
-    strlit1521 = alloc_String("""\x22""");
-    gc_root(strlit1521);
+  Object idxres1560 = callmethod(*var_line, "[]", 1, partcv, params);
+// compilenode returning idxres1560
+  int op_slot_left_1559 = gc_frame_newslot(idxres1560);
+  if (strlit1561 == NULL) {
+    strlit1561 = alloc_String("""\x22""");
+    gc_root(strlit1561);
   }
-// compilenode returning strlit1521
-  int op_slot_right_1519 = gc_frame_newslot(strlit1521);
-  params[0] = strlit1521;
+// compilenode returning strlit1561
+  int op_slot_right_1559 = gc_frame_newslot(strlit1561);
+  params[0] = strlit1561;
   partcv[0] = 1;
-  Object opresult1523 = callmethod(idxres1520, "==", 1, partcv, params);
-// compilenode returning opresult1523
-  int op_slot_left_1518 = gc_frame_newslot(opresult1523);
+  Object opresult1563 = callmethod(idxres1560, "==", 1, partcv, params);
+// compilenode returning opresult1563
+  int op_slot_left_1558 = gc_frame_newslot(opresult1563);
 // compilenode returning *var_line
 // compilenode returning *var_pos
   params[0] = *var_pos;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1525 = callmethod(*var_line, "[]", 1, partcv, params);
-// compilenode returning idxres1525
-  int op_slot_left_1524 = gc_frame_newslot(idxres1525);
-  if (strlit1526 == NULL) {
-    strlit1526 = alloc_String(" ");
-    gc_root(strlit1526);
+  Object idxres1565 = callmethod(*var_line, "[]", 1, partcv, params);
+// compilenode returning idxres1565
+  int op_slot_left_1564 = gc_frame_newslot(idxres1565);
+  if (strlit1566 == NULL) {
+    strlit1566 = alloc_String(" ");
+    gc_root(strlit1566);
   }
-// compilenode returning strlit1526
-  int op_slot_right_1524 = gc_frame_newslot(strlit1526);
-  params[0] = strlit1526;
+// compilenode returning strlit1566
+  int op_slot_right_1564 = gc_frame_newslot(strlit1566);
+  params[0] = strlit1566;
   partcv[0] = 1;
-  Object opresult1528 = callmethod(idxres1525, "==", 1, partcv, params);
-// compilenode returning opresult1528
-  int op_slot_right_1518 = gc_frame_newslot(opresult1528);
-  params[0] = opresult1528;
+  Object opresult1568 = callmethod(idxres1565, "==", 1, partcv, params);
+// compilenode returning opresult1568
+  int op_slot_right_1558 = gc_frame_newslot(opresult1568);
+  params[0] = opresult1568;
   partcv[0] = 1;
-  Object opresult1530 = callmethod(opresult1523, "||", 1, partcv, params);
-// compilenode returning opresult1530
+  Object opresult1570 = callmethod(opresult1563, "||", 1, partcv, params);
+// compilenode returning opresult1570
   partcv[0] = 0;
-  Object call1531 = callmethod(opresult1530, "prefix!",
+  Object call1571 = callmethod(opresult1570, "prefix!",
     1, partcv, params);
-  gc_frame_end(callframe1517);
-// compilenode returning call1531
-  int op_slot_right_1511 = gc_frame_newslot(call1531);
-  params[0] = call1531;
+  gc_frame_end(callframe1557);
+// compilenode returning call1571
+  int op_slot_right_1551 = gc_frame_newslot(call1571);
+  params[0] = call1571;
   partcv[0] = 1;
-  Object opresult1533 = callmethod(opresult1516, "&&", 1, partcv, params);
-// compilenode returning opresult1533
+  Object opresult1573 = callmethod(opresult1556, "&&", 1, partcv, params);
+// compilenode returning opresult1573
   gc_frame_end(frame);
-  return opresult1533;
+  return opresult1573;
 }
-Object meth_PackageManager__apply1536(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1576(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -10512,31 +10629,31 @@ Object meth_PackageManager__apply1536(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 475
-  setline(475);
+// Begin line 468
+  setline(468);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 474
-  setline(474);
+// Begin line 467
+  setline(467);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_pos
-  int op_slot_left_1537 = gc_frame_newslot(*var_pos);
-  Object num1538 = alloc_Float64(1);
-// compilenode returning num1538
-  int op_slot_right_1537 = gc_frame_newslot(num1538);
-  params[0] = num1538;
+  int op_slot_left_1577 = gc_frame_newslot(*var_pos);
+  Object num1578 = alloc_Float64(1);
+// compilenode returning num1578
+  int op_slot_right_1577 = gc_frame_newslot(num1578);
+  params[0] = num1578;
   partcv[0] = 1;
-  Object sum1540 = callmethod(*var_pos, "+", 1, partcv, params);
-// compilenode returning sum1540
-  *var_pos = sum1540;
-  if (sum1540 == undefined)
+  Object sum1580 = callmethod(*var_pos, "+", 1, partcv, params);
+// compilenode returning sum1580
+  *var_pos = sum1580;
+  if (sum1580 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager__apply1574(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1614(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -10562,24 +10679,24 @@ Object meth_PackageManager__apply1574(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 481
-  setline(481);
+// Begin line 474
+  setline(474);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1575 = gc_frame_new();
+  int callframe1615 = gc_frame_new();
 // compilenode returning *var_d
   gc_frame_newslot(*var_d);
 // compilenode returning *var_outFile
   params[0] = *var_d;
   partcv[0] = 1;
-  Object call1576 = callmethod(*var_outFile, "push",
+  Object call1616 = callmethod(*var_outFile, "push",
     1, partcv, params);
-  gc_frame_end(callframe1575);
-// compilenode returning call1576
+  gc_frame_end(callframe1615);
+// compilenode returning call1616
   gc_frame_end(frame);
-  return call1576;
+  return call1616;
 }
-Object meth_PackageManager__apply1581(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1621(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -10605,24 +10722,24 @@ Object meth_PackageManager__apply1581(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 486
-  setline(486);
+// Begin line 479
+  setline(479);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1582 = gc_frame_new();
+  int callframe1622 = gc_frame_new();
 // compilenode returning *var_d
   gc_frame_newslot(*var_d);
 // compilenode returning *var_outFile
   params[0] = *var_d;
   partcv[0] = 1;
-  Object call1583 = callmethod(*var_outFile, "push",
+  Object call1623 = callmethod(*var_outFile, "push",
     1, partcv, params);
-  gc_frame_end(callframe1582);
-// compilenode returning call1583
+  gc_frame_end(callframe1622);
+// compilenode returning call1623
   gc_frame_end(frame);
-  return call1583;
+  return call1623;
 }
-Object meth_PackageManager__apply1421(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1461(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(8, getclosureframe(closure));
@@ -10661,12 +10778,12 @@ Object meth_PackageManager__apply1421(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 6, "nextImport");
   Object *var_remainder = &(stackframe->slots[7]);
   setframeelementname(stackframe, 7, "remainder");
-// Begin line 456
-  setline(456);
+// Begin line 449
+  setline(449);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 455
-  setline(455);
+// Begin line 448
+  setline(448);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -10674,257 +10791,257 @@ Object meth_PackageManager__apply1421(Object realself, int nparts, int *argcv, O
   if (*var_curPos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 459
-  setline(459);
+// Begin line 452
+  setline(452);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1423 = gc_frame_new();
-// Begin line 456
-  setline(456);
+  int callframe1463 = gc_frame_new();
+// Begin line 449
+  setline(449);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1424 = alloc_Block(NULL, NULL, "PackageManager", 456);
-  gc_frame_newslot(block1424);
-  block_savedest(block1424);
-  Object closure1425 = createclosure(3, "_apply");
-setclosureframe(closure1425, stackframe);
-  addtoclosure(closure1425, var_curPos);
-  addtoclosure(closure1425, var_readFile);
-  addtoclosure(closure1425, selfslot);
-  struct UserObject *uo1425 = (struct UserObject*)block1424;
-  uo1425->data[0] = (Object)closure1425;
-  Method *meth_meth_PackageManager__apply1425 = addmethod2pos(block1424, "_apply", &meth_PackageManager__apply1425, 0);
-int argcv_meth_PackageManager__apply1425[] = {0};
-meth_meth_PackageManager__apply1425->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1425);
-  meth_meth_PackageManager__apply1425->definitionModule = modulename;
-  meth_meth_PackageManager__apply1425->definitionLine = 454;
-// compilenode returning block1424
-  gc_frame_newslot(block1424);
-// Begin line 459
-  setline(459);
+  Object block1464 = alloc_Block(NULL, NULL, "PackageManager", 449);
+  gc_frame_newslot(block1464);
+  block_savedest(block1464);
+  Object closure1465 = createclosure(3, "_apply");
+setclosureframe(closure1465, stackframe);
+  addtoclosure(closure1465, var_curPos);
+  addtoclosure(closure1465, var_readFile);
+  addtoclosure(closure1465, selfslot);
+  struct UserObject *uo1465 = (struct UserObject*)block1464;
+  uo1465->data[0] = (Object)closure1465;
+  Method *meth_meth_PackageManager__apply1465 = addmethod2pos(block1464, "_apply", &meth_PackageManager__apply1465, 0);
+int argcv_meth_PackageManager__apply1465[] = {0};
+meth_meth_PackageManager__apply1465->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1465);
+  meth_meth_PackageManager__apply1465->definitionModule = modulename;
+  meth_meth_PackageManager__apply1465->definitionLine = 447;
+// compilenode returning block1464
+  gc_frame_newslot(block1464);
+// Begin line 452
+  setline(452);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1440 = alloc_Block(NULL, NULL, "PackageManager", 459);
-  gc_frame_newslot(block1440);
-  block_savedest(block1440);
-  Object closure1441 = createclosure(2, "_apply");
-setclosureframe(closure1441, stackframe);
-  addtoclosure(closure1441, var_curPos);
-  addtoclosure(closure1441, selfslot);
-  struct UserObject *uo1441 = (struct UserObject*)block1440;
-  uo1441->data[0] = (Object)closure1441;
-  Method *meth_meth_PackageManager__apply1441 = addmethod2pos(block1440, "_apply", &meth_PackageManager__apply1441, 0);
-int argcv_meth_PackageManager__apply1441[] = {0};
-meth_meth_PackageManager__apply1441->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1441);
-  meth_meth_PackageManager__apply1441->definitionModule = modulename;
-  meth_meth_PackageManager__apply1441->definitionLine = 456;
-// compilenode returning block1440
-  gc_frame_newslot(block1440);
-  params[0] = block1424;
-  params[1] = block1440;
+  Object block1480 = alloc_Block(NULL, NULL, "PackageManager", 452);
+  gc_frame_newslot(block1480);
+  block_savedest(block1480);
+  Object closure1481 = createclosure(2, "_apply");
+setclosureframe(closure1481, stackframe);
+  addtoclosure(closure1481, var_curPos);
+  addtoclosure(closure1481, selfslot);
+  struct UserObject *uo1481 = (struct UserObject*)block1480;
+  uo1481->data[0] = (Object)closure1481;
+  Method *meth_meth_PackageManager__apply1481 = addmethod2pos(block1480, "_apply", &meth_PackageManager__apply1481, 0);
+int argcv_meth_PackageManager__apply1481[] = {0};
+meth_meth_PackageManager__apply1481->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1481);
+  meth_meth_PackageManager__apply1481->definitionModule = modulename;
+  meth_meth_PackageManager__apply1481->definitionLine = 449;
+// compilenode returning block1480
+  gc_frame_newslot(block1480);
+  params[0] = block1464;
+  params[1] = block1480;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1448 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1423);
-// compilenode returning call1448
-// Begin line 460
-  setline(460);
+  Object call1488 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1463);
+// compilenode returning call1488
+// Begin line 453
+  setline(453);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1449 = gc_frame_new();
-// Begin line 459
-  setline(459);
+  int callframe1489 = gc_frame_new();
+// Begin line 452
+  setline(452);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_startPos
   gc_frame_newslot(*var_startPos);
 // compilenode returning *var_curPos
-  int op_slot_left_1450 = gc_frame_newslot(*var_curPos);
-  Object num1451 = alloc_Float64(1);
-// compilenode returning num1451
-  int op_slot_right_1450 = gc_frame_newslot(num1451);
-  params[0] = num1451;
+  int op_slot_left_1490 = gc_frame_newslot(*var_curPos);
+  Object num1491 = alloc_Float64(1);
+// compilenode returning num1491
+  int op_slot_right_1490 = gc_frame_newslot(num1491);
+  params[0] = num1491;
   partcv[0] = 1;
-  Object diff1453 = callmethod(*var_curPos, "-", 1, partcv, params);
-// compilenode returning diff1453
-  gc_frame_newslot(diff1453);
+  Object diff1493 = callmethod(*var_curPos, "-", 1, partcv, params);
+// compilenode returning diff1493
+  gc_frame_newslot(diff1493);
 // compilenode returning *var_readFile
   params[0] = *var_startPos;
-  params[1] = diff1453;
+  params[1] = diff1493;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1454 = callmethod(*var_readFile, "substringFrom()to",
+  Object call1494 = callmethod(*var_readFile, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1449);
-// compilenode returning call1454
-  *var_data = call1454;
-  if (call1454 == undefined)
+  gc_frame_end(callframe1489);
+// compilenode returning call1494
+  *var_data = call1494;
+  if (call1494 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 460
-  setline(460);
+// Begin line 453
+  setline(453);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1455 == NULL) {
-    strlit1455 = alloc_String("");
-    gc_root(strlit1455);
+  if (strlit1495 == NULL) {
+    strlit1495 = alloc_String("");
+    gc_root(strlit1495);
   }
-// compilenode returning strlit1455
-  *var_line = strlit1455;
-  if (strlit1455 == undefined)
+// compilenode returning strlit1495
+  *var_line = strlit1495;
+  if (strlit1495 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 461
-  setline(461);
+// Begin line 454
+  setline(454);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1456 = alloc_Float64(1);
-// compilenode returning num1456
-  *var_count = num1456;
-  if (num1456 == undefined)
+  Object num1496 = alloc_Float64(1);
+// compilenode returning num1496
+  *var_count = num1496;
+  if (num1496 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 465
-  setline(465);
+// Begin line 458
+  setline(458);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1457 = gc_frame_new();
-// Begin line 462
-  setline(462);
+  int callframe1497 = gc_frame_new();
+// Begin line 455
+  setline(455);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_startPos
-  int op_slot_left_1458 = gc_frame_newslot(*var_startPos);
+  int op_slot_left_1498 = gc_frame_newslot(*var_startPos);
 // compilenode returning *var_curPos
-  int op_slot_left_1459 = gc_frame_newslot(*var_curPos);
-  Object num1460 = alloc_Float64(1);
-// compilenode returning num1460
-  int op_slot_right_1459 = gc_frame_newslot(num1460);
-  params[0] = num1460;
+  int op_slot_left_1499 = gc_frame_newslot(*var_curPos);
+  Object num1500 = alloc_Float64(1);
+// compilenode returning num1500
+  int op_slot_right_1499 = gc_frame_newslot(num1500);
+  params[0] = num1500;
   partcv[0] = 1;
-  Object diff1462 = callmethod(*var_curPos, "-", 1, partcv, params);
-// compilenode returning diff1462
-  int op_slot_right_1458 = gc_frame_newslot(diff1462);
-  params[0] = diff1462;
+  Object diff1502 = callmethod(*var_curPos, "-", 1, partcv, params);
+// compilenode returning diff1502
+  int op_slot_right_1498 = gc_frame_newslot(diff1502);
+  params[0] = diff1502;
   partcv[0] = 1;
-  Object opresult1464 = callmethod(*var_startPos, "..", 1, partcv, params);
-// compilenode returning opresult1464
-  gc_frame_newslot(opresult1464);
-// Begin line 465
-  setline(465);
+  Object opresult1504 = callmethod(*var_startPos, "..", 1, partcv, params);
+// compilenode returning opresult1504
+  gc_frame_newslot(opresult1504);
+// Begin line 458
+  setline(458);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1465 = alloc_Block(NULL, NULL, "PackageManager", 465);
-  gc_frame_newslot(block1465);
-  block_savedest(block1465);
-  Object closure1466 = createclosure(3, "_apply");
-setclosureframe(closure1466, stackframe);
-  addtoclosure(closure1466, var_line);
-  addtoclosure(closure1466, var_readFile);
-  addtoclosure(closure1466, selfslot);
-  struct UserObject *uo1466 = (struct UserObject*)block1465;
-  uo1466->data[0] = (Object)closure1466;
-  Method *meth_meth_PackageManager__apply1466 = addmethod2pos(block1465, "_apply", &meth_PackageManager__apply1466, 0);
-int argcv_meth_PackageManager__apply1466[] = {1};
-meth_meth_PackageManager__apply1466->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1466);
-  meth_meth_PackageManager__apply1466->definitionModule = modulename;
-  meth_meth_PackageManager__apply1466->definitionLine = 456;
-// compilenode returning block1465
-  gc_frame_newslot(block1465);
-  params[0] = opresult1464;
-  params[1] = block1465;
+  Object block1505 = alloc_Block(NULL, NULL, "PackageManager", 458);
+  gc_frame_newslot(block1505);
+  block_savedest(block1505);
+  Object closure1506 = createclosure(3, "_apply");
+setclosureframe(closure1506, stackframe);
+  addtoclosure(closure1506, var_line);
+  addtoclosure(closure1506, var_readFile);
+  addtoclosure(closure1506, selfslot);
+  struct UserObject *uo1506 = (struct UserObject*)block1505;
+  uo1506->data[0] = (Object)closure1506;
+  Method *meth_meth_PackageManager__apply1506 = addmethod2pos(block1505, "_apply", &meth_PackageManager__apply1506, 0);
+int argcv_meth_PackageManager__apply1506[] = {1};
+meth_meth_PackageManager__apply1506->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1506);
+  meth_meth_PackageManager__apply1506->definitionModule = modulename;
+  meth_meth_PackageManager__apply1506->definitionLine = 449;
+// compilenode returning block1505
+  gc_frame_newslot(block1505);
+  params[0] = opresult1504;
+  params[1] = block1505;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1473 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1457);
-// compilenode returning call1473
-// Begin line 465
-  setline(465);
+  Object call1513 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1497);
+// compilenode returning call1513
+// Begin line 458
+  setline(458);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_line
   params[0] = *var_line;
-  Object call1474 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1474
-// Begin line 489
-  setline(489);
+  Object call1514 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1514
+// Begin line 482
+  setline(482);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 466
-  setline(466);
+// Begin line 459
+  setline(459);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1478 = gc_frame_new();
+  int callframe1518 = gc_frame_new();
 // compilenode returning *var_line
   partcv[0] = 0;
-  Object call1479 = callmethod(*var_line, "size",
+  Object call1519 = callmethod(*var_line, "size",
     1, partcv, params);
-  gc_frame_end(callframe1478);
-// compilenode returning call1479
-// compilenode returning call1479
-  int op_slot_left_1477 = gc_frame_newslot(call1479);
-  Object num1480 = alloc_Float64(6);
-// compilenode returning num1480
-  int op_slot_right_1477 = gc_frame_newslot(num1480);
-  params[0] = num1480;
+  gc_frame_end(callframe1518);
+// compilenode returning call1519
+// compilenode returning call1519
+  int op_slot_left_1517 = gc_frame_newslot(call1519);
+  Object num1520 = alloc_Float64(6);
+// compilenode returning num1520
+  int op_slot_right_1517 = gc_frame_newslot(num1520);
+  params[0] = num1520;
   partcv[0] = 1;
-  Object opresult1482 = callmethod(call1479, ">", 1, partcv, params);
-// compilenode returning opresult1482
-  int op_slot_left_1476 = gc_frame_newslot(opresult1482);
-  int callframe1484 = gc_frame_new();
-  Object num1485 = alloc_Float64(1);
-// compilenode returning num1485
-  gc_frame_newslot(num1485);
-  Object num1486 = alloc_Float64(7);
-// compilenode returning num1486
-  gc_frame_newslot(num1486);
+  Object opresult1522 = callmethod(call1519, ">", 1, partcv, params);
+// compilenode returning opresult1522
+  int op_slot_left_1516 = gc_frame_newslot(opresult1522);
+  int callframe1524 = gc_frame_new();
+  Object num1525 = alloc_Float64(1);
+// compilenode returning num1525
+  gc_frame_newslot(num1525);
+  Object num1526 = alloc_Float64(7);
+// compilenode returning num1526
+  gc_frame_newslot(num1526);
 // compilenode returning *var_line
-  params[0] = num1485;
-  params[1] = num1486;
+  params[0] = num1525;
+  params[1] = num1526;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1487 = callmethod(*var_line, "substringFrom()to",
+  Object call1527 = callmethod(*var_line, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1484);
-// compilenode returning call1487
-  int op_slot_left_1483 = gc_frame_newslot(call1487);
-  if (strlit1488 == NULL) {
-    strlit1488 = alloc_String("import ");
-    gc_root(strlit1488);
+  gc_frame_end(callframe1524);
+// compilenode returning call1527
+  int op_slot_left_1523 = gc_frame_newslot(call1527);
+  if (strlit1528 == NULL) {
+    strlit1528 = alloc_String("import ");
+    gc_root(strlit1528);
   }
-// compilenode returning strlit1488
-  int op_slot_right_1483 = gc_frame_newslot(strlit1488);
-  params[0] = strlit1488;
+// compilenode returning strlit1528
+  int op_slot_right_1523 = gc_frame_newslot(strlit1528);
+  params[0] = strlit1528;
   partcv[0] = 1;
-  Object opresult1490 = callmethod(call1487, "==", 1, partcv, params);
-// compilenode returning opresult1490
-  int op_slot_right_1476 = gc_frame_newslot(opresult1490);
-  params[0] = opresult1490;
+  Object opresult1530 = callmethod(call1527, "==", 1, partcv, params);
+// compilenode returning opresult1530
+  int op_slot_right_1516 = gc_frame_newslot(opresult1530);
+  params[0] = opresult1530;
   partcv[0] = 1;
-  Object opresult1492 = callmethod(opresult1482, "&&", 1, partcv, params);
-// compilenode returning opresult1492
-  Object if1475 = done;
-  if (istrue(opresult1492)) {
-// Begin line 468
-  setline(468);
+  Object opresult1532 = callmethod(opresult1522, "&&", 1, partcv, params);
+// compilenode returning opresult1532
+  Object if1515 = done;
+  if (istrue(opresult1532)) {
+// Begin line 461
+  setline(461);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 467
-  setline(467);
+// Begin line 460
+  setline(460);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1493 = alloc_Float64(1);
-// compilenode returning num1493
-  *var_pos = num1493;
-  if (num1493 == undefined)
+  Object num1533 = alloc_Float64(1);
+// compilenode returning num1533
+  *var_pos = num1533;
+  if (num1533 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 469
-  setline(469);
+// Begin line 462
+  setline(462);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 468
-  setline(468);
+// Begin line 461
+  setline(461);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_pos
@@ -10932,30 +11049,30 @@ meth_meth_PackageManager__apply1466->type = alloc_MethodType(1, argcv_meth_Packa
   if (*var_pos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 470
-  setline(470);
+// Begin line 463
+  setline(463);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 469
-  setline(469);
+// Begin line 462
+  setline(462);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1494 == NULL) {
-    strlit1494 = alloc_String("");
-    gc_root(strlit1494);
+  if (strlit1534 == NULL) {
+    strlit1534 = alloc_String("");
+    gc_root(strlit1534);
   }
-// compilenode returning strlit1494
-  *var_nextImport = strlit1494;
-  if (strlit1494 == undefined)
+// compilenode returning strlit1534
+  *var_nextImport = strlit1534;
+  if (strlit1534 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 471
-  setline(471);
+// Begin line 464
+  setline(464);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1495 = gc_frame_new();
-// Begin line 470
-  setline(470);
+  int callframe1535 = gc_frame_new();
+// Begin line 463
+  setline(463);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_line
@@ -10965,321 +11082,321 @@ meth_meth_PackageManager__apply1466->type = alloc_MethodType(1, argcv_meth_Packa
   params[0] = *var_line;
   params[1] = *var_pos;
   partcv[0] = 2;
-  Object call1496 = callmethodflags(self, "skipWhiteSpace", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1495);
-// compilenode returning call1496
-  *var_pos = call1496;
-  if (call1496 == undefined)
+  Object call1536 = callmethodflags(self, "skipWhiteSpace", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1535);
+// compilenode returning call1536
+  *var_pos = call1536;
+  if (call1536 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 472
-  setline(472);
+// Begin line 465
+  setline(465);
   setmodule(modulename);
   setsource(originalSourceLines);
+// Begin line 464
+  setline(464);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_pos
+  int op_slot_left_1538 = gc_frame_newslot(*var_pos);
+  Object num1539 = alloc_Float64(1);
+// compilenode returning num1539
+  int op_slot_right_1538 = gc_frame_newslot(num1539);
+  params[0] = num1539;
+  partcv[0] = 1;
+  Object sum1541 = callmethod(*var_pos, "+", 1, partcv, params);
+// compilenode returning sum1541
+  *var_pos = sum1541;
+  if (sum1541 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 465
+  setline(465);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  if (strlit1544 == NULL) {
+    strlit1544 = alloc_String("LINE = ");
+    gc_root(strlit1544);
+  }
+// compilenode returning strlit1544
+  int op_slot_left_1543 = gc_frame_newslot(strlit1544);
+// compilenode returning *var_line
+  int op_slot_right_1543 = gc_frame_newslot(*var_line);
+  params[0] = *var_line;
+  partcv[0] = 1;
+  Object opresult1546 = callmethod(strlit1544, "++", 1, partcv, params);
+// compilenode returning opresult1546
+  params[0] = opresult1546;
+  Object call1547 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1547
+// Begin line 469
+  setline(469);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1548 = gc_frame_new();
+// Begin line 466
+  setline(466);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block1549 = alloc_Block(NULL, NULL, "PackageManager", 466);
+  gc_frame_newslot(block1549);
+  block_savedest(block1549);
+  Object closure1550 = createclosure(3, "_apply");
+setclosureframe(closure1550, stackframe);
+  addtoclosure(closure1550, var_pos);
+  addtoclosure(closure1550, var_line);
+  addtoclosure(closure1550, selfslot);
+  struct UserObject *uo1550 = (struct UserObject*)block1549;
+  uo1550->data[0] = (Object)closure1550;
+  Method *meth_meth_PackageManager__apply1550 = addmethod2pos(block1549, "_apply", &meth_PackageManager__apply1550, 0);
+int argcv_meth_PackageManager__apply1550[] = {0};
+meth_meth_PackageManager__apply1550->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1550);
+  meth_meth_PackageManager__apply1550->definitionModule = modulename;
+  meth_meth_PackageManager__apply1550->definitionLine = 459;
+// compilenode returning block1549
+  gc_frame_newslot(block1549);
+// Begin line 469
+  setline(469);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block1575 = alloc_Block(NULL, NULL, "PackageManager", 469);
+  gc_frame_newslot(block1575);
+  block_savedest(block1575);
+  Object closure1576 = createclosure(2, "_apply");
+setclosureframe(closure1576, stackframe);
+  addtoclosure(closure1576, var_pos);
+  addtoclosure(closure1576, selfslot);
+  struct UserObject *uo1576 = (struct UserObject*)block1575;
+  uo1576->data[0] = (Object)closure1576;
+  Method *meth_meth_PackageManager__apply1576 = addmethod2pos(block1575, "_apply", &meth_PackageManager__apply1576, 0);
+int argcv_meth_PackageManager__apply1576[] = {0};
+meth_meth_PackageManager__apply1576->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1576);
+  meth_meth_PackageManager__apply1576->definitionModule = modulename;
+  meth_meth_PackageManager__apply1576->definitionLine = 466;
+// compilenode returning block1575
+  gc_frame_newslot(block1575);
+  params[0] = block1549;
+  params[1] = block1575;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call1583 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1548);
+// compilenode returning call1583
+// Begin line 469
+  setline(469);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_pos
+  int op_slot_left_1584 = gc_frame_newslot(*var_pos);
+  Object num1585 = alloc_Float64(1);
+// compilenode returning num1585
+  int op_slot_right_1584 = gc_frame_newslot(num1585);
+  params[0] = num1585;
+  partcv[0] = 1;
+  Object sum1587 = callmethod(*var_pos, "+", 1, partcv, params);
+// compilenode returning sum1587
+  *var_pos = sum1587;
+  if (sum1587 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 470
+  setline(470);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1589 = gc_frame_new();
+  int callframe1590 = gc_frame_new();
+// compilenode returning *var_pos
+  int op_slot_left_1591 = gc_frame_newslot(*var_pos);
+  Object num1592 = alloc_Float64(1);
+// compilenode returning num1592
+  int op_slot_right_1591 = gc_frame_newslot(num1592);
+  params[0] = num1592;
+  partcv[0] = 1;
+  Object sum1594 = callmethod(*var_pos, "+", 1, partcv, params);
+// compilenode returning sum1594
+  gc_frame_newslot(sum1594);
+  int callframe1595 = gc_frame_new();
+// compilenode returning *var_line
+  partcv[0] = 0;
+  Object call1596 = callmethod(*var_line, "size",
+    1, partcv, params);
+  gc_frame_end(callframe1595);
+// compilenode returning call1596
+// compilenode returning call1596
+  gc_frame_newslot(call1596);
+// compilenode returning *var_line
+  params[0] = sum1594;
+  params[1] = call1596;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call1597 = callmethod(*var_line, "substringFrom()to",
+    2, partcv, params);
+  gc_frame_end(callframe1590);
+// compilenode returning call1597
+  gc_frame_newslot(call1597);
+  params[0] = call1597;
+  partcv[0] = 1;
+  Object call1598 = callmethodflags(self, "removeExistingUrls", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1589);
+// compilenode returning call1598
+  *var_remainder = call1598;
+  if (call1598 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
 // Begin line 471
   setline(471);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_pos
-  int op_slot_left_1498 = gc_frame_newslot(*var_pos);
-  Object num1499 = alloc_Float64(1);
-// compilenode returning num1499
-  int op_slot_right_1498 = gc_frame_newslot(num1499);
-  params[0] = num1499;
+  if (strlit1602 == NULL) {
+    strlit1602 = alloc_String("import ""\x22""");
+    gc_root(strlit1602);
+  }
+// compilenode returning strlit1602
+  int op_slot_left_1601 = gc_frame_newslot(strlit1602);
+// compilenode returning *var_prefix
+  int op_slot_right_1601 = gc_frame_newslot(*var_prefix);
+  params[0] = *var_prefix;
   partcv[0] = 1;
-  Object sum1501 = callmethod(*var_pos, "+", 1, partcv, params);
-// compilenode returning sum1501
-  *var_pos = sum1501;
-  if (sum1501 == undefined)
+  Object opresult1604 = callmethod(strlit1602, "++", 1, partcv, params);
+// compilenode returning opresult1604
+  int op_slot_left_1600 = gc_frame_newslot(opresult1604);
+  if (strlit1605 == NULL) {
+    strlit1605 = alloc_String("/");
+    gc_root(strlit1605);
+  }
+// compilenode returning strlit1605
+  int op_slot_right_1600 = gc_frame_newslot(strlit1605);
+  params[0] = strlit1605;
+  partcv[0] = 1;
+  Object opresult1607 = callmethod(opresult1604, "++", 1, partcv, params);
+// compilenode returning opresult1607
+  int op_slot_left_1599 = gc_frame_newslot(opresult1607);
+// compilenode returning *var_remainder
+  int op_slot_right_1599 = gc_frame_newslot(*var_remainder);
+  params[0] = *var_remainder;
+  partcv[0] = 1;
+  Object opresult1609 = callmethod(opresult1607, "++", 1, partcv, params);
+// compilenode returning opresult1609
+  *var_line = opresult1609;
+  if (opresult1609 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
 // Begin line 472
   setline(472);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1504 == NULL) {
-    strlit1504 = alloc_String("LINE = ");
-    gc_root(strlit1504);
-  }
-// compilenode returning strlit1504
-  int op_slot_left_1503 = gc_frame_newslot(strlit1504);
 // compilenode returning *var_line
-  int op_slot_right_1503 = gc_frame_newslot(*var_line);
   params[0] = *var_line;
-  partcv[0] = 1;
-  Object opresult1506 = callmethod(strlit1504, "++", 1, partcv, params);
-// compilenode returning opresult1506
-  params[0] = opresult1506;
-  Object call1507 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1507
+  Object call1611 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1611
 // Begin line 476
   setline(476);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1508 = gc_frame_new();
+  int callframe1612 = gc_frame_new();
 // Begin line 473
   setline(473);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1509 = alloc_Block(NULL, NULL, "PackageManager", 473);
-  gc_frame_newslot(block1509);
-  block_savedest(block1509);
-  Object closure1510 = createclosure(3, "_apply");
-setclosureframe(closure1510, stackframe);
-  addtoclosure(closure1510, var_pos);
-  addtoclosure(closure1510, var_line);
-  addtoclosure(closure1510, selfslot);
-  struct UserObject *uo1510 = (struct UserObject*)block1509;
-  uo1510->data[0] = (Object)closure1510;
-  Method *meth_meth_PackageManager__apply1510 = addmethod2pos(block1509, "_apply", &meth_PackageManager__apply1510, 0);
-int argcv_meth_PackageManager__apply1510[] = {0};
-meth_meth_PackageManager__apply1510->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1510);
-  meth_meth_PackageManager__apply1510->definitionModule = modulename;
-  meth_meth_PackageManager__apply1510->definitionLine = 466;
-// compilenode returning block1509
-  gc_frame_newslot(block1509);
+// compilenode returning *var_line
+  gc_frame_newslot(*var_line);
 // Begin line 476
   setline(476);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1535 = alloc_Block(NULL, NULL, "PackageManager", 476);
-  gc_frame_newslot(block1535);
-  block_savedest(block1535);
-  Object closure1536 = createclosure(2, "_apply");
-setclosureframe(closure1536, stackframe);
-  addtoclosure(closure1536, var_pos);
-  addtoclosure(closure1536, selfslot);
-  struct UserObject *uo1536 = (struct UserObject*)block1535;
-  uo1536->data[0] = (Object)closure1536;
-  Method *meth_meth_PackageManager__apply1536 = addmethod2pos(block1535, "_apply", &meth_PackageManager__apply1536, 0);
-int argcv_meth_PackageManager__apply1536[] = {0};
-meth_meth_PackageManager__apply1536->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1536);
-  meth_meth_PackageManager__apply1536->definitionModule = modulename;
-  meth_meth_PackageManager__apply1536->definitionLine = 473;
-// compilenode returning block1535
-  gc_frame_newslot(block1535);
-  params[0] = block1509;
-  params[1] = block1535;
+  Object block1613 = alloc_Block(NULL, NULL, "PackageManager", 476);
+  gc_frame_newslot(block1613);
+  block_savedest(block1613);
+  Object closure1614 = createclosure(2, "_apply");
+setclosureframe(closure1614, stackframe);
+  addtoclosure(closure1614, var_outFile);
+  addtoclosure(closure1614, selfslot);
+  struct UserObject *uo1614 = (struct UserObject*)block1613;
+  uo1614->data[0] = (Object)closure1614;
+  Method *meth_meth_PackageManager__apply1614 = addmethod2pos(block1613, "_apply", &meth_PackageManager__apply1614, 0);
+int argcv_meth_PackageManager__apply1614[] = {1};
+meth_meth_PackageManager__apply1614->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1614);
+  meth_meth_PackageManager__apply1614->definitionModule = modulename;
+  meth_meth_PackageManager__apply1614->definitionLine = 470;
+// compilenode returning block1613
+  gc_frame_newslot(block1613);
+  params[0] = *var_line;
+  params[1] = block1613;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1543 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1508);
-// compilenode returning call1543
-// Begin line 476
-  setline(476);
+  Object call1618 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1612);
+// compilenode returning call1618
+    gc_frame_newslot(call1618);
+    if1515 = call1618;
+  } else {
+// Begin line 481
+  setline(481);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_pos
-  int op_slot_left_1544 = gc_frame_newslot(*var_pos);
-  Object num1545 = alloc_Float64(1);
-// compilenode returning num1545
-  int op_slot_right_1544 = gc_frame_newslot(num1545);
-  params[0] = num1545;
-  partcv[0] = 1;
-  Object sum1547 = callmethod(*var_pos, "+", 1, partcv, params);
-// compilenode returning sum1547
-  *var_pos = sum1547;
-  if (sum1547 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 477
-  setline(477);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1549 = gc_frame_new();
-  int callframe1550 = gc_frame_new();
-// compilenode returning *var_pos
-  int op_slot_left_1551 = gc_frame_newslot(*var_pos);
-  Object num1552 = alloc_Float64(1);
-// compilenode returning num1552
-  int op_slot_right_1551 = gc_frame_newslot(num1552);
-  params[0] = num1552;
-  partcv[0] = 1;
-  Object sum1554 = callmethod(*var_pos, "+", 1, partcv, params);
-// compilenode returning sum1554
-  gc_frame_newslot(sum1554);
-  int callframe1555 = gc_frame_new();
-// compilenode returning *var_line
-  partcv[0] = 0;
-  Object call1556 = callmethod(*var_line, "size",
-    1, partcv, params);
-  gc_frame_end(callframe1555);
-// compilenode returning call1556
-// compilenode returning call1556
-  gc_frame_newslot(call1556);
-// compilenode returning *var_line
-  params[0] = sum1554;
-  params[1] = call1556;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1557 = callmethod(*var_line, "substringFrom()to",
-    2, partcv, params);
-  gc_frame_end(callframe1550);
-// compilenode returning call1557
-  gc_frame_newslot(call1557);
-  params[0] = call1557;
-  partcv[0] = 1;
-  Object call1558 = callmethodflags(self, "removeExistingUrls", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1549);
-// compilenode returning call1558
-  *var_remainder = call1558;
-  if (call1558 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
+  int callframe1619 = gc_frame_new();
 // Begin line 478
   setline(478);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1562 == NULL) {
-    strlit1562 = alloc_String("import ""\x22""");
-    gc_root(strlit1562);
-  }
-// compilenode returning strlit1562
-  int op_slot_left_1561 = gc_frame_newslot(strlit1562);
-// compilenode returning *var_prefix
-  int op_slot_right_1561 = gc_frame_newslot(*var_prefix);
-  params[0] = *var_prefix;
-  partcv[0] = 1;
-  Object opresult1564 = callmethod(strlit1562, "++", 1, partcv, params);
-// compilenode returning opresult1564
-  int op_slot_left_1560 = gc_frame_newslot(opresult1564);
-  if (strlit1565 == NULL) {
-    strlit1565 = alloc_String("/");
-    gc_root(strlit1565);
-  }
-// compilenode returning strlit1565
-  int op_slot_right_1560 = gc_frame_newslot(strlit1565);
-  params[0] = strlit1565;
-  partcv[0] = 1;
-  Object opresult1567 = callmethod(opresult1564, "++", 1, partcv, params);
-// compilenode returning opresult1567
-  int op_slot_left_1559 = gc_frame_newslot(opresult1567);
-// compilenode returning *var_remainder
-  int op_slot_right_1559 = gc_frame_newslot(*var_remainder);
-  params[0] = *var_remainder;
-  partcv[0] = 1;
-  Object opresult1569 = callmethod(opresult1567, "++", 1, partcv, params);
-// compilenode returning opresult1569
-  *var_line = opresult1569;
-  if (opresult1569 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 479
-  setline(479);
+// compilenode returning *var_line
+  gc_frame_newslot(*var_line);
+// Begin line 481
+  setline(481);
   setmodule(modulename);
   setsource(originalSourceLines);
-// compilenode returning *var_line
+  Object block1620 = alloc_Block(NULL, NULL, "PackageManager", 481);
+  gc_frame_newslot(block1620);
+  block_savedest(block1620);
+  Object closure1621 = createclosure(2, "_apply");
+setclosureframe(closure1621, stackframe);
+  addtoclosure(closure1621, var_outFile);
+  addtoclosure(closure1621, selfslot);
+  struct UserObject *uo1621 = (struct UserObject*)block1620;
+  uo1621->data[0] = (Object)closure1621;
+  Method *meth_meth_PackageManager__apply1621 = addmethod2pos(block1620, "_apply", &meth_PackageManager__apply1621, 0);
+int argcv_meth_PackageManager__apply1621[] = {1};
+meth_meth_PackageManager__apply1621->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1621);
+  meth_meth_PackageManager__apply1621->definitionModule = modulename;
+  meth_meth_PackageManager__apply1621->definitionLine = 470;
+// compilenode returning block1620
+  gc_frame_newslot(block1620);
   params[0] = *var_line;
-  Object call1571 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1571
+  params[1] = block1620;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call1625 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1619);
+// compilenode returning call1625
+    gc_frame_newslot(call1625);
+    if1515 = call1625;
+  }
+// compilenode returning if1515
 // Begin line 483
   setline(483);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1572 = gc_frame_new();
-// Begin line 480
-  setline(480);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_line
-  gc_frame_newslot(*var_line);
-// Begin line 483
-  setline(483);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block1573 = alloc_Block(NULL, NULL, "PackageManager", 483);
-  gc_frame_newslot(block1573);
-  block_savedest(block1573);
-  Object closure1574 = createclosure(2, "_apply");
-setclosureframe(closure1574, stackframe);
-  addtoclosure(closure1574, var_outFile);
-  addtoclosure(closure1574, selfslot);
-  struct UserObject *uo1574 = (struct UserObject*)block1573;
-  uo1574->data[0] = (Object)closure1574;
-  Method *meth_meth_PackageManager__apply1574 = addmethod2pos(block1573, "_apply", &meth_PackageManager__apply1574, 0);
-int argcv_meth_PackageManager__apply1574[] = {1};
-meth_meth_PackageManager__apply1574->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1574);
-  meth_meth_PackageManager__apply1574->definitionModule = modulename;
-  meth_meth_PackageManager__apply1574->definitionLine = 477;
-// compilenode returning block1573
-  gc_frame_newslot(block1573);
-  params[0] = *var_line;
-  params[1] = block1573;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1578 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1572);
-// compilenode returning call1578
-    gc_frame_newslot(call1578);
-    if1475 = call1578;
-  } else {
-// Begin line 488
-  setline(488);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1579 = gc_frame_new();
-// Begin line 485
-  setline(485);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_line
-  gc_frame_newslot(*var_line);
-// Begin line 488
-  setline(488);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block1580 = alloc_Block(NULL, NULL, "PackageManager", 488);
-  gc_frame_newslot(block1580);
-  block_savedest(block1580);
-  Object closure1581 = createclosure(2, "_apply");
-setclosureframe(closure1581, stackframe);
-  addtoclosure(closure1581, var_outFile);
-  addtoclosure(closure1581, selfslot);
-  struct UserObject *uo1581 = (struct UserObject*)block1580;
-  uo1581->data[0] = (Object)closure1581;
-  Method *meth_meth_PackageManager__apply1581 = addmethod2pos(block1580, "_apply", &meth_PackageManager__apply1581, 0);
-int argcv_meth_PackageManager__apply1581[] = {1};
-meth_meth_PackageManager__apply1581->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1581);
-  meth_meth_PackageManager__apply1581->definitionModule = modulename;
-  meth_meth_PackageManager__apply1581->definitionLine = 477;
-// compilenode returning block1580
-  gc_frame_newslot(block1580);
-  params[0] = *var_line;
-  params[1] = block1580;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1585 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1579);
-// compilenode returning call1585
-    gc_frame_newslot(call1585);
-    if1475 = call1585;
-  }
-// compilenode returning if1475
-// Begin line 490
-  setline(490);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 489
-  setline(489);
+// Begin line 482
+  setline(482);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1586 = gc_frame_newslot(*var_curPos);
-  Object num1587 = alloc_Float64(1);
-// compilenode returning num1587
-  int op_slot_right_1586 = gc_frame_newslot(num1587);
-  params[0] = num1587;
+  int op_slot_left_1626 = gc_frame_newslot(*var_curPos);
+  Object num1627 = alloc_Float64(1);
+// compilenode returning num1627
+  int op_slot_right_1626 = gc_frame_newslot(num1627);
+  params[0] = num1627;
   partcv[0] = 1;
-  Object sum1589 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1589
-  *var_curPos = sum1589;
-  if (sum1589 == undefined)
+  Object sum1629 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1629
+  *var_curPos = sum1629;
+  if (sum1629 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager__apply1410(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1450(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -11309,67 +11426,67 @@ Object meth_PackageManager__apply1410(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 491
-  setline(491);
+// Begin line 484
+  setline(484);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1411 = gc_frame_new();
-// Begin line 454
-  setline(454);
+  int callframe1451 = gc_frame_new();
+// Begin line 447
+  setline(447);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1412 = alloc_Block(NULL, NULL, "PackageManager", 454);
-  gc_frame_newslot(block1412);
-  block_savedest(block1412);
-  Object closure1413 = createclosure(3, "_apply");
-setclosureframe(closure1413, stackframe);
-  addtoclosure(closure1413, var_curPos);
-  addtoclosure(closure1413, var_readFile);
-  addtoclosure(closure1413, selfslot);
-  struct UserObject *uo1413 = (struct UserObject*)block1412;
-  uo1413->data[0] = (Object)closure1413;
-  Method *meth_meth_PackageManager__apply1413 = addmethod2pos(block1412, "_apply", &meth_PackageManager__apply1413, 0);
-int argcv_meth_PackageManager__apply1413[] = {0};
-meth_meth_PackageManager__apply1413->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1413);
-  meth_meth_PackageManager__apply1413->definitionModule = modulename;
-  meth_meth_PackageManager__apply1413->definitionLine = 453;
-// compilenode returning block1412
-  gc_frame_newslot(block1412);
-// Begin line 491
-  setline(491);
+  Object block1452 = alloc_Block(NULL, NULL, "PackageManager", 447);
+  gc_frame_newslot(block1452);
+  block_savedest(block1452);
+  Object closure1453 = createclosure(3, "_apply");
+setclosureframe(closure1453, stackframe);
+  addtoclosure(closure1453, var_curPos);
+  addtoclosure(closure1453, var_readFile);
+  addtoclosure(closure1453, selfslot);
+  struct UserObject *uo1453 = (struct UserObject*)block1452;
+  uo1453->data[0] = (Object)closure1453;
+  Method *meth_meth_PackageManager__apply1453 = addmethod2pos(block1452, "_apply", &meth_PackageManager__apply1453, 0);
+int argcv_meth_PackageManager__apply1453[] = {0};
+meth_meth_PackageManager__apply1453->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1453);
+  meth_meth_PackageManager__apply1453->definitionModule = modulename;
+  meth_meth_PackageManager__apply1453->definitionLine = 446;
+// compilenode returning block1452
+  gc_frame_newslot(block1452);
+// Begin line 484
+  setline(484);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1420 = alloc_Block(NULL, NULL, "PackageManager", 491);
-  gc_frame_newslot(block1420);
-  block_savedest(block1420);
-  Object closure1421 = createclosure(6, "_apply");
-setclosureframe(closure1421, stackframe);
-  addtoclosure(closure1421, var_curPos);
-  addtoclosure(closure1421, var_startPos);
-  addtoclosure(closure1421, var_readFile);
-  addtoclosure(closure1421, var_prefix);
-  addtoclosure(closure1421, var_outFile);
-  addtoclosure(closure1421, selfslot);
-  struct UserObject *uo1421 = (struct UserObject*)block1420;
-  uo1421->data[0] = (Object)closure1421;
-  Method *meth_meth_PackageManager__apply1421 = addmethod2pos(block1420, "_apply", &meth_PackageManager__apply1421, 0);
-int argcv_meth_PackageManager__apply1421[] = {0};
-meth_meth_PackageManager__apply1421->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1421);
-  meth_meth_PackageManager__apply1421->definitionModule = modulename;
-  meth_meth_PackageManager__apply1421->definitionLine = 454;
-// compilenode returning block1420
-  gc_frame_newslot(block1420);
-  params[0] = block1412;
-  params[1] = block1420;
+  Object block1460 = alloc_Block(NULL, NULL, "PackageManager", 484);
+  gc_frame_newslot(block1460);
+  block_savedest(block1460);
+  Object closure1461 = createclosure(6, "_apply");
+setclosureframe(closure1461, stackframe);
+  addtoclosure(closure1461, var_curPos);
+  addtoclosure(closure1461, var_startPos);
+  addtoclosure(closure1461, var_readFile);
+  addtoclosure(closure1461, var_prefix);
+  addtoclosure(closure1461, var_outFile);
+  addtoclosure(closure1461, selfslot);
+  struct UserObject *uo1461 = (struct UserObject*)block1460;
+  uo1461->data[0] = (Object)closure1461;
+  Method *meth_meth_PackageManager__apply1461 = addmethod2pos(block1460, "_apply", &meth_PackageManager__apply1461, 0);
+int argcv_meth_PackageManager__apply1461[] = {0};
+meth_meth_PackageManager__apply1461->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1461);
+  meth_meth_PackageManager__apply1461->definitionModule = modulename;
+  meth_meth_PackageManager__apply1461->definitionLine = 447;
+// compilenode returning block1460
+  gc_frame_newslot(block1460);
+  params[0] = block1452;
+  params[1] = block1460;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1592 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1411);
-// compilenode returning call1592
+  Object call1632 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1451);
+// compilenode returning call1632
   gc_frame_end(frame);
-  return call1592;
+  return call1632;
 }
-Object meth_PackageManager_parseAndPrefix1399(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_parseAndPrefix1439(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(7, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "parseAndPrefix");
@@ -11406,22 +11523,22 @@ if (argcv && argcv[0] > 3)
   setframeelementname(stackframe, 5, "startPos");
   Object *var_outFile = &(stackframe->slots[6]);
   setframeelementname(stackframe, 6, "outFile");
-// Begin line 450
-  setline(450);
+// Begin line 443
+  setline(443);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1400 = alloc_Float64(1);
-// compilenode returning num1400
-  *var_curPos = num1400;
-  if (num1400 == undefined)
+  Object num1440 = alloc_Float64(1);
+// compilenode returning num1440
+  *var_curPos = num1440;
+  if (num1440 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 452
-  setline(452);
+// Begin line 445
+  setline(445);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 451
-  setline(451);
+// Begin line 444
+  setline(444);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -11429,100 +11546,100 @@ if (argcv && argcv[0] > 3)
   if (*var_curPos == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 452
-  setline(452);
+// Begin line 445
+  setline(445);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object array1401 = alloc_BuiltinList();
+  Object array1441 = alloc_BuiltinList();
   gc_pause();
   gc_unpause();
-// compilenode returning array1401
-  *var_outFile = array1401;
-  if (array1401 == undefined)
+// compilenode returning array1441
+  *var_outFile = array1441;
+  if (array1441 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 494
-  setline(494);
+// Begin line 487
+  setline(487);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1402 = gc_frame_new();
-// Begin line 453
-  setline(453);
+  int callframe1442 = gc_frame_new();
+// Begin line 446
+  setline(446);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1404 = alloc_Float64(0);
-// compilenode returning num1404
-  int op_slot_left_1403 = gc_frame_newslot(num1404);
-  int callframe1405 = gc_frame_new();
+  Object num1444 = alloc_Float64(0);
+// compilenode returning num1444
+  int op_slot_left_1443 = gc_frame_newslot(num1444);
+  int callframe1445 = gc_frame_new();
 // compilenode returning *var_readFile
   partcv[0] = 0;
-  Object call1406 = callmethod(*var_readFile, "size",
+  Object call1446 = callmethod(*var_readFile, "size",
     1, partcv, params);
-  gc_frame_end(callframe1405);
-// compilenode returning call1406
-// compilenode returning call1406
-  int op_slot_right_1403 = gc_frame_newslot(call1406);
-  params[0] = call1406;
+  gc_frame_end(callframe1445);
+// compilenode returning call1446
+// compilenode returning call1446
+  int op_slot_right_1443 = gc_frame_newslot(call1446);
+  params[0] = call1446;
   partcv[0] = 1;
-  Object opresult1408 = callmethod(num1404, "..", 1, partcv, params);
-// compilenode returning opresult1408
-  gc_frame_newslot(opresult1408);
-// Begin line 494
-  setline(494);
+  Object opresult1448 = callmethod(num1444, "..", 1, partcv, params);
+// compilenode returning opresult1448
+  gc_frame_newslot(opresult1448);
+// Begin line 487
+  setline(487);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1409 = alloc_Block(NULL, NULL, "PackageManager", 494);
-  gc_frame_newslot(block1409);
-  block_savedest(block1409);
-  Object closure1410 = createclosure(6, "_apply");
-setclosureframe(closure1410, stackframe);
-  addtoclosure(closure1410, var_curPos);
-  addtoclosure(closure1410, var_readFile);
-  addtoclosure(closure1410, var_startPos);
-  addtoclosure(closure1410, var_prefix);
-  addtoclosure(closure1410, var_outFile);
-  addtoclosure(closure1410, selfslot);
-  struct UserObject *uo1410 = (struct UserObject*)block1409;
-  uo1410->data[0] = (Object)closure1410;
-  Method *meth_meth_PackageManager__apply1410 = addmethod2pos(block1409, "_apply", &meth_PackageManager__apply1410, 0);
-int argcv_meth_PackageManager__apply1410[] = {1};
-meth_meth_PackageManager__apply1410->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1410);
-  meth_meth_PackageManager__apply1410->definitionModule = modulename;
-  meth_meth_PackageManager__apply1410->definitionLine = 453;
-// compilenode returning block1409
-  gc_frame_newslot(block1409);
-  params[0] = opresult1408;
-  params[1] = block1409;
+  Object block1449 = alloc_Block(NULL, NULL, "PackageManager", 487);
+  gc_frame_newslot(block1449);
+  block_savedest(block1449);
+  Object closure1450 = createclosure(6, "_apply");
+setclosureframe(closure1450, stackframe);
+  addtoclosure(closure1450, var_curPos);
+  addtoclosure(closure1450, var_readFile);
+  addtoclosure(closure1450, var_startPos);
+  addtoclosure(closure1450, var_prefix);
+  addtoclosure(closure1450, var_outFile);
+  addtoclosure(closure1450, selfslot);
+  struct UserObject *uo1450 = (struct UserObject*)block1449;
+  uo1450->data[0] = (Object)closure1450;
+  Method *meth_meth_PackageManager__apply1450 = addmethod2pos(block1449, "_apply", &meth_PackageManager__apply1450, 0);
+int argcv_meth_PackageManager__apply1450[] = {1};
+meth_meth_PackageManager__apply1450->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1450);
+  meth_meth_PackageManager__apply1450->definitionModule = modulename;
+  meth_meth_PackageManager__apply1450->definitionLine = 446;
+// compilenode returning block1449
+  gc_frame_newslot(block1449);
+  params[0] = opresult1448;
+  params[1] = block1449;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1594 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1402);
-// compilenode returning call1594
-// Begin line 495
-  setline(495);
+  Object call1634 = callmethodflags(prelude, "for()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1442);
+// compilenode returning call1634
+// Begin line 488
+  setline(488);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 494
-  setline(494);
+// Begin line 487
+  setline(487);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1596 == NULL) {
-    strlit1596 = alloc_String("OUTFILE ");
-    gc_root(strlit1596);
+  if (strlit1636 == NULL) {
+    strlit1636 = alloc_String("OUTFILE ");
+    gc_root(strlit1636);
   }
-// compilenode returning strlit1596
-  int op_slot_left_1595 = gc_frame_newslot(strlit1596);
+// compilenode returning strlit1636
+  int op_slot_left_1635 = gc_frame_newslot(strlit1636);
 // compilenode returning *var_outFile
-  int op_slot_right_1595 = gc_frame_newslot(*var_outFile);
+  int op_slot_right_1635 = gc_frame_newslot(*var_outFile);
   params[0] = *var_outFile;
   partcv[0] = 1;
-  Object opresult1598 = callmethod(strlit1596, "++", 1, partcv, params);
-// compilenode returning opresult1598
-  params[0] = opresult1598;
-  Object call1599 = gracelib_print(NULL, 1,  params);
-// compilenode returning call1599
-// Begin line 495
-  setline(495);
+  Object opresult1638 = callmethod(strlit1636, "++", 1, partcv, params);
+// compilenode returning opresult1638
+  params[0] = opresult1638;
+  Object call1639 = gracelib_print(NULL, 1,  params);
+// compilenode returning call1639
+// Begin line 488
+  setline(488);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_outFile
@@ -11531,7 +11648,7 @@ meth_meth_PackageManager__apply1410->type = alloc_MethodType(1, argcv_meth_Packa
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager__apply1621(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1661(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -11554,24 +11671,24 @@ Object meth_PackageManager__apply1621(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_curPos
-  int op_slot_left_1622 = gc_frame_newslot(*var_curPos);
-  int callframe1623 = gc_frame_new();
+  int op_slot_left_1662 = gc_frame_newslot(*var_curPos);
+  int callframe1663 = gc_frame_new();
 // compilenode returning *var_importStatement
   partcv[0] = 0;
-  Object call1624 = callmethod(*var_importStatement, "size",
+  Object call1664 = callmethod(*var_importStatement, "size",
     1, partcv, params);
-  gc_frame_end(callframe1623);
-// compilenode returning call1624
-// compilenode returning call1624
-  int op_slot_right_1622 = gc_frame_newslot(call1624);
-  params[0] = call1624;
+  gc_frame_end(callframe1663);
+// compilenode returning call1664
+// compilenode returning call1664
+  int op_slot_right_1662 = gc_frame_newslot(call1664);
+  params[0] = call1664;
   partcv[0] = 1;
-  Object opresult1626 = callmethod(*var_curPos, "<=", 1, partcv, params);
-// compilenode returning opresult1626
+  Object opresult1666 = callmethod(*var_curPos, "<=", 1, partcv, params);
+// compilenode returning opresult1666
   gc_frame_end(frame);
-  return opresult1626;
+  return opresult1666;
 }
-Object meth_PackageManager__apply1629(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1669(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -11594,12 +11711,12 @@ Object meth_PackageManager__apply1629(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 511
-  setline(511);
+// Begin line 504
+  setline(504);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 508
-  setline(508);
+// Begin line 501
+  setline(501);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_importStatement
@@ -11607,23 +11724,23 @@ Object meth_PackageManager__apply1629(Object realself, int nparts, int *argcv, O
   params[0] = *var_curPos;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1632 = callmethod(*var_importStatement, "[]", 1, partcv, params);
-// compilenode returning idxres1632
-  int op_slot_left_1631 = gc_frame_newslot(idxres1632);
-  if (strlit1633 == NULL) {
-    strlit1633 = alloc_String("/");
-    gc_root(strlit1633);
+  Object idxres1672 = callmethod(*var_importStatement, "[]", 1, partcv, params);
+// compilenode returning idxres1672
+  int op_slot_left_1671 = gc_frame_newslot(idxres1672);
+  if (strlit1673 == NULL) {
+    strlit1673 = alloc_String("/");
+    gc_root(strlit1673);
   }
-// compilenode returning strlit1633
-  int op_slot_right_1631 = gc_frame_newslot(strlit1633);
-  params[0] = strlit1633;
+// compilenode returning strlit1673
+  int op_slot_right_1671 = gc_frame_newslot(strlit1673);
+  params[0] = strlit1673;
   partcv[0] = 1;
-  Object opresult1635 = callmethod(idxres1632, "==", 1, partcv, params);
-// compilenode returning opresult1635
-  Object if1630 = done;
-  if (istrue(opresult1635)) {
-// Begin line 509
-  setline(509);
+  Object opresult1675 = callmethod(idxres1672, "==", 1, partcv, params);
+// compilenode returning opresult1675
+  Object if1670 = done;
+  if (istrue(opresult1675)) {
+// Begin line 502
+  setline(502);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
@@ -11632,31 +11749,31 @@ Object meth_PackageManager__apply1629(Object realself, int nparts, int *argcv, O
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if1630 = done;
+    if1670 = done;
   } else {
   }
-// compilenode returning if1630
-// Begin line 511
-  setline(511);
+// compilenode returning if1670
+// Begin line 504
+  setline(504);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_curPos
-  int op_slot_left_1637 = gc_frame_newslot(*var_curPos);
-  Object num1638 = alloc_Float64(1);
-// compilenode returning num1638
-  int op_slot_right_1637 = gc_frame_newslot(num1638);
-  params[0] = num1638;
+  int op_slot_left_1677 = gc_frame_newslot(*var_curPos);
+  Object num1678 = alloc_Float64(1);
+// compilenode returning num1678
+  int op_slot_right_1677 = gc_frame_newslot(num1678);
+  params[0] = num1678;
   partcv[0] = 1;
-  Object sum1640 = callmethod(*var_curPos, "+", 1, partcv, params);
-// compilenode returning sum1640
-  *var_curPos = sum1640;
-  if (sum1640 == undefined)
+  Object sum1680 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum1680
+  *var_curPos = sum1680;
+  if (sum1680 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_removeExistingUrls1600(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_removeExistingUrls1640(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(5, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "removeExistingUrls");
@@ -11687,218 +11804,218 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 3, "curPos");
   Object *var_res = &(stackframe->slots[4]);
   setframeelementname(stackframe, 4, "res");
-// Begin line 504
-  setline(504);
+// Begin line 497
+  setline(497);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 501
-  setline(501);
+// Begin line 494
+  setline(494);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1603 = gc_frame_new();
+  int callframe1643 = gc_frame_new();
 // compilenode returning *var_importStatement
   partcv[0] = 0;
-  Object call1604 = callmethod(*var_importStatement, "size",
+  Object call1644 = callmethod(*var_importStatement, "size",
     1, partcv, params);
-  gc_frame_end(callframe1603);
-// compilenode returning call1604
-// compilenode returning call1604
-  int op_slot_left_1602 = gc_frame_newslot(call1604);
-  Object num1605 = alloc_Float64(7);
-// compilenode returning num1605
-  int op_slot_right_1602 = gc_frame_newslot(num1605);
-  params[0] = num1605;
+  gc_frame_end(callframe1643);
+// compilenode returning call1644
+// compilenode returning call1644
+  int op_slot_left_1642 = gc_frame_newslot(call1644);
+  Object num1645 = alloc_Float64(7);
+// compilenode returning num1645
+  int op_slot_right_1642 = gc_frame_newslot(num1645);
+  params[0] = num1645;
   partcv[0] = 1;
-  Object opresult1607 = callmethod(call1604, "<", 1, partcv, params);
-// compilenode returning opresult1607
-  Object if1601 = done;
-  if (istrue(opresult1607)) {
-// Begin line 502
-  setline(502);
+  Object opresult1647 = callmethod(call1644, "<", 1, partcv, params);
+// compilenode returning opresult1647
+  Object if1641 = done;
+  if (istrue(opresult1647)) {
+// Begin line 495
+  setline(495);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_importStatement
   return *var_importStatement;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1601 = undefined;
+    if1641 = undefined;
   } else {
   }
-// compilenode returning if1601
-// Begin line 521
-  setline(521);
+// compilenode returning if1641
+// Begin line 514
+  setline(514);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 504
-  setline(504);
+// Begin line 497
+  setline(497);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1610 = gc_frame_new();
-  Object num1611 = alloc_Float64(1);
-// compilenode returning num1611
-  gc_frame_newslot(num1611);
-  Object num1612 = alloc_Float64(7);
-// compilenode returning num1612
-  gc_frame_newslot(num1612);
+  int callframe1650 = gc_frame_new();
+  Object num1651 = alloc_Float64(1);
+// compilenode returning num1651
+  gc_frame_newslot(num1651);
+  Object num1652 = alloc_Float64(7);
+// compilenode returning num1652
+  gc_frame_newslot(num1652);
 // compilenode returning *var_importStatement
-  params[0] = num1611;
-  params[1] = num1612;
+  params[0] = num1651;
+  params[1] = num1652;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1613 = callmethod(*var_importStatement, "substringFrom()to",
+  Object call1653 = callmethod(*var_importStatement, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1610);
-// compilenode returning call1613
-  int op_slot_left_1609 = gc_frame_newslot(call1613);
-  if (strlit1614 == NULL) {
-    strlit1614 = alloc_String("http://");
-    gc_root(strlit1614);
+  gc_frame_end(callframe1650);
+// compilenode returning call1653
+  int op_slot_left_1649 = gc_frame_newslot(call1653);
+  if (strlit1654 == NULL) {
+    strlit1654 = alloc_String("http://");
+    gc_root(strlit1654);
   }
-// compilenode returning strlit1614
-  int op_slot_right_1609 = gc_frame_newslot(strlit1614);
-  params[0] = strlit1614;
+// compilenode returning strlit1654
+  int op_slot_right_1649 = gc_frame_newslot(strlit1654);
+  params[0] = strlit1654;
   partcv[0] = 1;
-  Object opresult1616 = callmethod(call1613, "==", 1, partcv, params);
-// compilenode returning opresult1616
-  Object if1608 = done;
-  if (istrue(opresult1616)) {
-// Begin line 505
-  setline(505);
+  Object opresult1656 = callmethod(call1653, "==", 1, partcv, params);
+// compilenode returning opresult1656
+  Object if1648 = done;
+  if (istrue(opresult1656)) {
+// Begin line 498
+  setline(498);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1617 = alloc_Float64(7);
-// compilenode returning num1617
-  *var_lastIndex = num1617;
-  if (num1617 == undefined)
+  Object num1657 = alloc_Float64(7);
+// compilenode returning num1657
+  *var_lastIndex = num1657;
+  if (num1657 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 499
+  setline(499);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object num1658 = alloc_Float64(7);
+// compilenode returning num1658
+  *var_curPos = num1658;
+  if (num1658 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
 // Begin line 506
   setline(506);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1618 = alloc_Float64(7);
-// compilenode returning num1618
-  *var_curPos = num1618;
-  if (num1618 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 513
-  setline(513);
+  int callframe1659 = gc_frame_new();
+// Begin line 500
+  setline(500);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1619 = gc_frame_new();
-// Begin line 507
-  setline(507);
+  Object block1660 = alloc_Block(NULL, NULL, "PackageManager", 500);
+  gc_frame_newslot(block1660);
+  block_savedest(block1660);
+  Object closure1661 = createclosure(3, "_apply");
+setclosureframe(closure1661, stackframe);
+  addtoclosure(closure1661, var_curPos);
+  addtoclosure(closure1661, var_importStatement);
+  addtoclosure(closure1661, selfslot);
+  struct UserObject *uo1661 = (struct UserObject*)block1660;
+  uo1661->data[0] = (Object)closure1661;
+  Method *meth_meth_PackageManager__apply1661 = addmethod2pos(block1660, "_apply", &meth_PackageManager__apply1661, 0);
+int argcv_meth_PackageManager__apply1661[] = {0};
+meth_meth_PackageManager__apply1661->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1661);
+  meth_meth_PackageManager__apply1661->definitionModule = modulename;
+  meth_meth_PackageManager__apply1661->definitionLine = 494;
+// compilenode returning block1660
+  gc_frame_newslot(block1660);
+// Begin line 506
+  setline(506);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1620 = alloc_Block(NULL, NULL, "PackageManager", 507);
-  gc_frame_newslot(block1620);
-  block_savedest(block1620);
-  Object closure1621 = createclosure(3, "_apply");
-setclosureframe(closure1621, stackframe);
-  addtoclosure(closure1621, var_curPos);
-  addtoclosure(closure1621, var_importStatement);
-  addtoclosure(closure1621, selfslot);
-  struct UserObject *uo1621 = (struct UserObject*)block1620;
-  uo1621->data[0] = (Object)closure1621;
-  Method *meth_meth_PackageManager__apply1621 = addmethod2pos(block1620, "_apply", &meth_PackageManager__apply1621, 0);
-int argcv_meth_PackageManager__apply1621[] = {0};
-meth_meth_PackageManager__apply1621->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1621);
-  meth_meth_PackageManager__apply1621->definitionModule = modulename;
-  meth_meth_PackageManager__apply1621->definitionLine = 501;
-// compilenode returning block1620
-  gc_frame_newslot(block1620);
-// Begin line 513
-  setline(513);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block1628 = alloc_Block(NULL, NULL, "PackageManager", 513);
-  gc_frame_newslot(block1628);
-  block_savedest(block1628);
-  Object closure1629 = createclosure(4, "_apply");
-setclosureframe(closure1629, stackframe);
-  addtoclosure(closure1629, var_importStatement);
-  addtoclosure(closure1629, var_curPos);
-  addtoclosure(closure1629, var_lastIndex);
-  addtoclosure(closure1629, selfslot);
-  struct UserObject *uo1629 = (struct UserObject*)block1628;
-  uo1629->data[0] = (Object)closure1629;
-  Method *meth_meth_PackageManager__apply1629 = addmethod2pos(block1628, "_apply", &meth_PackageManager__apply1629, 0);
-int argcv_meth_PackageManager__apply1629[] = {0};
-meth_meth_PackageManager__apply1629->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1629);
-  meth_meth_PackageManager__apply1629->definitionModule = modulename;
-  meth_meth_PackageManager__apply1629->definitionLine = 507;
-// compilenode returning block1628
-  gc_frame_newslot(block1628);
-  params[0] = block1620;
-  params[1] = block1628;
+  Object block1668 = alloc_Block(NULL, NULL, "PackageManager", 506);
+  gc_frame_newslot(block1668);
+  block_savedest(block1668);
+  Object closure1669 = createclosure(4, "_apply");
+setclosureframe(closure1669, stackframe);
+  addtoclosure(closure1669, var_importStatement);
+  addtoclosure(closure1669, var_curPos);
+  addtoclosure(closure1669, var_lastIndex);
+  addtoclosure(closure1669, selfslot);
+  struct UserObject *uo1669 = (struct UserObject*)block1668;
+  uo1669->data[0] = (Object)closure1669;
+  Method *meth_meth_PackageManager__apply1669 = addmethod2pos(block1668, "_apply", &meth_PackageManager__apply1669, 0);
+int argcv_meth_PackageManager__apply1669[] = {0};
+meth_meth_PackageManager__apply1669->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1669);
+  meth_meth_PackageManager__apply1669->definitionModule = modulename;
+  meth_meth_PackageManager__apply1669->definitionLine = 500;
+// compilenode returning block1668
+  gc_frame_newslot(block1668);
+  params[0] = block1660;
+  params[1] = block1668;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1643 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1619);
-// compilenode returning call1643
-// Begin line 513
-  setline(513);
+  Object call1683 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1659);
+// compilenode returning call1683
+// Begin line 506
+  setline(506);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1644 = gc_frame_new();
+  int callframe1684 = gc_frame_new();
 // compilenode returning *var_lastIndex
-  int op_slot_left_1645 = gc_frame_newslot(*var_lastIndex);
-  Object num1646 = alloc_Float64(1);
-// compilenode returning num1646
-  int op_slot_right_1645 = gc_frame_newslot(num1646);
-  params[0] = num1646;
+  int op_slot_left_1685 = gc_frame_newslot(*var_lastIndex);
+  Object num1686 = alloc_Float64(1);
+// compilenode returning num1686
+  int op_slot_right_1685 = gc_frame_newslot(num1686);
+  params[0] = num1686;
   partcv[0] = 1;
-  Object sum1648 = callmethod(*var_lastIndex, "+", 1, partcv, params);
-// compilenode returning sum1648
-  gc_frame_newslot(sum1648);
-  int callframe1649 = gc_frame_new();
+  Object sum1688 = callmethod(*var_lastIndex, "+", 1, partcv, params);
+// compilenode returning sum1688
+  gc_frame_newslot(sum1688);
+  int callframe1689 = gc_frame_new();
 // compilenode returning *var_importStatement
   partcv[0] = 0;
-  Object call1650 = callmethod(*var_importStatement, "size",
+  Object call1690 = callmethod(*var_importStatement, "size",
     1, partcv, params);
-  gc_frame_end(callframe1649);
-// compilenode returning call1650
-// compilenode returning call1650
-  gc_frame_newslot(call1650);
+  gc_frame_end(callframe1689);
+// compilenode returning call1690
+// compilenode returning call1690
+  gc_frame_newslot(call1690);
 // compilenode returning *var_importStatement
-  params[0] = sum1648;
-  params[1] = call1650;
+  params[0] = sum1688;
+  params[1] = call1690;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1651 = callmethod(*var_importStatement, "substringFrom()to",
+  Object call1691 = callmethod(*var_importStatement, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1644);
-// compilenode returning call1651
-  *var_res = call1651;
-  if (call1651 == undefined)
+  gc_frame_end(callframe1684);
+// compilenode returning call1691
+  *var_res = call1691;
+  if (call1691 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
-// Begin line 514
-  setline(514);
+// Begin line 507
+  setline(507);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_res
   return *var_res;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1608 = undefined;
+    if1648 = undefined;
   } else {
-// Begin line 517
-  setline(517);
+// Begin line 510
+  setline(510);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_importStatement
   return *var_importStatement;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1608 = undefined;
+    if1648 = undefined;
   }
-// compilenode returning if1608
+// compilenode returning if1648
   gc_frame_end(frame);
-  return if1608;
+  return if1648;
 }
-Object meth_PackageManager__apply1659(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1699(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -11921,24 +12038,24 @@ Object meth_PackageManager__apply1659(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_count
-  int op_slot_left_1660 = gc_frame_newslot(*var_count);
-  int callframe1661 = gc_frame_new();
+  int op_slot_left_1700 = gc_frame_newslot(*var_count);
+  int callframe1701 = gc_frame_new();
 // compilenode returning *var_st
   partcv[0] = 0;
-  Object call1662 = callmethod(*var_st, "size",
+  Object call1702 = callmethod(*var_st, "size",
     1, partcv, params);
-  gc_frame_end(callframe1661);
-// compilenode returning call1662
-// compilenode returning call1662
-  int op_slot_right_1660 = gc_frame_newslot(call1662);
-  params[0] = call1662;
+  gc_frame_end(callframe1701);
+// compilenode returning call1702
+// compilenode returning call1702
+  int op_slot_right_1700 = gc_frame_newslot(call1702);
+  params[0] = call1702;
   partcv[0] = 1;
-  Object opresult1664 = callmethod(*var_count, "<=", 1, partcv, params);
-// compilenode returning opresult1664
+  Object opresult1704 = callmethod(*var_count, "<=", 1, partcv, params);
+// compilenode returning opresult1704
   gc_frame_end(frame);
-  return opresult1664;
+  return opresult1704;
 }
-Object meth_PackageManager__apply1667(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1707(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -11961,12 +12078,12 @@ Object meth_PackageManager__apply1667(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 530
-  setline(530);
+// Begin line 523
+  setline(523);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 527
-  setline(527);
+// Begin line 520
+  setline(520);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_st
@@ -11974,23 +12091,23 @@ Object meth_PackageManager__apply1667(Object realself, int nparts, int *argcv, O
   params[0] = *var_count;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1670 = callmethod(*var_st, "[]", 1, partcv, params);
-// compilenode returning idxres1670
-  int op_slot_left_1669 = gc_frame_newslot(idxres1670);
-  if (strlit1671 == NULL) {
-    strlit1671 = alloc_String("/");
-    gc_root(strlit1671);
+  Object idxres1710 = callmethod(*var_st, "[]", 1, partcv, params);
+// compilenode returning idxres1710
+  int op_slot_left_1709 = gc_frame_newslot(idxres1710);
+  if (strlit1711 == NULL) {
+    strlit1711 = alloc_String("/");
+    gc_root(strlit1711);
   }
-// compilenode returning strlit1671
-  int op_slot_right_1669 = gc_frame_newslot(strlit1671);
-  params[0] = strlit1671;
+// compilenode returning strlit1711
+  int op_slot_right_1709 = gc_frame_newslot(strlit1711);
+  params[0] = strlit1711;
   partcv[0] = 1;
-  Object opresult1673 = callmethod(idxres1670, "==", 1, partcv, params);
-// compilenode returning opresult1673
-  Object if1668 = done;
-  if (istrue(opresult1673)) {
-// Begin line 528
-  setline(528);
+  Object opresult1713 = callmethod(idxres1710, "==", 1, partcv, params);
+// compilenode returning opresult1713
+  Object if1708 = done;
+  if (istrue(opresult1713)) {
+// Begin line 521
+  setline(521);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count
@@ -11999,31 +12116,31 @@ Object meth_PackageManager__apply1667(Object realself, int nparts, int *argcv, O
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if1668 = done;
+    if1708 = done;
   } else {
   }
-// compilenode returning if1668
-// Begin line 530
-  setline(530);
+// compilenode returning if1708
+// Begin line 523
+  setline(523);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count
-  int op_slot_left_1675 = gc_frame_newslot(*var_count);
-  Object num1676 = alloc_Float64(1);
-// compilenode returning num1676
-  int op_slot_right_1675 = gc_frame_newslot(num1676);
-  params[0] = num1676;
+  int op_slot_left_1715 = gc_frame_newslot(*var_count);
+  Object num1716 = alloc_Float64(1);
+// compilenode returning num1716
+  int op_slot_right_1715 = gc_frame_newslot(num1716);
+  params[0] = num1716;
   partcv[0] = 1;
-  Object sum1678 = callmethod(*var_count, "+", 1, partcv, params);
-// compilenode returning sum1678
-  *var_count = sum1678;
-  if (sum1678 == undefined)
+  Object sum1718 = callmethod(*var_count, "+", 1, partcv, params);
+// compilenode returning sum1718
+  *var_count = sum1718;
+  if (sum1718 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_removeContainingDir1652(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_removeContainingDir1692(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(4, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "removeContainingDir");
@@ -12052,163 +12169,163 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 2, "count");
   Object *var_lastIndex = &(stackframe->slots[3]);
   setframeelementname(stackframe, 3, "lastIndex");
-// Begin line 524
-  setline(524);
+// Begin line 517
+  setline(517);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1653 = alloc_Float64(1);
-// compilenode returning num1653
-  *var_count = num1653;
-  if (num1653 == undefined)
+  Object num1693 = alloc_Float64(1);
+// compilenode returning num1693
+  *var_count = num1693;
+  if (num1693 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 518
+  setline(518);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1694 = gc_frame_new();
+  Object num1695 = alloc_Float64(1);
+// compilenode returning num1695
+  partcv[0] = 0;
+  Object call1696 = callmethod(num1695, "prefix-",
+    1, partcv, params);
+  gc_frame_end(callframe1694);
+// compilenode returning call1696
+  *var_lastIndex = call1696;
+  if (call1696 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
 // Begin line 525
   setline(525);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1654 = gc_frame_new();
-  Object num1655 = alloc_Float64(1);
-// compilenode returning num1655
-  partcv[0] = 0;
-  Object call1656 = callmethod(num1655, "prefix-",
-    1, partcv, params);
-  gc_frame_end(callframe1654);
-// compilenode returning call1656
-  *var_lastIndex = call1656;
-  if (call1656 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 532
-  setline(532);
+  int callframe1697 = gc_frame_new();
+// Begin line 519
+  setline(519);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1657 = gc_frame_new();
-// Begin line 526
-  setline(526);
+  Object block1698 = alloc_Block(NULL, NULL, "PackageManager", 519);
+  gc_frame_newslot(block1698);
+  block_savedest(block1698);
+  Object closure1699 = createclosure(3, "_apply");
+setclosureframe(closure1699, stackframe);
+  addtoclosure(closure1699, var_count);
+  addtoclosure(closure1699, var_st);
+  addtoclosure(closure1699, selfslot);
+  struct UserObject *uo1699 = (struct UserObject*)block1698;
+  uo1699->data[0] = (Object)closure1699;
+  Method *meth_meth_PackageManager__apply1699 = addmethod2pos(block1698, "_apply", &meth_PackageManager__apply1699, 0);
+int argcv_meth_PackageManager__apply1699[] = {0};
+meth_meth_PackageManager__apply1699->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1699);
+  meth_meth_PackageManager__apply1699->definitionModule = modulename;
+  meth_meth_PackageManager__apply1699->definitionLine = 506;
+// compilenode returning block1698
+  gc_frame_newslot(block1698);
+// Begin line 525
+  setline(525);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1658 = alloc_Block(NULL, NULL, "PackageManager", 526);
-  gc_frame_newslot(block1658);
-  block_savedest(block1658);
-  Object closure1659 = createclosure(3, "_apply");
-setclosureframe(closure1659, stackframe);
-  addtoclosure(closure1659, var_count);
-  addtoclosure(closure1659, var_st);
-  addtoclosure(closure1659, selfslot);
-  struct UserObject *uo1659 = (struct UserObject*)block1658;
-  uo1659->data[0] = (Object)closure1659;
-  Method *meth_meth_PackageManager__apply1659 = addmethod2pos(block1658, "_apply", &meth_PackageManager__apply1659, 0);
-int argcv_meth_PackageManager__apply1659[] = {0};
-meth_meth_PackageManager__apply1659->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1659);
-  meth_meth_PackageManager__apply1659->definitionModule = modulename;
-  meth_meth_PackageManager__apply1659->definitionLine = 513;
-// compilenode returning block1658
-  gc_frame_newslot(block1658);
-// Begin line 532
-  setline(532);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block1666 = alloc_Block(NULL, NULL, "PackageManager", 532);
-  gc_frame_newslot(block1666);
-  block_savedest(block1666);
-  Object closure1667 = createclosure(4, "_apply");
-setclosureframe(closure1667, stackframe);
-  addtoclosure(closure1667, var_st);
-  addtoclosure(closure1667, var_count);
-  addtoclosure(closure1667, var_lastIndex);
-  addtoclosure(closure1667, selfslot);
-  struct UserObject *uo1667 = (struct UserObject*)block1666;
-  uo1667->data[0] = (Object)closure1667;
-  Method *meth_meth_PackageManager__apply1667 = addmethod2pos(block1666, "_apply", &meth_PackageManager__apply1667, 0);
-int argcv_meth_PackageManager__apply1667[] = {0};
-meth_meth_PackageManager__apply1667->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1667);
-  meth_meth_PackageManager__apply1667->definitionModule = modulename;
-  meth_meth_PackageManager__apply1667->definitionLine = 526;
-// compilenode returning block1666
-  gc_frame_newslot(block1666);
-  params[0] = block1658;
-  params[1] = block1666;
+  Object block1706 = alloc_Block(NULL, NULL, "PackageManager", 525);
+  gc_frame_newslot(block1706);
+  block_savedest(block1706);
+  Object closure1707 = createclosure(4, "_apply");
+setclosureframe(closure1707, stackframe);
+  addtoclosure(closure1707, var_st);
+  addtoclosure(closure1707, var_count);
+  addtoclosure(closure1707, var_lastIndex);
+  addtoclosure(closure1707, selfslot);
+  struct UserObject *uo1707 = (struct UserObject*)block1706;
+  uo1707->data[0] = (Object)closure1707;
+  Method *meth_meth_PackageManager__apply1707 = addmethod2pos(block1706, "_apply", &meth_PackageManager__apply1707, 0);
+int argcv_meth_PackageManager__apply1707[] = {0};
+meth_meth_PackageManager__apply1707->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1707);
+  meth_meth_PackageManager__apply1707->definitionModule = modulename;
+  meth_meth_PackageManager__apply1707->definitionLine = 519;
+// compilenode returning block1706
+  gc_frame_newslot(block1706);
+  params[0] = block1698;
+  params[1] = block1706;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1681 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1657);
-// compilenode returning call1681
-// Begin line 535
-  setline(535);
+  Object call1721 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1697);
+// compilenode returning call1721
+// Begin line 528
+  setline(528);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 532
-  setline(532);
+// Begin line 525
+  setline(525);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_lastIndex
-  int op_slot_left_1683 = gc_frame_newslot(*var_lastIndex);
-  int callframe1684 = gc_frame_new();
-  Object num1685 = alloc_Float64(1);
-// compilenode returning num1685
+  int op_slot_left_1723 = gc_frame_newslot(*var_lastIndex);
+  int callframe1724 = gc_frame_new();
+  Object num1725 = alloc_Float64(1);
+// compilenode returning num1725
   partcv[0] = 0;
-  Object call1686 = callmethod(num1685, "prefix-",
+  Object call1726 = callmethod(num1725, "prefix-",
     1, partcv, params);
-  gc_frame_end(callframe1684);
-// compilenode returning call1686
-  int op_slot_right_1683 = gc_frame_newslot(call1686);
-  params[0] = call1686;
+  gc_frame_end(callframe1724);
+// compilenode returning call1726
+  int op_slot_right_1723 = gc_frame_newslot(call1726);
+  params[0] = call1726;
   partcv[0] = 1;
-  Object opresult1688 = callmethod(*var_lastIndex, "==", 1, partcv, params);
-// compilenode returning opresult1688
-  Object if1682 = done;
-  if (istrue(opresult1688)) {
-// Begin line 533
-  setline(533);
+  Object opresult1728 = callmethod(*var_lastIndex, "==", 1, partcv, params);
+// compilenode returning opresult1728
+  Object if1722 = done;
+  if (istrue(opresult1728)) {
+// Begin line 526
+  setline(526);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_st
   return *var_st;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1682 = undefined;
+    if1722 = undefined;
   } else {
   }
-// compilenode returning if1682
-// Begin line 535
-  setline(535);
+// compilenode returning if1722
+// Begin line 528
+  setline(528);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1689 = gc_frame_new();
+  int callframe1729 = gc_frame_new();
 // compilenode returning *var_lastIndex
-  int op_slot_left_1690 = gc_frame_newslot(*var_lastIndex);
-  Object num1691 = alloc_Float64(1);
-// compilenode returning num1691
-  int op_slot_right_1690 = gc_frame_newslot(num1691);
-  params[0] = num1691;
+  int op_slot_left_1730 = gc_frame_newslot(*var_lastIndex);
+  Object num1731 = alloc_Float64(1);
+// compilenode returning num1731
+  int op_slot_right_1730 = gc_frame_newslot(num1731);
+  params[0] = num1731;
   partcv[0] = 1;
-  Object sum1693 = callmethod(*var_lastIndex, "+", 1, partcv, params);
-// compilenode returning sum1693
-  gc_frame_newslot(sum1693);
-  int callframe1694 = gc_frame_new();
+  Object sum1733 = callmethod(*var_lastIndex, "+", 1, partcv, params);
+// compilenode returning sum1733
+  gc_frame_newslot(sum1733);
+  int callframe1734 = gc_frame_new();
 // compilenode returning *var_st
   partcv[0] = 0;
-  Object call1695 = callmethod(*var_st, "size",
+  Object call1735 = callmethod(*var_st, "size",
     1, partcv, params);
-  gc_frame_end(callframe1694);
-// compilenode returning call1695
-// compilenode returning call1695
-  gc_frame_newslot(call1695);
+  gc_frame_end(callframe1734);
+// compilenode returning call1735
+// compilenode returning call1735
+  gc_frame_newslot(call1735);
 // compilenode returning *var_st
-  params[0] = sum1693;
-  params[1] = call1695;
+  params[0] = sum1733;
+  params[1] = call1735;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1696 = callmethod(*var_st, "substringFrom()to",
+  Object call1736 = callmethod(*var_st, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1689);
-// compilenode returning call1696
-  return call1696;
+  gc_frame_end(callframe1729);
+// compilenode returning call1736
+  return call1736;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager__apply1704(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1744(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12231,24 +12348,24 @@ Object meth_PackageManager__apply1704(Object realself, int nparts, int *argcv, O
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
 // compilenode returning *var_count
-  int op_slot_left_1705 = gc_frame_newslot(*var_count);
-  int callframe1706 = gc_frame_new();
+  int op_slot_left_1745 = gc_frame_newslot(*var_count);
+  int callframe1746 = gc_frame_new();
 // compilenode returning *var_st
   partcv[0] = 0;
-  Object call1707 = callmethod(*var_st, "size",
+  Object call1747 = callmethod(*var_st, "size",
     1, partcv, params);
-  gc_frame_end(callframe1706);
-// compilenode returning call1707
-// compilenode returning call1707
-  int op_slot_right_1705 = gc_frame_newslot(call1707);
-  params[0] = call1707;
+  gc_frame_end(callframe1746);
+// compilenode returning call1747
+// compilenode returning call1747
+  int op_slot_right_1745 = gc_frame_newslot(call1747);
+  params[0] = call1747;
   partcv[0] = 1;
-  Object opresult1709 = callmethod(*var_count, "<=", 1, partcv, params);
-// compilenode returning opresult1709
+  Object opresult1749 = callmethod(*var_count, "<=", 1, partcv, params);
+// compilenode returning opresult1749
   gc_frame_end(frame);
-  return opresult1709;
+  return opresult1749;
 }
-Object meth_PackageManager__apply1712(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager__apply1752(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12271,12 +12388,12 @@ Object meth_PackageManager__apply1712(Object realself, int nparts, int *argcv, O
   *selfslot = self;
   setframeelementname(stackframe, 0, "self");
   if (methodInheritingObject) curarg++;
-// Begin line 545
-  setline(545);
+// Begin line 538
+  setline(538);
   setmodule(modulename);
   setsource(originalSourceLines);
-// Begin line 542
-  setline(542);
+// Begin line 535
+  setline(535);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_st
@@ -12284,23 +12401,23 @@ Object meth_PackageManager__apply1712(Object realself, int nparts, int *argcv, O
   params[0] = *var_count;
   gc_frame_newslot(params[0]);
   partcv[0] = 1;
-  Object idxres1715 = callmethod(*var_st, "[]", 1, partcv, params);
-// compilenode returning idxres1715
-  int op_slot_left_1714 = gc_frame_newslot(idxres1715);
-  if (strlit1716 == NULL) {
-    strlit1716 = alloc_String("/");
-    gc_root(strlit1716);
+  Object idxres1755 = callmethod(*var_st, "[]", 1, partcv, params);
+// compilenode returning idxres1755
+  int op_slot_left_1754 = gc_frame_newslot(idxres1755);
+  if (strlit1756 == NULL) {
+    strlit1756 = alloc_String("/");
+    gc_root(strlit1756);
   }
-// compilenode returning strlit1716
-  int op_slot_right_1714 = gc_frame_newslot(strlit1716);
-  params[0] = strlit1716;
+// compilenode returning strlit1756
+  int op_slot_right_1754 = gc_frame_newslot(strlit1756);
+  params[0] = strlit1756;
   partcv[0] = 1;
-  Object opresult1718 = callmethod(idxres1715, "==", 1, partcv, params);
-// compilenode returning opresult1718
-  Object if1713 = done;
-  if (istrue(opresult1718)) {
-// Begin line 543
-  setline(543);
+  Object opresult1758 = callmethod(idxres1755, "==", 1, partcv, params);
+// compilenode returning opresult1758
+  Object if1753 = done;
+  if (istrue(opresult1758)) {
+// Begin line 536
+  setline(536);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count
@@ -12309,31 +12426,31 @@ Object meth_PackageManager__apply1712(Object realself, int nparts, int *argcv, O
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
     gc_frame_newslot(done);
-    if1713 = done;
+    if1753 = done;
   } else {
   }
-// compilenode returning if1713
-// Begin line 545
-  setline(545);
+// compilenode returning if1753
+// Begin line 538
+  setline(538);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning *var_count
-  int op_slot_left_1720 = gc_frame_newslot(*var_count);
-  Object num1721 = alloc_Float64(1);
-// compilenode returning num1721
-  int op_slot_right_1720 = gc_frame_newslot(num1721);
-  params[0] = num1721;
+  int op_slot_left_1760 = gc_frame_newslot(*var_count);
+  Object num1761 = alloc_Float64(1);
+// compilenode returning num1761
+  int op_slot_right_1760 = gc_frame_newslot(num1761);
+  params[0] = num1761;
   partcv[0] = 1;
-  Object sum1723 = callmethod(*var_count, "+", 1, partcv, params);
-// compilenode returning sum1723
-  *var_count = sum1723;
-  if (sum1723 == undefined)
+  Object sum1763 = callmethod(*var_count, "+", 1, partcv, params);
+// compilenode returning sum1763
+  *var_count = sum1763;
+  if (sum1763 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_getContainingDirectory1697(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_getContainingDirectory1737(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct StackFrameObject *stackframe = alloc_StackFrame(4, NULL);
   pushclosure(NULL);
   pushstackframe(stackframe, "getContainingDirectory");
@@ -12362,172 +12479,172 @@ if (argcv && argcv[0] > 1)
   setframeelementname(stackframe, 2, "count");
   Object *var_last = &(stackframe->slots[3]);
   setframeelementname(stackframe, 3, "last");
-// Begin line 539
-  setline(539);
+// Begin line 532
+  setline(532);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object num1698 = alloc_Float64(1);
-// compilenode returning num1698
-  *var_count = num1698;
-  if (num1698 == undefined)
+  Object num1738 = alloc_Float64(1);
+// compilenode returning num1738
+  *var_count = num1738;
+  if (num1738 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 533
+  setline(533);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe1739 = gc_frame_new();
+  Object num1740 = alloc_Float64(1);
+// compilenode returning num1740
+  partcv[0] = 0;
+  Object call1741 = callmethod(num1740, "prefix-",
+    1, partcv, params);
+  gc_frame_end(callframe1739);
+// compilenode returning call1741
+  *var_last = call1741;
+  if (call1741 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
 // compilenode returning done
 // Begin line 540
   setline(540);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1699 = gc_frame_new();
-  Object num1700 = alloc_Float64(1);
-// compilenode returning num1700
-  partcv[0] = 0;
-  Object call1701 = callmethod(num1700, "prefix-",
-    1, partcv, params);
-  gc_frame_end(callframe1699);
-// compilenode returning call1701
-  *var_last = call1701;
-  if (call1701 == undefined)
-    callmethod(done, "assignment", 0, NULL, NULL);
-// compilenode returning done
-// Begin line 547
-  setline(547);
+  int callframe1742 = gc_frame_new();
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1702 = gc_frame_new();
+  Object block1743 = alloc_Block(NULL, NULL, "PackageManager", 534);
+  gc_frame_newslot(block1743);
+  block_savedest(block1743);
+  Object closure1744 = createclosure(3, "_apply");
+setclosureframe(closure1744, stackframe);
+  addtoclosure(closure1744, var_count);
+  addtoclosure(closure1744, var_st);
+  addtoclosure(closure1744, selfslot);
+  struct UserObject *uo1744 = (struct UserObject*)block1743;
+  uo1744->data[0] = (Object)closure1744;
+  Method *meth_meth_PackageManager__apply1744 = addmethod2pos(block1743, "_apply", &meth_PackageManager__apply1744, 0);
+int argcv_meth_PackageManager__apply1744[] = {0};
+meth_meth_PackageManager__apply1744->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1744);
+  meth_meth_PackageManager__apply1744->definitionModule = modulename;
+  meth_meth_PackageManager__apply1744->definitionLine = 528;
+// compilenode returning block1743
+  gc_frame_newslot(block1743);
+// Begin line 540
+  setline(540);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block1751 = alloc_Block(NULL, NULL, "PackageManager", 540);
+  gc_frame_newslot(block1751);
+  block_savedest(block1751);
+  Object closure1752 = createclosure(4, "_apply");
+setclosureframe(closure1752, stackframe);
+  addtoclosure(closure1752, var_st);
+  addtoclosure(closure1752, var_count);
+  addtoclosure(closure1752, var_last);
+  addtoclosure(closure1752, selfslot);
+  struct UserObject *uo1752 = (struct UserObject*)block1751;
+  uo1752->data[0] = (Object)closure1752;
+  Method *meth_meth_PackageManager__apply1752 = addmethod2pos(block1751, "_apply", &meth_PackageManager__apply1752, 0);
+int argcv_meth_PackageManager__apply1752[] = {0};
+meth_meth_PackageManager__apply1752->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1752);
+  meth_meth_PackageManager__apply1752->definitionModule = modulename;
+  meth_meth_PackageManager__apply1752->definitionLine = 534;
+// compilenode returning block1751
+  gc_frame_newslot(block1751);
+  params[0] = block1743;
+  params[1] = block1751;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call1766 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1742);
+// compilenode returning call1766
+// Begin line 543
+  setline(543);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 540
+  setline(540);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_last
+  int op_slot_left_1768 = gc_frame_newslot(*var_last);
+  int callframe1769 = gc_frame_new();
+  Object num1770 = alloc_Float64(1);
+// compilenode returning num1770
+  partcv[0] = 0;
+  Object call1771 = callmethod(num1770, "prefix-",
+    1, partcv, params);
+  gc_frame_end(callframe1769);
+// compilenode returning call1771
+  int op_slot_right_1768 = gc_frame_newslot(call1771);
+  params[0] = call1771;
+  partcv[0] = 1;
+  Object opresult1773 = callmethod(*var_last, "==", 1, partcv, params);
+// compilenode returning opresult1773
+  Object if1767 = done;
+  if (istrue(opresult1773)) {
 // Begin line 541
   setline(541);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object block1703 = alloc_Block(NULL, NULL, "PackageManager", 541);
-  gc_frame_newslot(block1703);
-  block_savedest(block1703);
-  Object closure1704 = createclosure(3, "_apply");
-setclosureframe(closure1704, stackframe);
-  addtoclosure(closure1704, var_count);
-  addtoclosure(closure1704, var_st);
-  addtoclosure(closure1704, selfslot);
-  struct UserObject *uo1704 = (struct UserObject*)block1703;
-  uo1704->data[0] = (Object)closure1704;
-  Method *meth_meth_PackageManager__apply1704 = addmethod2pos(block1703, "_apply", &meth_PackageManager__apply1704, 0);
-int argcv_meth_PackageManager__apply1704[] = {0};
-meth_meth_PackageManager__apply1704->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1704);
-  meth_meth_PackageManager__apply1704->definitionModule = modulename;
-  meth_meth_PackageManager__apply1704->definitionLine = 535;
-// compilenode returning block1703
-  gc_frame_newslot(block1703);
-// Begin line 547
-  setline(547);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  Object block1711 = alloc_Block(NULL, NULL, "PackageManager", 547);
-  gc_frame_newslot(block1711);
-  block_savedest(block1711);
-  Object closure1712 = createclosure(4, "_apply");
-setclosureframe(closure1712, stackframe);
-  addtoclosure(closure1712, var_st);
-  addtoclosure(closure1712, var_count);
-  addtoclosure(closure1712, var_last);
-  addtoclosure(closure1712, selfslot);
-  struct UserObject *uo1712 = (struct UserObject*)block1711;
-  uo1712->data[0] = (Object)closure1712;
-  Method *meth_meth_PackageManager__apply1712 = addmethod2pos(block1711, "_apply", &meth_PackageManager__apply1712, 0);
-int argcv_meth_PackageManager__apply1712[] = {0};
-meth_meth_PackageManager__apply1712->type = alloc_MethodType(1, argcv_meth_PackageManager__apply1712);
-  meth_meth_PackageManager__apply1712->definitionModule = modulename;
-  meth_meth_PackageManager__apply1712->definitionLine = 541;
-// compilenode returning block1711
-  gc_frame_newslot(block1711);
-  params[0] = block1703;
-  params[1] = block1711;
-  partcv[0] = 1;
-  partcv[1] = 1;
-  Object call1726 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1702);
-// compilenode returning call1726
-// Begin line 550
-  setline(550);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// Begin line 547
-  setline(547);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-// compilenode returning *var_last
-  int op_slot_left_1728 = gc_frame_newslot(*var_last);
-  int callframe1729 = gc_frame_new();
-  Object num1730 = alloc_Float64(1);
-// compilenode returning num1730
+  int callframe1775 = gc_frame_new();
   partcv[0] = 0;
-  Object call1731 = callmethod(num1730, "prefix-",
-    1, partcv, params);
-  gc_frame_end(callframe1729);
-// compilenode returning call1731
-  int op_slot_right_1728 = gc_frame_newslot(call1731);
-  params[0] = call1731;
-  partcv[0] = 1;
-  Object opresult1733 = callmethod(*var_last, "==", 1, partcv, params);
-// compilenode returning opresult1733
-  Object if1727 = done;
-  if (istrue(opresult1733)) {
-// Begin line 548
-  setline(548);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  int callframe1735 = gc_frame_new();
-  partcv[0] = 0;
-  Object call1736 = callmethodflags(self, "getBuildPath", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1735);
-// compilenode returning call1736
-  int op_slot_left_1734 = gc_frame_newslot(call1736);
-  if (strlit1737 == NULL) {
-    strlit1737 = alloc_String("/");
-    gc_root(strlit1737);
+  Object call1776 = callmethodflags(self, "getBuildPath", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1775);
+// compilenode returning call1776
+  int op_slot_left_1774 = gc_frame_newslot(call1776);
+  if (strlit1777 == NULL) {
+    strlit1777 = alloc_String("/");
+    gc_root(strlit1777);
   }
-// compilenode returning strlit1737
-  int op_slot_right_1734 = gc_frame_newslot(strlit1737);
-  params[0] = strlit1737;
+// compilenode returning strlit1777
+  int op_slot_right_1774 = gc_frame_newslot(strlit1777);
+  params[0] = strlit1777;
   partcv[0] = 1;
-  Object opresult1739 = callmethod(call1736, "++", 1, partcv, params);
-// compilenode returning opresult1739
-  return opresult1739;
+  Object opresult1779 = callmethod(call1776, "++", 1, partcv, params);
+// compilenode returning opresult1779
+  return opresult1779;
 // compilenode returning undefined
     gc_frame_newslot(undefined);
-    if1727 = undefined;
+    if1767 = undefined;
   } else {
   }
-// compilenode returning if1727
-// Begin line 550
-  setline(550);
+// compilenode returning if1767
+// Begin line 543
+  setline(543);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe1740 = gc_frame_new();
-  Object num1741 = alloc_Float64(0);
-// compilenode returning num1741
-  gc_frame_newslot(num1741);
+  int callframe1780 = gc_frame_new();
+  Object num1781 = alloc_Float64(0);
+// compilenode returning num1781
+  gc_frame_newslot(num1781);
 // compilenode returning *var_last
-  int op_slot_left_1742 = gc_frame_newslot(*var_last);
-  Object num1743 = alloc_Float64(1);
-// compilenode returning num1743
-  int op_slot_right_1742 = gc_frame_newslot(num1743);
-  params[0] = num1743;
+  int op_slot_left_1782 = gc_frame_newslot(*var_last);
+  Object num1783 = alloc_Float64(1);
+// compilenode returning num1783
+  int op_slot_right_1782 = gc_frame_newslot(num1783);
+  params[0] = num1783;
   partcv[0] = 1;
-  Object diff1745 = callmethod(*var_last, "-", 1, partcv, params);
-// compilenode returning diff1745
-  gc_frame_newslot(diff1745);
+  Object diff1785 = callmethod(*var_last, "-", 1, partcv, params);
+// compilenode returning diff1785
+  gc_frame_newslot(diff1785);
 // compilenode returning *var_st
-  params[0] = num1741;
-  params[1] = diff1745;
+  params[0] = num1781;
+  params[1] = diff1785;
   partcv[0] = 1;
   partcv[1] = 1;
-  Object call1746 = callmethod(*var_st, "substringFrom()to",
+  Object call1786 = callmethod(*var_st, "substringFrom()to",
     2, partcv, params);
-  gc_frame_end(callframe1740);
-// compilenode returning call1746
-  return call1746;
+  gc_frame_end(callframe1780);
+// compilenode returning call1786
+  return call1786;
 // compilenode returning undefined
   gc_frame_end(frame);
   return undefined;
 }
-Object meth_PackageManager_imported1747(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_imported1787(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 27, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12558,7 +12675,7 @@ if (argcv && argcv[0] > 0)
   gc_frame_end(frame);
   return *var_imported;
 }
-Object meth_PackageManager_imported_58__61_1748(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_imported_58__61_1788(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 28, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -12594,7 +12711,7 @@ if (argcv && argcv[0] > 1)
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_toProcess1750(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_toProcess1791(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 29, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12625,7 +12742,7 @@ if (argcv && argcv[0] > 0)
   gc_frame_end(frame);
   return *var_toProcess;
 }
-Object meth_PackageManager_toProcess_58__61_1751(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_toProcess_58__61_1792(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 30, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -12661,7 +12778,7 @@ if (argcv && argcv[0] > 1)
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_verbose1754(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_verbose1795(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 31, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12692,7 +12809,7 @@ if (argcv && argcv[0] > 0)
   gc_frame_end(frame);
   return *var_verbose;
 }
-Object meth_PackageManager_verbose_58__61_1755(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_verbose_58__61_1796(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 32, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -12728,7 +12845,7 @@ if (argcv && argcv[0] > 1)
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_global1758(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_global1799(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 33, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12759,7 +12876,7 @@ if (argcv && argcv[0] > 0)
   gc_frame_end(frame);
   return *var_global;
 }
-Object meth_PackageManager_global_58__61_1759(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_global_58__61_1800(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 34, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -12795,7 +12912,7 @@ if (argcv && argcv[0] > 1)
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_bundlePath1762(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_bundlePath1803(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 35, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12826,7 +12943,7 @@ if (argcv && argcv[0] > 0)
   gc_frame_end(frame);
   return *var_bundlePath;
 }
-Object meth_PackageManager_bundlePath_58__61_1763(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_bundlePath_58__61_1804(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 36, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -12862,7 +12979,7 @@ if (argcv && argcv[0] > 1)
   gc_frame_end(frame);
   return done;
 }
-Object meth_PackageManager_curFile1765(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_curFile1806(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 37, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
@@ -12893,7 +13010,7 @@ if (argcv && argcv[0] > 0)
   gc_frame_end(frame);
   return *var_curFile;
 }
-Object meth_PackageManager_curFile_58__61_1766(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+Object meth_PackageManager_curFile_58__61_1807(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)self;
   Object closure = getdatum((Object)uo, 38, (flags>>24)&0xff);
   struct StackFrameObject *stackframe = alloc_StackFrame(2, getclosureframe(closure));
@@ -13014,8 +13131,8 @@ meth_meth_PackageManager_parseArgs0->type = alloc_MethodType(1, argcv_meth_Packa
   meth_meth_PackageManager_parseArgs0->definitionModule = modulename;
   meth_meth_PackageManager_parseArgs0->definitionLine = 14;
 // compilenode returning 
-// Begin line 46
-  setline(46);
+// Begin line 40
+  setline(40);
   setmodule(modulename);
   setsource(originalSourceLines);
   struct UserObject *uo60 = (struct UserObject*)self;
@@ -13025,390 +13142,390 @@ int argcv_meth_PackageManager_forArgs_40__41_do60[] = {1, 1};
 meth_meth_PackageManager_forArgs_40__41_do60->type = alloc_MethodType(2, argcv_meth_PackageManager_forArgs_40__41_do60);
   meth_meth_PackageManager_forArgs_40__41_do60->flags |= MFLAG_CONFIDENTIAL;
   meth_meth_PackageManager_forArgs_40__41_do60->definitionModule = modulename;
-  meth_meth_PackageManager_forArgs_40__41_do60->definitionLine = 46;
+  meth_meth_PackageManager_forArgs_40__41_do60->definitionLine = 40;
   Method *meth_meth_PackageManager_forArgs_40__41_do60_object = addmethod2pos(self, "forArgs()do()object", &meth_PackageManager_forArgs_40__41_do60_object, 2);
 int argcv_meth_PackageManager_forArgs_40__41_do60_object[] = {1, 1};
 meth_meth_PackageManager_forArgs_40__41_do60_object->type = alloc_MethodType(2, argcv_meth_PackageManager_forArgs_40__41_do60_object);
   meth_meth_PackageManager_forArgs_40__41_do60_object->flags |= MFLAG_CONFIDENTIAL;
   meth_meth_PackageManager_forArgs_40__41_do60_object->definitionModule = modulename;
-  meth_meth_PackageManager_forArgs_40__41_do60_object->definitionLine = 46;
+  meth_meth_PackageManager_forArgs_40__41_do60_object->definitionLine = 40;
 // compilenode returning 
-// Begin line 113
-  setline(113);
+// Begin line 103
+  setline(103);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure286 = createclosure(2, "listInstalled");
-setclosureframe(closure286, stackframe);
-  addtoclosure(closure286, var_io);
-  addtoclosure(closure286, var_sys);
-  struct UserObject *uo286 = (struct UserObject*)self;
-  uo286->data[3] = (Object)closure286;
-  Method *meth_meth_PackageManager_listInstalled286 = addmethod2pos(self, "listInstalled", &meth_PackageManager_listInstalled286, 3);
-int argcv_meth_PackageManager_listInstalled286[] = {0};
-meth_meth_PackageManager_listInstalled286->type = alloc_MethodType(1, argcv_meth_PackageManager_listInstalled286);
-  meth_meth_PackageManager_listInstalled286->definitionModule = modulename;
-  meth_meth_PackageManager_listInstalled286->definitionLine = 113;
+  Object closure273 = createclosure(2, "listInstalled");
+setclosureframe(closure273, stackframe);
+  addtoclosure(closure273, var_io);
+  addtoclosure(closure273, var_sys);
+  struct UserObject *uo273 = (struct UserObject*)self;
+  uo273->data[3] = (Object)closure273;
+  Method *meth_meth_PackageManager_listInstalled273 = addmethod2pos(self, "listInstalled", &meth_PackageManager_listInstalled273, 3);
+int argcv_meth_PackageManager_listInstalled273[] = {0};
+meth_meth_PackageManager_listInstalled273->type = alloc_MethodType(1, argcv_meth_PackageManager_listInstalled273);
+  meth_meth_PackageManager_listInstalled273->definitionModule = modulename;
+  meth_meth_PackageManager_listInstalled273->definitionLine = 103;
 // compilenode returning 
-// Begin line 126
-  setline(126);
+// Begin line 116
+  setline(116);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure321 = createclosure(1, "recurseDirectory");
-setclosureframe(closure321, stackframe);
-  addtoclosure(closure321, var_io);
-  struct UserObject *uo321 = (struct UserObject*)self;
-  uo321->data[4] = (Object)closure321;
-  Method *meth_meth_PackageManager_recurseDirectory321 = addmethod2pos(self, "recurseDirectory", &meth_PackageManager_recurseDirectory321, 4);
-int argcv_meth_PackageManager_recurseDirectory321[] = {2};
-meth_meth_PackageManager_recurseDirectory321->type = alloc_MethodType(1, argcv_meth_PackageManager_recurseDirectory321);
-  meth_meth_PackageManager_recurseDirectory321->definitionModule = modulename;
-  meth_meth_PackageManager_recurseDirectory321->definitionLine = 126;
+  Object closure308 = createclosure(1, "recurseDirectory");
+setclosureframe(closure308, stackframe);
+  addtoclosure(closure308, var_io);
+  struct UserObject *uo308 = (struct UserObject*)self;
+  uo308->data[4] = (Object)closure308;
+  Method *meth_meth_PackageManager_recurseDirectory308 = addmethod2pos(self, "recurseDirectory", &meth_PackageManager_recurseDirectory308, 4);
+int argcv_meth_PackageManager_recurseDirectory308[] = {2};
+meth_meth_PackageManager_recurseDirectory308->type = alloc_MethodType(1, argcv_meth_PackageManager_recurseDirectory308);
+  meth_meth_PackageManager_recurseDirectory308->definitionModule = modulename;
+  meth_meth_PackageManager_recurseDirectory308->definitionLine = 116;
 // compilenode returning 
-// Begin line 138
-  setline(138);
+// Begin line 128
+  setline(128);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure374 = createclosure(1, "doGet");
-setclosureframe(closure374, stackframe);
-  addtoclosure(closure374, var_imported);
-  struct UserObject *uo374 = (struct UserObject*)self;
-  uo374->data[5] = (Object)closure374;
-  Method *meth_meth_PackageManager_doGet374 = addmethod2pos(self, "doGet", &meth_PackageManager_doGet374, 5);
-int argcv_meth_PackageManager_doGet374[] = {1};
-meth_meth_PackageManager_doGet374->type = alloc_MethodType(1, argcv_meth_PackageManager_doGet374);
-  meth_meth_PackageManager_doGet374->definitionModule = modulename;
-  meth_meth_PackageManager_doGet374->definitionLine = 138;
+  Object closure361 = createclosure(1, "doGet");
+setclosureframe(closure361, stackframe);
+  addtoclosure(closure361, var_imported);
+  struct UserObject *uo361 = (struct UserObject*)self;
+  uo361->data[5] = (Object)closure361;
+  Method *meth_meth_PackageManager_doGet361 = addmethod2pos(self, "doGet", &meth_PackageManager_doGet361, 5);
+int argcv_meth_PackageManager_doGet361[] = {1};
+meth_meth_PackageManager_doGet361->type = alloc_MethodType(1, argcv_meth_PackageManager_doGet361);
+  meth_meth_PackageManager_doGet361->definitionModule = modulename;
+  meth_meth_PackageManager_doGet361->definitionLine = 128;
 // compilenode returning 
-// Begin line 149
-  setline(149);
+// Begin line 139
+  setline(139);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure393 = createclosure(1, "setFile");
-setclosureframe(closure393, stackframe);
-  addtoclosure(closure393, var_curFile);
-  struct UserObject *uo393 = (struct UserObject*)self;
-  uo393->data[6] = (Object)closure393;
-  Method *meth_meth_PackageManager_setFile393 = addmethod2pos(self, "setFile", &meth_PackageManager_setFile393, 6);
-int argcv_meth_PackageManager_setFile393[] = {1};
-meth_meth_PackageManager_setFile393->type = alloc_MethodType(1, argcv_meth_PackageManager_setFile393);
-  meth_meth_PackageManager_setFile393->definitionModule = modulename;
-  meth_meth_PackageManager_setFile393->definitionLine = 149;
+  Object closure380 = createclosure(1, "setFile");
+setclosureframe(closure380, stackframe);
+  addtoclosure(closure380, var_curFile);
+  struct UserObject *uo380 = (struct UserObject*)self;
+  uo380->data[6] = (Object)closure380;
+  Method *meth_meth_PackageManager_setFile380 = addmethod2pos(self, "setFile", &meth_PackageManager_setFile380, 6);
+int argcv_meth_PackageManager_setFile380[] = {1};
+meth_meth_PackageManager_setFile380->type = alloc_MethodType(1, argcv_meth_PackageManager_setFile380);
+  meth_meth_PackageManager_setFile380->definitionModule = modulename;
+  meth_meth_PackageManager_setFile380->definitionLine = 139;
 // compilenode returning 
-// Begin line 161
-  setline(161);
+// Begin line 151
+  setline(151);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure416 = createclosure(3, "fetchImports");
-setclosureframe(closure416, stackframe);
-  addtoclosure(closure416, var_curFile);
-  addtoclosure(closure416, var_imported);
-  addtoclosure(closure416, var_toProcess);
-  struct UserObject *uo416 = (struct UserObject*)self;
-  uo416->data[7] = (Object)closure416;
-  Method *meth_meth_PackageManager_fetchImports416 = addmethod2pos(self, "fetchImports", &meth_PackageManager_fetchImports416, 7);
-int argcv_meth_PackageManager_fetchImports416[] = {1};
-meth_meth_PackageManager_fetchImports416->type = alloc_MethodType(1, argcv_meth_PackageManager_fetchImports416);
-  meth_meth_PackageManager_fetchImports416->definitionModule = modulename;
-  meth_meth_PackageManager_fetchImports416->definitionLine = 161;
+  Object closure403 = createclosure(3, "fetchImports");
+setclosureframe(closure403, stackframe);
+  addtoclosure(closure403, var_curFile);
+  addtoclosure(closure403, var_imported);
+  addtoclosure(closure403, var_toProcess);
+  struct UserObject *uo403 = (struct UserObject*)self;
+  uo403->data[7] = (Object)closure403;
+  Method *meth_meth_PackageManager_fetchImports403 = addmethod2pos(self, "fetchImports", &meth_PackageManager_fetchImports403, 7);
+int argcv_meth_PackageManager_fetchImports403[] = {1};
+meth_meth_PackageManager_fetchImports403->type = alloc_MethodType(1, argcv_meth_PackageManager_fetchImports403);
+  meth_meth_PackageManager_fetchImports403->definitionModule = modulename;
+  meth_meth_PackageManager_fetchImports403->definitionLine = 151;
 // compilenode returning 
-// Begin line 186
-  setline(186);
+// Begin line 176
+  setline(176);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure483 = createclosure(1, "setFileData");
-setclosureframe(closure483, stackframe);
-  addtoclosure(closure483, var_curl);
-  struct UserObject *uo483 = (struct UserObject*)self;
-  uo483->data[8] = (Object)closure483;
-  Method *meth_meth_PackageManager_setFileData483 = addmethod2pos(self, "setFileData", &meth_PackageManager_setFileData483, 8);
-int argcv_meth_PackageManager_setFileData483[] = {1};
-meth_meth_PackageManager_setFileData483->type = alloc_MethodType(1, argcv_meth_PackageManager_setFileData483);
-  meth_meth_PackageManager_setFileData483->definitionModule = modulename;
-  meth_meth_PackageManager_setFileData483->definitionLine = 186;
+  Object closure479 = createclosure(1, "setFileData");
+setclosureframe(closure479, stackframe);
+  addtoclosure(closure479, var_curl);
+  struct UserObject *uo479 = (struct UserObject*)self;
+  uo479->data[8] = (Object)closure479;
+  Method *meth_meth_PackageManager_setFileData479 = addmethod2pos(self, "setFileData", &meth_PackageManager_setFileData479, 8);
+int argcv_meth_PackageManager_setFileData479[] = {1};
+meth_meth_PackageManager_setFileData479->type = alloc_MethodType(1, argcv_meth_PackageManager_setFileData479);
+  meth_meth_PackageManager_setFileData479->definitionModule = modulename;
+  meth_meth_PackageManager_setFileData479->definitionLine = 176;
 // compilenode returning 
-// Begin line 222
-  setline(222);
+// Begin line 212
+  setline(212);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure602 = createclosure(3, "findExisting");
-setclosureframe(closure602, stackframe);
-  addtoclosure(closure602, var_io);
-  addtoclosure(closure602, var_sys);
-  addtoclosure(closure602, var_bundlePath);
-  struct UserObject *uo602 = (struct UserObject*)self;
-  uo602->data[9] = (Object)closure602;
-  Method *meth_meth_PackageManager_findExisting602 = addmethod2pos(self, "findExisting", &meth_PackageManager_findExisting602, 9);
-int argcv_meth_PackageManager_findExisting602[] = {1};
-meth_meth_PackageManager_findExisting602->type = alloc_MethodType(1, argcv_meth_PackageManager_findExisting602);
-  meth_meth_PackageManager_findExisting602->definitionModule = modulename;
-  meth_meth_PackageManager_findExisting602->definitionLine = 222;
+  Object closure598 = createclosure(3, "findExisting");
+setclosureframe(closure598, stackframe);
+  addtoclosure(closure598, var_io);
+  addtoclosure(closure598, var_sys);
+  addtoclosure(closure598, var_bundlePath);
+  struct UserObject *uo598 = (struct UserObject*)self;
+  uo598->data[9] = (Object)closure598;
+  Method *meth_meth_PackageManager_findExisting598 = addmethod2pos(self, "findExisting", &meth_PackageManager_findExisting598, 9);
+int argcv_meth_PackageManager_findExisting598[] = {1};
+meth_meth_PackageManager_findExisting598->type = alloc_MethodType(1, argcv_meth_PackageManager_findExisting598);
+  meth_meth_PackageManager_findExisting598->definitionModule = modulename;
+  meth_meth_PackageManager_findExisting598->definitionLine = 212;
 // compilenode returning 
-// Begin line 249
-  setline(249);
+// Begin line 242
+  setline(242);
   setmodule(modulename);
   setsource(originalSourceLines);
-  struct UserObject *uo755 = (struct UserObject*)self;
-  uo755->data[10] = emptyclosure;
-  Method *meth_meth_PackageManager_validateFile755 = addmethod2pos(self, "validateFile", &meth_PackageManager_validateFile755, 10);
-int argcv_meth_PackageManager_validateFile755[] = {1};
-meth_meth_PackageManager_validateFile755->type = alloc_MethodType(1, argcv_meth_PackageManager_validateFile755);
-  meth_meth_PackageManager_validateFile755->definitionModule = modulename;
-  meth_meth_PackageManager_validateFile755->definitionLine = 249;
+  struct UserObject *uo795 = (struct UserObject*)self;
+  uo795->data[10] = emptyclosure;
+  Method *meth_meth_PackageManager_validateFile795 = addmethod2pos(self, "validateFile", &meth_PackageManager_validateFile795, 10);
+int argcv_meth_PackageManager_validateFile795[] = {1};
+meth_meth_PackageManager_validateFile795->type = alloc_MethodType(1, argcv_meth_PackageManager_validateFile795);
+  meth_meth_PackageManager_validateFile795->definitionModule = modulename;
+  meth_meth_PackageManager_validateFile795->definitionLine = 242;
 // compilenode returning 
-// Begin line 259
-  setline(259);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  block_savedest(self);
-  Object closure778 = createclosure(3, "write");
-setclosureframe(closure778, stackframe);
-  addtoclosure(closure778, var_global);
-  addtoclosure(closure778, var_sys);
-  addtoclosure(closure778, var_io);
-  struct UserObject *uo778 = (struct UserObject*)self;
-  uo778->data[11] = (Object)closure778;
-  Method *meth_meth_PackageManager_write778 = addmethod2pos(self, "write", &meth_PackageManager_write778, 11);
-int argcv_meth_PackageManager_write778[] = {1};
-meth_meth_PackageManager_write778->type = alloc_MethodType(1, argcv_meth_PackageManager_write778);
-  meth_meth_PackageManager_write778->definitionModule = modulename;
-  meth_meth_PackageManager_write778->definitionLine = 259;
-// compilenode returning 
-// Begin line 274
-  setline(274);
+// Begin line 252
+  setline(252);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure815 = createclosure(2, "getBuildPath");
-setclosureframe(closure815, stackframe);
-  addtoclosure(closure815, var_sys);
-  addtoclosure(closure815, var_io);
-  struct UserObject *uo815 = (struct UserObject*)self;
-  uo815->data[12] = (Object)closure815;
-  Method *meth_meth_PackageManager_getBuildPath815 = addmethod2pos(self, "getBuildPath", &meth_PackageManager_getBuildPath815, 12);
-int argcv_meth_PackageManager_getBuildPath815[] = {0};
-meth_meth_PackageManager_getBuildPath815->type = alloc_MethodType(1, argcv_meth_PackageManager_getBuildPath815);
-  meth_meth_PackageManager_getBuildPath815->definitionModule = modulename;
-  meth_meth_PackageManager_getBuildPath815->definitionLine = 274;
+  Object closure818 = createclosure(3, "write");
+setclosureframe(closure818, stackframe);
+  addtoclosure(closure818, var_global);
+  addtoclosure(closure818, var_sys);
+  addtoclosure(closure818, var_io);
+  struct UserObject *uo818 = (struct UserObject*)self;
+  uo818->data[11] = (Object)closure818;
+  Method *meth_meth_PackageManager_write818 = addmethod2pos(self, "write", &meth_PackageManager_write818, 11);
+int argcv_meth_PackageManager_write818[] = {1};
+meth_meth_PackageManager_write818->type = alloc_MethodType(1, argcv_meth_PackageManager_write818);
+  meth_meth_PackageManager_write818->definitionModule = modulename;
+  meth_meth_PackageManager_write818->definitionLine = 252;
 // compilenode returning 
-// Begin line 291
-  setline(291);
+// Begin line 267
+  setline(267);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure853 = createclosure(3, "compile");
-setclosureframe(closure853, stackframe);
-  addtoclosure(closure853, var_global);
-  addtoclosure(closure853, var_sys);
-  addtoclosure(closure853, var_io);
-  struct UserObject *uo853 = (struct UserObject*)self;
-  uo853->data[13] = (Object)closure853;
-  Method *meth_meth_PackageManager_compile853 = addmethod2pos(self, "compile", &meth_PackageManager_compile853, 13);
-int argcv_meth_PackageManager_compile853[] = {1};
-meth_meth_PackageManager_compile853->type = alloc_MethodType(1, argcv_meth_PackageManager_compile853);
-  meth_meth_PackageManager_compile853->definitionModule = modulename;
-  meth_meth_PackageManager_compile853->definitionLine = 291;
+  Object closure855 = createclosure(2, "getBuildPath");
+setclosureframe(closure855, stackframe);
+  addtoclosure(closure855, var_sys);
+  addtoclosure(closure855, var_io);
+  struct UserObject *uo855 = (struct UserObject*)self;
+  uo855->data[12] = (Object)closure855;
+  Method *meth_meth_PackageManager_getBuildPath855 = addmethod2pos(self, "getBuildPath", &meth_PackageManager_getBuildPath855, 12);
+int argcv_meth_PackageManager_getBuildPath855[] = {0};
+meth_meth_PackageManager_getBuildPath855->type = alloc_MethodType(1, argcv_meth_PackageManager_getBuildPath855);
+  meth_meth_PackageManager_getBuildPath855->definitionModule = modulename;
+  meth_meth_PackageManager_getBuildPath855->definitionLine = 267;
 // compilenode returning 
-// Begin line 307
-  setline(307);
+// Begin line 284
+  setline(284);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure893 = createclosure(1, "createDirectory");
+  Object closure893 = createclosure(3, "compile");
 setclosureframe(closure893, stackframe);
+  addtoclosure(closure893, var_global);
+  addtoclosure(closure893, var_sys);
   addtoclosure(closure893, var_io);
   struct UserObject *uo893 = (struct UserObject*)self;
-  uo893->data[14] = (Object)closure893;
-  Method *meth_meth_PackageManager_createDirectory893 = addmethod2pos(self, "createDirectory", &meth_PackageManager_createDirectory893, 14);
-int argcv_meth_PackageManager_createDirectory893[] = {1};
-meth_meth_PackageManager_createDirectory893->type = alloc_MethodType(1, argcv_meth_PackageManager_createDirectory893);
-  meth_meth_PackageManager_createDirectory893->definitionModule = modulename;
-  meth_meth_PackageManager_createDirectory893->definitionLine = 307;
+  uo893->data[13] = (Object)closure893;
+  Method *meth_meth_PackageManager_compile893 = addmethod2pos(self, "compile", &meth_PackageManager_compile893, 13);
+int argcv_meth_PackageManager_compile893[] = {1};
+meth_meth_PackageManager_compile893->type = alloc_MethodType(1, argcv_meth_PackageManager_compile893);
+  meth_meth_PackageManager_compile893->definitionModule = modulename;
+  meth_meth_PackageManager_compile893->definitionLine = 284;
 // compilenode returning 
-// Begin line 331
-  setline(331);
+// Begin line 300
+  setline(300);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure971 = createclosure(1, "parseFile");
-setclosureframe(closure971, stackframe);
-  addtoclosure(closure971, var_done);
-  struct UserObject *uo971 = (struct UserObject*)self;
-  uo971->data[15] = (Object)closure971;
-  Method *meth_meth_PackageManager_parseFile971 = addmethod2pos(self, "parseFile", &meth_PackageManager_parseFile971, 15);
-int argcv_meth_PackageManager_parseFile971[] = {1};
-meth_meth_PackageManager_parseFile971->type = alloc_MethodType(1, argcv_meth_PackageManager_parseFile971);
-  meth_meth_PackageManager_parseFile971->definitionModule = modulename;
-  meth_meth_PackageManager_parseFile971->definitionLine = 331;
+  Object closure933 = createclosure(1, "createDirectory");
+setclosureframe(closure933, stackframe);
+  addtoclosure(closure933, var_io);
+  struct UserObject *uo933 = (struct UserObject*)self;
+  uo933->data[14] = (Object)closure933;
+  Method *meth_meth_PackageManager_createDirectory933 = addmethod2pos(self, "createDirectory", &meth_PackageManager_createDirectory933, 14);
+int argcv_meth_PackageManager_createDirectory933[] = {1};
+meth_meth_PackageManager_createDirectory933->type = alloc_MethodType(1, argcv_meth_PackageManager_createDirectory933);
+  meth_meth_PackageManager_createDirectory933->definitionModule = modulename;
+  meth_meth_PackageManager_createDirectory933->definitionLine = 300;
 // compilenode returning 
-// Begin line 348
-  setline(348);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  struct UserObject *uo1031 = (struct UserObject*)self;
-  uo1031->data[16] = emptyclosure;
-  Method *meth_meth_PackageManager_processLine1031 = addmethod2pos(self, "processLine", &meth_PackageManager_processLine1031, 16);
-int argcv_meth_PackageManager_processLine1031[] = {1};
-meth_meth_PackageManager_processLine1031->type = alloc_MethodType(1, argcv_meth_PackageManager_processLine1031);
-  meth_meth_PackageManager_processLine1031->definitionModule = modulename;
-  meth_meth_PackageManager_processLine1031->definitionLine = 348;
-// compilenode returning 
-// Begin line 367
-  setline(367);
+// Begin line 324
+  setline(324);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1112 = createclosure(2, "parseImport");
-setclosureframe(closure1112, stackframe);
-  addtoclosure(closure1112, var_imported);
-  addtoclosure(closure1112, var_toProcess);
-  struct UserObject *uo1112 = (struct UserObject*)self;
-  uo1112->data[17] = (Object)closure1112;
-  Method *meth_meth_PackageManager_parseImport1112 = addmethod2pos(self, "parseImport", &meth_PackageManager_parseImport1112, 17);
-int argcv_meth_PackageManager_parseImport1112[] = {1};
-meth_meth_PackageManager_parseImport1112->type = alloc_MethodType(1, argcv_meth_PackageManager_parseImport1112);
-  meth_meth_PackageManager_parseImport1112->definitionModule = modulename;
-  meth_meth_PackageManager_parseImport1112->definitionLine = 367;
+  Object closure1011 = createclosure(1, "parseFile");
+setclosureframe(closure1011, stackframe);
+  addtoclosure(closure1011, var_done);
+  struct UserObject *uo1011 = (struct UserObject*)self;
+  uo1011->data[15] = (Object)closure1011;
+  Method *meth_meth_PackageManager_parseFile1011 = addmethod2pos(self, "parseFile", &meth_PackageManager_parseFile1011, 15);
+int argcv_meth_PackageManager_parseFile1011[] = {1};
+meth_meth_PackageManager_parseFile1011->type = alloc_MethodType(1, argcv_meth_PackageManager_parseFile1011);
+  meth_meth_PackageManager_parseFile1011->definitionModule = modulename;
+  meth_meth_PackageManager_parseFile1011->definitionLine = 324;
 // compilenode returning 
-// Begin line 384
-  setline(384);
+// Begin line 341
+  setline(341);
   setmodule(modulename);
   setsource(originalSourceLines);
-  struct UserObject *uo1183 = (struct UserObject*)self;
-  uo1183->data[18] = emptyclosure;
-  Method *meth_meth_PackageManager_skipWhiteSpace1183 = addmethod2pos(self, "skipWhiteSpace", &meth_PackageManager_skipWhiteSpace1183, 18);
-int argcv_meth_PackageManager_skipWhiteSpace1183[] = {2};
-meth_meth_PackageManager_skipWhiteSpace1183->type = alloc_MethodType(1, argcv_meth_PackageManager_skipWhiteSpace1183);
-  meth_meth_PackageManager_skipWhiteSpace1183->definitionModule = modulename;
-  meth_meth_PackageManager_skipWhiteSpace1183->definitionLine = 384;
+  struct UserObject *uo1071 = (struct UserObject*)self;
+  uo1071->data[16] = emptyclosure;
+  Method *meth_meth_PackageManager_processLine1071 = addmethod2pos(self, "processLine", &meth_PackageManager_processLine1071, 16);
+int argcv_meth_PackageManager_processLine1071[] = {1};
+meth_meth_PackageManager_processLine1071->type = alloc_MethodType(1, argcv_meth_PackageManager_processLine1071);
+  meth_meth_PackageManager_processLine1071->definitionModule = modulename;
+  meth_meth_PackageManager_processLine1071->definitionLine = 341;
 // compilenode returning 
-// Begin line 392
-  setline(392);
-  setmodule(modulename);
-  setsource(originalSourceLines);
-  struct UserObject *uo1210 = (struct UserObject*)self;
-  uo1210->data[19] = emptyclosure;
-  Method *meth_meth_PackageManager_displayHelp1210 = addmethod2pos(self, "displayHelp", &meth_PackageManager_displayHelp1210, 19);
-int argcv_meth_PackageManager_displayHelp1210[] = {0};
-meth_meth_PackageManager_displayHelp1210->type = alloc_MethodType(1, argcv_meth_PackageManager_displayHelp1210);
-  meth_meth_PackageManager_displayHelp1210->definitionModule = modulename;
-  meth_meth_PackageManager_displayHelp1210->definitionLine = 392;
-// compilenode returning 
-// Begin line 398
-  setline(398);
+// Begin line 360
+  setline(360);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1217 = createclosure(1, "printMessage");
-setclosureframe(closure1217, stackframe);
-  addtoclosure(closure1217, var_verbose);
-  struct UserObject *uo1217 = (struct UserObject*)self;
-  uo1217->data[20] = (Object)closure1217;
-  Method *meth_meth_PackageManager_printMessage1217 = addmethod2pos(self, "printMessage", &meth_PackageManager_printMessage1217, 20);
-int argcv_meth_PackageManager_printMessage1217[] = {1};
-meth_meth_PackageManager_printMessage1217->type = alloc_MethodType(1, argcv_meth_PackageManager_printMessage1217);
-  meth_meth_PackageManager_printMessage1217->definitionModule = modulename;
-  meth_meth_PackageManager_printMessage1217->definitionLine = 398;
+  Object closure1152 = createclosure(2, "parseImport");
+setclosureframe(closure1152, stackframe);
+  addtoclosure(closure1152, var_imported);
+  addtoclosure(closure1152, var_toProcess);
+  struct UserObject *uo1152 = (struct UserObject*)self;
+  uo1152->data[17] = (Object)closure1152;
+  Method *meth_meth_PackageManager_parseImport1152 = addmethod2pos(self, "parseImport", &meth_PackageManager_parseImport1152, 17);
+int argcv_meth_PackageManager_parseImport1152[] = {1};
+meth_meth_PackageManager_parseImport1152->type = alloc_MethodType(1, argcv_meth_PackageManager_parseImport1152);
+  meth_meth_PackageManager_parseImport1152->definitionModule = modulename;
+  meth_meth_PackageManager_parseImport1152->definitionLine = 360;
 // compilenode returning 
-// Begin line 407
-  setline(407);
+// Begin line 377
+  setline(377);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  struct UserObject *uo1223 = (struct UserObject*)self;
+  uo1223->data[18] = emptyclosure;
+  Method *meth_meth_PackageManager_skipWhiteSpace1223 = addmethod2pos(self, "skipWhiteSpace", &meth_PackageManager_skipWhiteSpace1223, 18);
+int argcv_meth_PackageManager_skipWhiteSpace1223[] = {2};
+meth_meth_PackageManager_skipWhiteSpace1223->type = alloc_MethodType(1, argcv_meth_PackageManager_skipWhiteSpace1223);
+  meth_meth_PackageManager_skipWhiteSpace1223->definitionModule = modulename;
+  meth_meth_PackageManager_skipWhiteSpace1223->definitionLine = 377;
+// compilenode returning 
+// Begin line 385
+  setline(385);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  struct UserObject *uo1250 = (struct UserObject*)self;
+  uo1250->data[19] = emptyclosure;
+  Method *meth_meth_PackageManager_displayHelp1250 = addmethod2pos(self, "displayHelp", &meth_PackageManager_displayHelp1250, 19);
+int argcv_meth_PackageManager_displayHelp1250[] = {0};
+meth_meth_PackageManager_displayHelp1250->type = alloc_MethodType(1, argcv_meth_PackageManager_displayHelp1250);
+  meth_meth_PackageManager_displayHelp1250->definitionModule = modulename;
+  meth_meth_PackageManager_displayHelp1250->definitionLine = 385;
+// compilenode returning 
+// Begin line 391
+  setline(391);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1220 = createclosure(3, "bundle");
-setclosureframe(closure1220, stackframe);
-  addtoclosure(closure1220, var_imported);
-  addtoclosure(closure1220, var_bundlePath);
-  addtoclosure(closure1220, var_io);
-  struct UserObject *uo1220 = (struct UserObject*)self;
-  uo1220->data[21] = (Object)closure1220;
-  Method *meth_meth_PackageManager_bundle1220 = addmethod2pos(self, "bundle", &meth_PackageManager_bundle1220, 21);
-int argcv_meth_PackageManager_bundle1220[] = {2};
-meth_meth_PackageManager_bundle1220->type = alloc_MethodType(1, argcv_meth_PackageManager_bundle1220);
-  meth_meth_PackageManager_bundle1220->definitionModule = modulename;
-  meth_meth_PackageManager_bundle1220->definitionLine = 407;
+  Object closure1257 = createclosure(1, "printMessage");
+setclosureframe(closure1257, stackframe);
+  addtoclosure(closure1257, var_verbose);
+  struct UserObject *uo1257 = (struct UserObject*)self;
+  uo1257->data[20] = (Object)closure1257;
+  Method *meth_meth_PackageManager_printMessage1257 = addmethod2pos(self, "printMessage", &meth_PackageManager_printMessage1257, 20);
+int argcv_meth_PackageManager_printMessage1257[] = {1};
+meth_meth_PackageManager_printMessage1257->type = alloc_MethodType(1, argcv_meth_PackageManager_printMessage1257);
+  meth_meth_PackageManager_printMessage1257->definitionModule = modulename;
+  meth_meth_PackageManager_printMessage1257->definitionLine = 391;
 // compilenode returning 
-// Begin line 425
-  setline(425);
+// Begin line 400
+  setline(400);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1323 = createclosure(1, "setImportDest");
-setclosureframe(closure1323, stackframe);
-  addtoclosure(closure1323, var_io);
-  struct UserObject *uo1323 = (struct UserObject*)self;
-  uo1323->data[22] = (Object)closure1323;
-  Method *meth_meth_PackageManager_setImportDest1323 = addmethod2pos(self, "setImportDest", &meth_PackageManager_setImportDest1323, 22);
-int argcv_meth_PackageManager_setImportDest1323[] = {2};
-meth_meth_PackageManager_setImportDest1323->type = alloc_MethodType(1, argcv_meth_PackageManager_setImportDest1323);
-  meth_meth_PackageManager_setImportDest1323->definitionModule = modulename;
-  meth_meth_PackageManager_setImportDest1323->definitionLine = 425;
+  Object closure1260 = createclosure(3, "bundle");
+setclosureframe(closure1260, stackframe);
+  addtoclosure(closure1260, var_imported);
+  addtoclosure(closure1260, var_bundlePath);
+  addtoclosure(closure1260, var_io);
+  struct UserObject *uo1260 = (struct UserObject*)self;
+  uo1260->data[21] = (Object)closure1260;
+  Method *meth_meth_PackageManager_bundle1260 = addmethod2pos(self, "bundle", &meth_PackageManager_bundle1260, 21);
+int argcv_meth_PackageManager_bundle1260[] = {2};
+meth_meth_PackageManager_bundle1260->type = alloc_MethodType(1, argcv_meth_PackageManager_bundle1260);
+  meth_meth_PackageManager_bundle1260->definitionModule = modulename;
+  meth_meth_PackageManager_bundle1260->definitionLine = 400;
 // compilenode returning 
-// Begin line 449
-  setline(449);
+// Begin line 418
+  setline(418);
   setmodule(modulename);
   setsource(originalSourceLines);
-  struct UserObject *uo1399 = (struct UserObject*)self;
-  uo1399->data[23] = emptyclosure;
-  Method *meth_meth_PackageManager_parseAndPrefix1399 = addmethod2pos(self, "parseAndPrefix", &meth_PackageManager_parseAndPrefix1399, 23);
-int argcv_meth_PackageManager_parseAndPrefix1399[] = {3};
-meth_meth_PackageManager_parseAndPrefix1399->type = alloc_MethodType(1, argcv_meth_PackageManager_parseAndPrefix1399);
-meth_meth_PackageManager_parseAndPrefix1399->type->types[0] = type_String;
-meth_meth_PackageManager_parseAndPrefix1399->type->names[0] = "readFile";
-meth_meth_PackageManager_parseAndPrefix1399->type->types[1] = type_String;
-meth_meth_PackageManager_parseAndPrefix1399->type->names[1] = "address";
-meth_meth_PackageManager_parseAndPrefix1399->type->types[2] = type_String;
-meth_meth_PackageManager_parseAndPrefix1399->type->names[2] = "prefix";
-  meth_meth_PackageManager_parseAndPrefix1399->definitionModule = modulename;
-  meth_meth_PackageManager_parseAndPrefix1399->definitionLine = 449;
+  block_savedest(self);
+  Object closure1363 = createclosure(1, "setImportDest");
+setclosureframe(closure1363, stackframe);
+  addtoclosure(closure1363, var_io);
+  struct UserObject *uo1363 = (struct UserObject*)self;
+  uo1363->data[22] = (Object)closure1363;
+  Method *meth_meth_PackageManager_setImportDest1363 = addmethod2pos(self, "setImportDest", &meth_PackageManager_setImportDest1363, 22);
+int argcv_meth_PackageManager_setImportDest1363[] = {2};
+meth_meth_PackageManager_setImportDest1363->type = alloc_MethodType(1, argcv_meth_PackageManager_setImportDest1363);
+  meth_meth_PackageManager_setImportDest1363->definitionModule = modulename;
+  meth_meth_PackageManager_setImportDest1363->definitionLine = 418;
 // compilenode returning 
-// Begin line 499
-  setline(499);
+// Begin line 442
+  setline(442);
   setmodule(modulename);
   setsource(originalSourceLines);
-  struct UserObject *uo1600 = (struct UserObject*)self;
-  uo1600->data[24] = emptyclosure;
-  Method *meth_meth_PackageManager_removeExistingUrls1600 = addmethod2pos(self, "removeExistingUrls", &meth_PackageManager_removeExistingUrls1600, 24);
-int argcv_meth_PackageManager_removeExistingUrls1600[] = {1};
-meth_meth_PackageManager_removeExistingUrls1600->type = alloc_MethodType(1, argcv_meth_PackageManager_removeExistingUrls1600);
-meth_meth_PackageManager_removeExistingUrls1600->type->types[0] = type_String;
-meth_meth_PackageManager_removeExistingUrls1600->type->names[0] = "importStatement";
-  meth_meth_PackageManager_removeExistingUrls1600->definitionModule = modulename;
-  meth_meth_PackageManager_removeExistingUrls1600->definitionLine = 499;
+  struct UserObject *uo1439 = (struct UserObject*)self;
+  uo1439->data[23] = emptyclosure;
+  Method *meth_meth_PackageManager_parseAndPrefix1439 = addmethod2pos(self, "parseAndPrefix", &meth_PackageManager_parseAndPrefix1439, 23);
+int argcv_meth_PackageManager_parseAndPrefix1439[] = {3};
+meth_meth_PackageManager_parseAndPrefix1439->type = alloc_MethodType(1, argcv_meth_PackageManager_parseAndPrefix1439);
+meth_meth_PackageManager_parseAndPrefix1439->type->types[0] = type_String;
+meth_meth_PackageManager_parseAndPrefix1439->type->names[0] = "readFile";
+meth_meth_PackageManager_parseAndPrefix1439->type->types[1] = type_String;
+meth_meth_PackageManager_parseAndPrefix1439->type->names[1] = "address";
+meth_meth_PackageManager_parseAndPrefix1439->type->types[2] = type_String;
+meth_meth_PackageManager_parseAndPrefix1439->type->names[2] = "prefix";
+  meth_meth_PackageManager_parseAndPrefix1439->definitionModule = modulename;
+  meth_meth_PackageManager_parseAndPrefix1439->definitionLine = 442;
 // compilenode returning 
-// Begin line 523
-  setline(523);
+// Begin line 492
+  setline(492);
   setmodule(modulename);
   setsource(originalSourceLines);
-  struct UserObject *uo1652 = (struct UserObject*)self;
-  uo1652->data[25] = emptyclosure;
-  Method *meth_meth_PackageManager_removeContainingDir1652 = addmethod2pos(self, "removeContainingDir", &meth_PackageManager_removeContainingDir1652, 25);
-int argcv_meth_PackageManager_removeContainingDir1652[] = {1};
-meth_meth_PackageManager_removeContainingDir1652->type = alloc_MethodType(1, argcv_meth_PackageManager_removeContainingDir1652);
-meth_meth_PackageManager_removeContainingDir1652->type->types[0] = type_String;
-meth_meth_PackageManager_removeContainingDir1652->type->names[0] = "st";
-  meth_meth_PackageManager_removeContainingDir1652->definitionModule = modulename;
-  meth_meth_PackageManager_removeContainingDir1652->definitionLine = 523;
+  struct UserObject *uo1640 = (struct UserObject*)self;
+  uo1640->data[24] = emptyclosure;
+  Method *meth_meth_PackageManager_removeExistingUrls1640 = addmethod2pos(self, "removeExistingUrls", &meth_PackageManager_removeExistingUrls1640, 24);
+int argcv_meth_PackageManager_removeExistingUrls1640[] = {1};
+meth_meth_PackageManager_removeExistingUrls1640->type = alloc_MethodType(1, argcv_meth_PackageManager_removeExistingUrls1640);
+meth_meth_PackageManager_removeExistingUrls1640->type->types[0] = type_String;
+meth_meth_PackageManager_removeExistingUrls1640->type->names[0] = "importStatement";
+  meth_meth_PackageManager_removeExistingUrls1640->definitionModule = modulename;
+  meth_meth_PackageManager_removeExistingUrls1640->definitionLine = 492;
 // compilenode returning 
-// Begin line 538
-  setline(538);
+// Begin line 516
+  setline(516);
   setmodule(modulename);
   setsource(originalSourceLines);
-  struct UserObject *uo1697 = (struct UserObject*)self;
-  uo1697->data[26] = emptyclosure;
-  Method *meth_meth_PackageManager_getContainingDirectory1697 = addmethod2pos(self, "getContainingDirectory", &meth_PackageManager_getContainingDirectory1697, 26);
-int argcv_meth_PackageManager_getContainingDirectory1697[] = {1};
-meth_meth_PackageManager_getContainingDirectory1697->type = alloc_MethodType(1, argcv_meth_PackageManager_getContainingDirectory1697);
-meth_meth_PackageManager_getContainingDirectory1697->type->types[0] = type_String;
-meth_meth_PackageManager_getContainingDirectory1697->type->names[0] = "st";
-  meth_meth_PackageManager_getContainingDirectory1697->definitionModule = modulename;
-  meth_meth_PackageManager_getContainingDirectory1697->definitionLine = 538;
+  struct UserObject *uo1692 = (struct UserObject*)self;
+  uo1692->data[25] = emptyclosure;
+  Method *meth_meth_PackageManager_removeContainingDir1692 = addmethod2pos(self, "removeContainingDir", &meth_PackageManager_removeContainingDir1692, 25);
+int argcv_meth_PackageManager_removeContainingDir1692[] = {1};
+meth_meth_PackageManager_removeContainingDir1692->type = alloc_MethodType(1, argcv_meth_PackageManager_removeContainingDir1692);
+meth_meth_PackageManager_removeContainingDir1692->type->types[0] = type_String;
+meth_meth_PackageManager_removeContainingDir1692->type->names[0] = "st";
+  meth_meth_PackageManager_removeContainingDir1692->definitionModule = modulename;
+  meth_meth_PackageManager_removeContainingDir1692->definitionLine = 516;
+// compilenode returning 
+// Begin line 531
+  setline(531);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  struct UserObject *uo1737 = (struct UserObject*)self;
+  uo1737->data[26] = emptyclosure;
+  Method *meth_meth_PackageManager_getContainingDirectory1737 = addmethod2pos(self, "getContainingDirectory", &meth_PackageManager_getContainingDirectory1737, 26);
+int argcv_meth_PackageManager_getContainingDirectory1737[] = {1};
+meth_meth_PackageManager_getContainingDirectory1737->type = alloc_MethodType(1, argcv_meth_PackageManager_getContainingDirectory1737);
+meth_meth_PackageManager_getContainingDirectory1737->type->types[0] = type_String;
+meth_meth_PackageManager_getContainingDirectory1737->type->names[0] = "st";
+  meth_meth_PackageManager_getContainingDirectory1737->definitionModule = modulename;
+  meth_meth_PackageManager_getContainingDirectory1737->definitionLine = 531;
 // compilenode returning 
 // Begin line 1
   setline(1);
@@ -13443,75 +13560,85 @@ meth_meth_PackageManager_getContainingDirectory1697->type->names[0] = "st";
   setmodule(modulename);
   setsource(originalSourceLines);
   *var_imported = undefined;
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1747 = createclosure(1, "imported");
-setclosureframe(closure1747, stackframe);
-  addtoclosure(closure1747, var_imported);
-  struct UserObject *uo1747 = (struct UserObject*)self;
-  uo1747->data[27] = (Object)closure1747;
-  Method *meth_meth_PackageManager_imported1747 = addmethod2pos(self, "imported", &meth_PackageManager_imported1747, 27);
-int argcv_meth_PackageManager_imported1747[] = {0};
-meth_meth_PackageManager_imported1747->type = alloc_MethodType(1, argcv_meth_PackageManager_imported1747);
-  meth_meth_PackageManager_imported1747->definitionModule = modulename;
-  meth_meth_PackageManager_imported1747->definitionLine = 541;
+  Object closure1787 = createclosure(1, "imported");
+setclosureframe(closure1787, stackframe);
+  addtoclosure(closure1787, var_imported);
+  struct UserObject *uo1787 = (struct UserObject*)self;
+  uo1787->data[27] = (Object)closure1787;
+  Method *meth_meth_PackageManager_imported1787 = addmethod2pos(self, "imported", &meth_PackageManager_imported1787, 27);
+int argcv_meth_PackageManager_imported1787[] = {0};
+meth_meth_PackageManager_imported1787->type = alloc_MethodType(1, argcv_meth_PackageManager_imported1787);
+  meth_meth_PackageManager_imported1787->definitionModule = modulename;
+  meth_meth_PackageManager_imported1787->definitionLine = 534;
 // compilenode returning 
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1748 = createclosure(1, "imported:=");
-setclosureframe(closure1748, stackframe);
-  addtoclosure(closure1748, var_imported);
-  struct UserObject *uo1748 = (struct UserObject*)self;
-  uo1748->data[28] = (Object)closure1748;
-  Method *meth_meth_PackageManager_imported_58__61_1748 = addmethod2pos(self, "imported:=", &meth_PackageManager_imported_58__61_1748, 28);
-int argcv_meth_PackageManager_imported_58__61_1748[] = {1};
-meth_meth_PackageManager_imported_58__61_1748->type = alloc_MethodType(1, argcv_meth_PackageManager_imported_58__61_1748);
-  meth_meth_PackageManager_imported_58__61_1748->definitionModule = modulename;
-  meth_meth_PackageManager_imported_58__61_1748->definitionLine = 541;
+  Object closure1788 = createclosure(1, "imported:=");
+setclosureframe(closure1788, stackframe);
+  addtoclosure(closure1788, var_imported);
+  struct UserObject *uo1788 = (struct UserObject*)self;
+  uo1788->data[28] = (Object)closure1788;
+  Method *meth_meth_PackageManager_imported_58__61_1788 = addmethod2pos(self, "imported:=", &meth_PackageManager_imported_58__61_1788, 28);
+int argcv_meth_PackageManager_imported_58__61_1788[] = {1};
+meth_meth_PackageManager_imported_58__61_1788->type = alloc_MethodType(1, argcv_meth_PackageManager_imported_58__61_1788);
+  meth_meth_PackageManager_imported_58__61_1788->definitionModule = modulename;
+  meth_meth_PackageManager_imported_58__61_1788->definitionLine = 534;
 // compilenode returning 
 // compilenode returning done
 // Begin line 7
   setline(7);
   setmodule(modulename);
   setsource(originalSourceLines);
-  *var_toProcess = undefined;
-// Begin line 541
-  setline(541);
+// Begin line 6
+  setline(6);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object array1790 = alloc_BuiltinList();
+  gc_pause();
+  gc_unpause();
+// compilenode returning array1790
+  *var_toProcess = array1790;
+  if (array1790 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1750 = createclosure(1, "toProcess");
-setclosureframe(closure1750, stackframe);
-  addtoclosure(closure1750, var_toProcess);
-  struct UserObject *uo1750 = (struct UserObject*)self;
-  uo1750->data[29] = (Object)closure1750;
-  Method *meth_meth_PackageManager_toProcess1750 = addmethod2pos(self, "toProcess", &meth_PackageManager_toProcess1750, 29);
-int argcv_meth_PackageManager_toProcess1750[] = {0};
-meth_meth_PackageManager_toProcess1750->type = alloc_MethodType(1, argcv_meth_PackageManager_toProcess1750);
-  meth_meth_PackageManager_toProcess1750->definitionModule = modulename;
-  meth_meth_PackageManager_toProcess1750->definitionLine = 541;
+  Object closure1791 = createclosure(1, "toProcess");
+setclosureframe(closure1791, stackframe);
+  addtoclosure(closure1791, var_toProcess);
+  struct UserObject *uo1791 = (struct UserObject*)self;
+  uo1791->data[29] = (Object)closure1791;
+  Method *meth_meth_PackageManager_toProcess1791 = addmethod2pos(self, "toProcess", &meth_PackageManager_toProcess1791, 29);
+int argcv_meth_PackageManager_toProcess1791[] = {0};
+meth_meth_PackageManager_toProcess1791->type = alloc_MethodType(1, argcv_meth_PackageManager_toProcess1791);
+  meth_meth_PackageManager_toProcess1791->definitionModule = modulename;
+  meth_meth_PackageManager_toProcess1791->definitionLine = 534;
 // compilenode returning 
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1751 = createclosure(1, "toProcess:=");
-setclosureframe(closure1751, stackframe);
-  addtoclosure(closure1751, var_toProcess);
-  struct UserObject *uo1751 = (struct UserObject*)self;
-  uo1751->data[30] = (Object)closure1751;
-  Method *meth_meth_PackageManager_toProcess_58__61_1751 = addmethod2pos(self, "toProcess:=", &meth_PackageManager_toProcess_58__61_1751, 30);
-int argcv_meth_PackageManager_toProcess_58__61_1751[] = {1};
-meth_meth_PackageManager_toProcess_58__61_1751->type = alloc_MethodType(1, argcv_meth_PackageManager_toProcess_58__61_1751);
-  meth_meth_PackageManager_toProcess_58__61_1751->definitionModule = modulename;
-  meth_meth_PackageManager_toProcess_58__61_1751->definitionLine = 541;
+  Object closure1792 = createclosure(1, "toProcess:=");
+setclosureframe(closure1792, stackframe);
+  addtoclosure(closure1792, var_toProcess);
+  struct UserObject *uo1792 = (struct UserObject*)self;
+  uo1792->data[30] = (Object)closure1792;
+  Method *meth_meth_PackageManager_toProcess_58__61_1792 = addmethod2pos(self, "toProcess:=", &meth_PackageManager_toProcess_58__61_1792, 30);
+int argcv_meth_PackageManager_toProcess_58__61_1792[] = {1};
+meth_meth_PackageManager_toProcess_58__61_1792->type = alloc_MethodType(1, argcv_meth_PackageManager_toProcess_58__61_1792);
+  meth_meth_PackageManager_toProcess_58__61_1792->definitionModule = modulename;
+  meth_meth_PackageManager_toProcess_58__61_1792->definitionLine = 534;
 // compilenode returning 
 // compilenode returning done
 // Begin line 8
@@ -13522,42 +13649,42 @@ meth_meth_PackageManager_toProcess_58__61_1751->type = alloc_MethodType(1, argcv
   setline(7);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool1753 = alloc_Boolean(0);
-// compilenode returning bool1753
-  *var_verbose = bool1753;
-  if (bool1753 == undefined)
+  Object bool1794 = alloc_Boolean(0);
+// compilenode returning bool1794
+  *var_verbose = bool1794;
+  if (bool1794 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1754 = createclosure(1, "verbose");
-setclosureframe(closure1754, stackframe);
-  addtoclosure(closure1754, var_verbose);
-  struct UserObject *uo1754 = (struct UserObject*)self;
-  uo1754->data[31] = (Object)closure1754;
-  Method *meth_meth_PackageManager_verbose1754 = addmethod2pos(self, "verbose", &meth_PackageManager_verbose1754, 31);
-int argcv_meth_PackageManager_verbose1754[] = {0};
-meth_meth_PackageManager_verbose1754->type = alloc_MethodType(1, argcv_meth_PackageManager_verbose1754);
-  meth_meth_PackageManager_verbose1754->definitionModule = modulename;
-  meth_meth_PackageManager_verbose1754->definitionLine = 541;
+  Object closure1795 = createclosure(1, "verbose");
+setclosureframe(closure1795, stackframe);
+  addtoclosure(closure1795, var_verbose);
+  struct UserObject *uo1795 = (struct UserObject*)self;
+  uo1795->data[31] = (Object)closure1795;
+  Method *meth_meth_PackageManager_verbose1795 = addmethod2pos(self, "verbose", &meth_PackageManager_verbose1795, 31);
+int argcv_meth_PackageManager_verbose1795[] = {0};
+meth_meth_PackageManager_verbose1795->type = alloc_MethodType(1, argcv_meth_PackageManager_verbose1795);
+  meth_meth_PackageManager_verbose1795->definitionModule = modulename;
+  meth_meth_PackageManager_verbose1795->definitionLine = 534;
 // compilenode returning 
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1755 = createclosure(1, "verbose:=");
-setclosureframe(closure1755, stackframe);
-  addtoclosure(closure1755, var_verbose);
-  struct UserObject *uo1755 = (struct UserObject*)self;
-  uo1755->data[32] = (Object)closure1755;
-  Method *meth_meth_PackageManager_verbose_58__61_1755 = addmethod2pos(self, "verbose:=", &meth_PackageManager_verbose_58__61_1755, 32);
-int argcv_meth_PackageManager_verbose_58__61_1755[] = {1};
-meth_meth_PackageManager_verbose_58__61_1755->type = alloc_MethodType(1, argcv_meth_PackageManager_verbose_58__61_1755);
-  meth_meth_PackageManager_verbose_58__61_1755->definitionModule = modulename;
-  meth_meth_PackageManager_verbose_58__61_1755->definitionLine = 541;
+  Object closure1796 = createclosure(1, "verbose:=");
+setclosureframe(closure1796, stackframe);
+  addtoclosure(closure1796, var_verbose);
+  struct UserObject *uo1796 = (struct UserObject*)self;
+  uo1796->data[32] = (Object)closure1796;
+  Method *meth_meth_PackageManager_verbose_58__61_1796 = addmethod2pos(self, "verbose:=", &meth_PackageManager_verbose_58__61_1796, 32);
+int argcv_meth_PackageManager_verbose_58__61_1796[] = {1};
+meth_meth_PackageManager_verbose_58__61_1796->type = alloc_MethodType(1, argcv_meth_PackageManager_verbose_58__61_1796);
+  meth_meth_PackageManager_verbose_58__61_1796->definitionModule = modulename;
+  meth_meth_PackageManager_verbose_58__61_1796->definitionLine = 534;
 // compilenode returning 
 // compilenode returning done
 // Begin line 9
@@ -13568,87 +13695,87 @@ meth_meth_PackageManager_verbose_58__61_1755->type = alloc_MethodType(1, argcv_m
   setline(8);
   setmodule(modulename);
   setsource(originalSourceLines);
-  Object bool1757 = alloc_Boolean(0);
-// compilenode returning bool1757
-  *var_global = bool1757;
-  if (bool1757 == undefined)
+  Object bool1798 = alloc_Boolean(0);
+// compilenode returning bool1798
+  *var_global = bool1798;
+  if (bool1798 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1758 = createclosure(1, "global");
-setclosureframe(closure1758, stackframe);
-  addtoclosure(closure1758, var_global);
-  struct UserObject *uo1758 = (struct UserObject*)self;
-  uo1758->data[33] = (Object)closure1758;
-  Method *meth_meth_PackageManager_global1758 = addmethod2pos(self, "global", &meth_PackageManager_global1758, 33);
-int argcv_meth_PackageManager_global1758[] = {0};
-meth_meth_PackageManager_global1758->type = alloc_MethodType(1, argcv_meth_PackageManager_global1758);
-  meth_meth_PackageManager_global1758->definitionModule = modulename;
-  meth_meth_PackageManager_global1758->definitionLine = 541;
+  Object closure1799 = createclosure(1, "global");
+setclosureframe(closure1799, stackframe);
+  addtoclosure(closure1799, var_global);
+  struct UserObject *uo1799 = (struct UserObject*)self;
+  uo1799->data[33] = (Object)closure1799;
+  Method *meth_meth_PackageManager_global1799 = addmethod2pos(self, "global", &meth_PackageManager_global1799, 33);
+int argcv_meth_PackageManager_global1799[] = {0};
+meth_meth_PackageManager_global1799->type = alloc_MethodType(1, argcv_meth_PackageManager_global1799);
+  meth_meth_PackageManager_global1799->definitionModule = modulename;
+  meth_meth_PackageManager_global1799->definitionLine = 534;
 // compilenode returning 
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1759 = createclosure(1, "global:=");
-setclosureframe(closure1759, stackframe);
-  addtoclosure(closure1759, var_global);
-  struct UserObject *uo1759 = (struct UserObject*)self;
-  uo1759->data[34] = (Object)closure1759;
-  Method *meth_meth_PackageManager_global_58__61_1759 = addmethod2pos(self, "global:=", &meth_PackageManager_global_58__61_1759, 34);
-int argcv_meth_PackageManager_global_58__61_1759[] = {1};
-meth_meth_PackageManager_global_58__61_1759->type = alloc_MethodType(1, argcv_meth_PackageManager_global_58__61_1759);
-  meth_meth_PackageManager_global_58__61_1759->definitionModule = modulename;
-  meth_meth_PackageManager_global_58__61_1759->definitionLine = 541;
+  Object closure1800 = createclosure(1, "global:=");
+setclosureframe(closure1800, stackframe);
+  addtoclosure(closure1800, var_global);
+  struct UserObject *uo1800 = (struct UserObject*)self;
+  uo1800->data[34] = (Object)closure1800;
+  Method *meth_meth_PackageManager_global_58__61_1800 = addmethod2pos(self, "global:=", &meth_PackageManager_global_58__61_1800, 34);
+int argcv_meth_PackageManager_global_58__61_1800[] = {1};
+meth_meth_PackageManager_global_58__61_1800->type = alloc_MethodType(1, argcv_meth_PackageManager_global_58__61_1800);
+  meth_meth_PackageManager_global_58__61_1800->definitionModule = modulename;
+  meth_meth_PackageManager_global_58__61_1800->definitionLine = 534;
 // compilenode returning 
 // compilenode returning done
 // Begin line 9
   setline(9);
   setmodule(modulename);
   setsource(originalSourceLines);
-  if (strlit1761 == NULL) {
-    strlit1761 = alloc_String("");
-    gc_root(strlit1761);
+  if (strlit1802 == NULL) {
+    strlit1802 = alloc_String("");
+    gc_root(strlit1802);
   }
-// compilenode returning strlit1761
-  *var_bundlePath = strlit1761;
-  if (strlit1761 == undefined)
+// compilenode returning strlit1802
+  *var_bundlePath = strlit1802;
+  if (strlit1802 == undefined)
     callmethod(done, "assignment", 0, NULL, NULL);
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1762 = createclosure(1, "bundlePath");
-setclosureframe(closure1762, stackframe);
-  addtoclosure(closure1762, var_bundlePath);
-  struct UserObject *uo1762 = (struct UserObject*)self;
-  uo1762->data[35] = (Object)closure1762;
-  Method *meth_meth_PackageManager_bundlePath1762 = addmethod2pos(self, "bundlePath", &meth_PackageManager_bundlePath1762, 35);
-int argcv_meth_PackageManager_bundlePath1762[] = {0};
-meth_meth_PackageManager_bundlePath1762->type = alloc_MethodType(1, argcv_meth_PackageManager_bundlePath1762);
-  meth_meth_PackageManager_bundlePath1762->definitionModule = modulename;
-  meth_meth_PackageManager_bundlePath1762->definitionLine = 541;
+  Object closure1803 = createclosure(1, "bundlePath");
+setclosureframe(closure1803, stackframe);
+  addtoclosure(closure1803, var_bundlePath);
+  struct UserObject *uo1803 = (struct UserObject*)self;
+  uo1803->data[35] = (Object)closure1803;
+  Method *meth_meth_PackageManager_bundlePath1803 = addmethod2pos(self, "bundlePath", &meth_PackageManager_bundlePath1803, 35);
+int argcv_meth_PackageManager_bundlePath1803[] = {0};
+meth_meth_PackageManager_bundlePath1803->type = alloc_MethodType(1, argcv_meth_PackageManager_bundlePath1803);
+  meth_meth_PackageManager_bundlePath1803->definitionModule = modulename;
+  meth_meth_PackageManager_bundlePath1803->definitionLine = 534;
 // compilenode returning 
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1763 = createclosure(1, "bundlePath:=");
-setclosureframe(closure1763, stackframe);
-  addtoclosure(closure1763, var_bundlePath);
-  struct UserObject *uo1763 = (struct UserObject*)self;
-  uo1763->data[36] = (Object)closure1763;
-  Method *meth_meth_PackageManager_bundlePath_58__61_1763 = addmethod2pos(self, "bundlePath:=", &meth_PackageManager_bundlePath_58__61_1763, 36);
-int argcv_meth_PackageManager_bundlePath_58__61_1763[] = {1};
-meth_meth_PackageManager_bundlePath_58__61_1763->type = alloc_MethodType(1, argcv_meth_PackageManager_bundlePath_58__61_1763);
-  meth_meth_PackageManager_bundlePath_58__61_1763->definitionModule = modulename;
-  meth_meth_PackageManager_bundlePath_58__61_1763->definitionLine = 541;
+  Object closure1804 = createclosure(1, "bundlePath:=");
+setclosureframe(closure1804, stackframe);
+  addtoclosure(closure1804, var_bundlePath);
+  struct UserObject *uo1804 = (struct UserObject*)self;
+  uo1804->data[36] = (Object)closure1804;
+  Method *meth_meth_PackageManager_bundlePath_58__61_1804 = addmethod2pos(self, "bundlePath:=", &meth_PackageManager_bundlePath_58__61_1804, 36);
+int argcv_meth_PackageManager_bundlePath_58__61_1804[] = {1};
+meth_meth_PackageManager_bundlePath_58__61_1804->type = alloc_MethodType(1, argcv_meth_PackageManager_bundlePath_58__61_1804);
+  meth_meth_PackageManager_bundlePath_58__61_1804->definitionModule = modulename;
+  meth_meth_PackageManager_bundlePath_58__61_1804->definitionLine = 534;
 // compilenode returning 
 // compilenode returning done
 // Begin line 10
@@ -13656,37 +13783,37 @@ meth_meth_PackageManager_bundlePath_58__61_1763->type = alloc_MethodType(1, argc
   setmodule(modulename);
   setsource(originalSourceLines);
   *var_curFile = undefined;
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1765 = createclosure(1, "curFile");
-setclosureframe(closure1765, stackframe);
-  addtoclosure(closure1765, var_curFile);
-  struct UserObject *uo1765 = (struct UserObject*)self;
-  uo1765->data[37] = (Object)closure1765;
-  Method *meth_meth_PackageManager_curFile1765 = addmethod2pos(self, "curFile", &meth_PackageManager_curFile1765, 37);
-int argcv_meth_PackageManager_curFile1765[] = {0};
-meth_meth_PackageManager_curFile1765->type = alloc_MethodType(1, argcv_meth_PackageManager_curFile1765);
-  meth_meth_PackageManager_curFile1765->definitionModule = modulename;
-  meth_meth_PackageManager_curFile1765->definitionLine = 541;
+  Object closure1806 = createclosure(1, "curFile");
+setclosureframe(closure1806, stackframe);
+  addtoclosure(closure1806, var_curFile);
+  struct UserObject *uo1806 = (struct UserObject*)self;
+  uo1806->data[37] = (Object)closure1806;
+  Method *meth_meth_PackageManager_curFile1806 = addmethod2pos(self, "curFile", &meth_PackageManager_curFile1806, 37);
+int argcv_meth_PackageManager_curFile1806[] = {0};
+meth_meth_PackageManager_curFile1806->type = alloc_MethodType(1, argcv_meth_PackageManager_curFile1806);
+  meth_meth_PackageManager_curFile1806->definitionModule = modulename;
+  meth_meth_PackageManager_curFile1806->definitionLine = 534;
 // compilenode returning 
-// Begin line 541
-  setline(541);
+// Begin line 534
+  setline(534);
   setmodule(modulename);
   setsource(originalSourceLines);
   block_savedest(self);
-  Object closure1766 = createclosure(1, "curFile:=");
-setclosureframe(closure1766, stackframe);
-  addtoclosure(closure1766, var_curFile);
-  struct UserObject *uo1766 = (struct UserObject*)self;
-  uo1766->data[38] = (Object)closure1766;
-  Method *meth_meth_PackageManager_curFile_58__61_1766 = addmethod2pos(self, "curFile:=", &meth_PackageManager_curFile_58__61_1766, 38);
-int argcv_meth_PackageManager_curFile_58__61_1766[] = {1};
-meth_meth_PackageManager_curFile_58__61_1766->type = alloc_MethodType(1, argcv_meth_PackageManager_curFile_58__61_1766);
-  meth_meth_PackageManager_curFile_58__61_1766->definitionModule = modulename;
-  meth_meth_PackageManager_curFile_58__61_1766->definitionLine = 541;
+  Object closure1807 = createclosure(1, "curFile:=");
+setclosureframe(closure1807, stackframe);
+  addtoclosure(closure1807, var_curFile);
+  struct UserObject *uo1807 = (struct UserObject*)self;
+  uo1807->data[38] = (Object)closure1807;
+  Method *meth_meth_PackageManager_curFile_58__61_1807 = addmethod2pos(self, "curFile:=", &meth_PackageManager_curFile_58__61_1807, 38);
+int argcv_meth_PackageManager_curFile_58__61_1807[] = {1};
+meth_meth_PackageManager_curFile_58__61_1807->type = alloc_MethodType(1, argcv_meth_PackageManager_curFile_58__61_1807);
+  meth_meth_PackageManager_curFile_58__61_1807->definitionModule = modulename;
+  meth_meth_PackageManager_curFile_58__61_1807->definitionLine = 534;
 // compilenode returning 
 // compilenode returning done
 // Begin line 12
@@ -13694,144 +13821,144 @@ meth_meth_PackageManager_curFile_58__61_1766->type = alloc_MethodType(1, argcv_m
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-  int callframe1768 = gc_frame_new();
-  int callframe1769 = gc_frame_new();
+  int callframe1809 = gc_frame_new();
+  int callframe1810 = gc_frame_new();
 // compilenode returning *var_sys
   partcv[0] = 0;
-  Object call1770 = callmethod(*var_sys, "argv",
+  Object call1811 = callmethod(*var_sys, "argv",
     1, partcv, params);
-  gc_frame_end(callframe1769);
-// compilenode returning call1770
-// compilenode returning call1770
-  gc_frame_newslot(call1770);
-  params[0] = call1770;
+  gc_frame_end(callframe1810);
+// compilenode returning call1811
+// compilenode returning call1811
+  gc_frame_newslot(call1811);
+  params[0] = call1811;
   partcv[0] = 1;
-  Object call1771 = callmethodflags(self, "parseArgs", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe1768);
-// compilenode returning call1771
+  Object call1812 = callmethodflags(self, "parseArgs", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe1809);
+// compilenode returning call1812
 // Begin line 14
   setline(14);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
 // compilenode returning 
-// Begin line 46
-  setline(46);
+// Begin line 40
+  setline(40);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 113
-  setline(113);
+// Begin line 103
+  setline(103);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 126
-  setline(126);
+// Begin line 116
+  setline(116);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 138
-  setline(138);
+// Begin line 128
+  setline(128);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 149
-  setline(149);
+// Begin line 139
+  setline(139);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 161
-  setline(161);
+// Begin line 151
+  setline(151);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 186
-  setline(186);
+// Begin line 176
+  setline(176);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 222
-  setline(222);
+// Begin line 212
+  setline(212);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 249
-  setline(249);
+// Begin line 242
+  setline(242);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 259
-  setline(259);
+// Begin line 252
+  setline(252);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 274
-  setline(274);
+// Begin line 267
+  setline(267);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 291
-  setline(291);
+// Begin line 284
+  setline(284);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 307
-  setline(307);
+// Begin line 300
+  setline(300);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 331
-  setline(331);
+// Begin line 324
+  setline(324);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 348
-  setline(348);
+// Begin line 341
+  setline(341);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 367
-  setline(367);
+// Begin line 360
+  setline(360);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 384
-  setline(384);
+// Begin line 377
+  setline(377);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 392
-  setline(392);
+// Begin line 385
+  setline(385);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 398
-  setline(398);
+// Begin line 391
+  setline(391);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 407
-  setline(407);
+// Begin line 400
+  setline(400);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 425
-  setline(425);
+// Begin line 418
+  setline(418);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 449
-  setline(449);
+// Begin line 442
+  setline(442);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 499
-  setline(499);
+// Begin line 492
+  setline(492);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
-// Begin line 523
-  setline(523);
+// Begin line 516
+  setline(516);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 

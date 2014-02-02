@@ -38,5 +38,6 @@ method getBuildPath() -> String{
             buildPath :=  buildPath++paths[t]
         }
     }
+    print({buildPath});
     return buildPath;
 }

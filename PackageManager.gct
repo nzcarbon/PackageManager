@@ -1,16 +1,3 @@
-fresh-methods:
- forArgs()do
-modules:
- sys
- io
-fresh:forArgs()do:
- option()shortHand()do
- flag()shortHand()do
- doubleValue()do
- option()do
- flag()do
-path:
- PackageManager
 classes:
 public:
  imported
@@ -52,3 +39,16 @@ public:
  getContainingDirectory
 confidential:
  forArgs()do
+fresh-methods:
+ forArgs()do
+modules:
+ sys
+ io
+fresh:forArgs()do:
+ flag()do
+ option()shortHand()do
+ flag()shortHand()do
+ doubleValue()do
+ option()do
+path:
+ PackageManager

@@ -1,3 +1,7 @@
+public:
+ getContPath
+ getBuildPath
+confidential:
 modules:
  sys
  io
@@ -5,7 +9,3 @@ fresh-methods:
 path:
  ContPath
 classes:
-public:
- getContPath
- getBuildPath
-confidential:
