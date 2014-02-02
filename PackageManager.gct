@@ -1,0 +1,54 @@
+modules:
+ io
+ sys
+fresh:forArgs()do:
+ option()shortHand()do
+ flag()shortHand()do
+ doubleValue()do
+ option()do
+ flag()do
+fresh-methods:
+ forArgs()do
+ bundle
+path:
+ PackageManager
+classes:
+public:
+ imported
+ imported:=
+ toProcess
+ toProcess:=
+ verbose
+ verbose:=
+ global
+ global:=
+ curFile
+ curFile:=
+ parseArgs
+ listInstalled
+ recurseDirectory
+ doGet
+ setFile
+ fetchImports
+ setFileData
+ findExisting
+ validateFile
+ write
+ compile
+ createDirectory
+ parseFile
+ processLine
+ parseImport
+ skipWhiteSpace
+ displayHelp
+ printMessage
+ bundle
+ setImportDest
+ parseAndPrefix
+confidential:
+ forArgs()do
+fresh:bundle:
+ data:=
+ data
+ address:=
+ address

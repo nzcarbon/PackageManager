@@ -1,0 +1,10 @@
+path:
+ fileWriteTest
+classes:
+public:
+ bundle
+confidential:
+fresh-methods:
+modules:
+ sys
+ io

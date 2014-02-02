@@ -1,0 +1,45 @@
+﻿Imports within Grace
+
+When the compiler encounters an import statement it should look at a select few locations in the order of importance, starting with the directory the program is compiled from. In code this will be io.realpath(“.”). The compiler will next look at the global modules directory as dictated by the platform with the possibility or the user being able to change it. Next the compiler will look at the user modules directory, again platform dependant. 
+Lastly the compiler should look next to the file that is to be compiled somehow, this I think is essential for two reasons. Firstly the imports need to be simple such that someone new writing a little script to do something that needs more than one file should be simple to put in the same folder and have the compiler be happy and important without the user needing to compile from the directory to take advantage of the compiler looking at where the compiler is run from. 
+Having anything found relative to where the compiler is run from is a recipe for disaster as it means that if the compiler is run from a different location it the breaks (does anything do this, I am pretty sure it doesn't).
+The procedure for importing an object once it has found it's location is to look for either a .grace will with the specified name, a .gcn file with the specified name or a folder with that name. A folder, when imported, will contain any subfolders and .grace or .gcn files as objects (is this even possible within the current minigrace compiler?) by the same name as the folder or file  e.g. Python.
+
+As I understand it dynamic module (.gso) importing is done from within the gracelib.c file using the function find_gso to find the module. Static module (.grace, .gcn) imports are done and found through the checkimport method within genc.grace. 
+
+Example 1:
+
+Within the file example.grace
+
+import “foo” as foo
+
+Steps:
+1. The compiler will look at the location at which the program is currently being compiled from for the file foo.grace, foo.gcn, foo/
+2. The compiler will look within the global modules directory, say /usr/lib/grace/modules for the file foo.grace or the directory foo/
+3.The compiler will look within the local modules directory and behave exactly as the global modules directory
+4. The compiler will look right next to example.grace
+
+Example 2:
+
+Within the file example.grace
+
+import “bar/foo/foobar” as fb
+
+
+Steps:
+1. The compiler will look for foobar.grace, foobar.gcn or foobar/ at ./bar/foo/
+2. The compiler will look within the global modules directory, for bar/foo/foobar.grace, bar/foo/foobar.grace and bar/foo/foobar/
+3.The compiler will look within the local modules directory and behave exactly as the global modules directory
+4. The compiler will look right next to example.grace for /bar/foo/foobar.grace, bar/foo/foobar.gcn or /bar/foo/foobar/
+
+
+Notes
+
+What they need to do 
+1. Make the simple case simple, two files right next to each other should be fine to import? (continued at 4)
+2. Same search path for both dynamic (The dynamic imports are done within the gracelib.c file at around line 3880 with the dlmodule method .gso files)and static modules (the static imports are done within genc.grace at around line 1800 in the checkimport method, .grace, .gcn files)
+3. Import paths are relative to the path that the program is compiled from, /usr/lib/grace/modules (this would be the global module directory), ~/.local/share/grace/modules (this would be the user module directory). Add the possibility of adding more directories, maybe through the use of environment variables or command line parameters. Here is something I don't understand: configure path built into compiler when it is built using ./configure and the buildinfo.grace file???
+4. I think having two files right next to each other should always work no matter where the program is compiled from but maybe this should be the last place to look for imports, so if the file that we are looking for is no where in any of the previous places that have been checked then it should combine the location the program is compiled from (io.realpath(“.”)) with the command line argument of the file to be compiled (so ./minigrace ./programs/foo/bar/foobar.grace would get the ./programs/foo/bar/foobar.grace part)
+5. Do we want directory imports like python? Each sub folder/file within the imported directory would then be an object on that top most object and so on down the directory tree.
+6. The global and user modules directories need to be platform dependant.
+
