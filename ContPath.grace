@@ -1,8 +1,8 @@
 import "sys" as sys
 import "io" as io
 
-print(getContPath("wow/hello/good/morning.grace"));
-print(getContPath("wow"));
+print(getBaseUrl("http://wow/hello/good/morning.grace"));
+print(getBaseUrl("http://"));
 
 method getContPath(st : String) -> String{
 
@@ -40,4 +40,28 @@ method getBuildPath() -> String{
     }
     print({buildPath});
     return buildPath;
+}
+
+
+method getBaseUrl(importStatement : String) -> String{
+
+    if (importStatement.size < 7)then{
+        return importStatement
+    }
+    if (importStatement.substringFrom(1)to(7) == "http://" )then{
+        var lastIndex := 7
+        var curPos := 7
+        while {curPos <= importStatement.size}do{
+            if (importStatement[curPos] == "/")then{
+                lastIndex := curPos
+            }
+            curPos := curPos +1
+        }
+        var res := importStatement.substringFrom(1)to(lastIndex)
+        return res
+    }
+    else{
+        return importStatement
+    }
+
 }

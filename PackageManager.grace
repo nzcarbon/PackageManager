@@ -6,33 +6,34 @@ var imported
 var toProcess := []
 var verbose := false
 var global := false
-var bundlePath := "";
-var curFile;
+var bundlePath := ""
+var baseUrl := ""
+var curFile
 
-parseArgs(sys.argv);
+parseArgs(sys.argv)
 
 method parseArgs(args : List<String>) {
-    var count := 0;
-    print(args.size);
+    var count := 0
+    print(args.size)
     forArgs(args) do { arg, on ->
-        print("in loop");
+        print("in loop")
         on.option "get" do { toGet->
-            doGet(toGet);
+            doGet(toGet)
         }
         on.flag "list" do { 
-            listInstalled();
+            listInstalled()
         }
         on.doubleValue "bundle" do { toBundle, name ->
-            bundle(toBundle,name);
+            bundle(toBundle,name)
         }
-        on.doubleValue "setAddress" do { address, prefix ->
-            setImportDest(address,prefix);
+        on.doubleValue "set-address" do { address, prefix ->
+            setImportDest(address,prefix)
         }
-        on.flag "verbose" do { 
-            verbose := true;
+        on.flag "--verbose" do { 
+            verbose := true
         }
-        on.flag "global" do {
-            global := true;
+        on.flag "--global" do {
+            global := true
         }
     }
 } 
@@ -43,9 +44,9 @@ method forArgs(args : List<String>) do(block) is confidential {
     def size = args.size
 
     def on = object {
-        method option(name : String) shortHand(sh : String) do(block') {
+        method option(name : String) do(block') {
             def arg = args.at(i)
-            if((arg == "--{name}") || (arg == "-{sh}")) then {
+            if(arg == name) then {
                 if(args.size == i) then {
                     Exception.raise "Missing value for option {name}"
                 }
@@ -58,7 +59,7 @@ method forArgs(args : List<String>) do(block) is confidential {
 
         method doubleValue(name: String) do (block'){
             def arg = args.at(i)
-            if((arg == "--{name}")) then {
+            if(arg == name) then {
                 if(args.size < (i+1)) then {
                     Exception.raise "Missing values for option {name}"
                 }
@@ -71,25 +72,17 @@ method forArgs(args : List<String>) do(block) is confidential {
 
         }
 
-        method option(name : String) do(block') {
-            option(name) shortHand("") do(block')
-        }
-
-        method flag(name : String) shortHand(sh : String) do(block') {
+        method flag(name : String) do(block') {
             def arg = args.at(i)
-            if((arg == "--{name}") || (arg == "-{sh}")) then {
+            if(arg == name) then {
                 block'.apply
                 ran := true
             }
         }
-
-        method flag(name : String) do(block') {
-            flag(name) shortHand("") do(block')
-        }
     }
     while { i <= size } do {
         def arg = args.at(i)
-        print(arg);
+        print(arg)
         ran := false
         block.apply(arg, on)
         if((arg.at(1) == "-") && ran.not) then {
@@ -102,22 +95,25 @@ method forArgs(args : List<String>) do(block) is confidential {
 
 method listInstalled{ 
     print("Installed packages:")
-    if (io.exists("usr/lib/grace/packages/"))then{
-        print("Going into the first call");
-        var globalDir := "usr/lib/grace/packages"
-        recurseDirectory(globalDir,"")
-    }
-    if (io.exists(sys.environ["HOME"]++"/grace/packages/"))then{
-        var usrDir := sys.environ["HOME"]++"/grace/packages"//++ sys.environ["HOME"]++"/.grace/packages")
-        recurseDirectory(usrDir," ")
+    checkListPath("usr/lib/grace/packages/")
+    checkListPath("usr/lib/grace/packages/")
+    checkListPath(sys.environ["HOME"]++"/grace/packages/")
+    checkListPath(sys.environ["HOME"]++"/.local/lib/grace/modules/")
+}
+
+method checkListPath(path : String){
+    
+    if (io.exists(path))then{
+        print(" Installed in path: {path}")
+        recurseDirectory(path," ")
     }
 }
 
 method recurseDirectory(path,padding){
-    var pathContents := io.getdir(path);
+    var pathContents := io.getdir(path)
     for (pathContents) do { p-> 
         if ((p != "..") && (p != "."))then{
-            print(padding++p);
+            print(padding++p)
             if(io.getdir(path++"/"++p).size > 0)then{
                 recurseDirectory((path++"/"++p),padding++"   ")
             }
@@ -127,13 +123,20 @@ method recurseDirectory(path,padding){
 
 method doGet(impAddress){
     imported := []
+    if ((impAddress.size >= 7) && (impAddress.substringFrom(1)to(7) == "http://"))then{
+        setBaseUrl(impAddress)
+    }
     fetchImports(impAddress)
     for(imported)do { im->
-        write(im);
+        write(im)
     }
     for(imported)do { im->
-        compile(im);
+        compile(im)
     }
+}
+
+method setBaseUrl(baseAddress: String){
+    baseUrl := getBaseUrl(baseAddress)
 }
 
 method setFile(fileAddress){
@@ -142,10 +145,10 @@ method setFile(fileAddress){
             var address is public := fileAddress
             var data is public
         }
-        curFile := file;
-        return true;
+        curFile := file
+        return true
     }
-    return false;
+    return false
 }
 
 method fetchImports(fileAddress) -> Boolean{
@@ -167,52 +170,64 @@ method fetchImports(fileAddress) -> Boolean{
     }
     else{ 
         if (fetchImports(fileAddress++".grace")==false)then{
-            print("Could not locate file. Check file address.");
+            print("Could not locate file. Check file address.")
             return false
         }
     }
+}
+
+method performCurlFetch(file) -> Boolean{
+    var req := curl.easy
+    req.url := file.address
+    print("Searching for import: "++file.address)
+    print(" Connecting...")
+    req.onReceive {d->
+        print(" Response received")   
+        if(req.responseCode != 200)then{
+            print(" Could not locate import: Error {req.responseCode} for import {file.address}")
+            return false
+        }
+        file.data := d.decode("utf-8")
+        return true
+    }
+    req.perform
 }
 
 method setFileData(file) -> Boolean {
     if (file.address.substringFrom(1)to(4) == "http")then{
-        var strippedUrl := file.address.substringFrom(1)to(4);
+        var strippedUrl := file.address.substringFrom(1)to(4)
         if (findExisting(file.address) != false)then{
             var findData := findExisting(strippedUrl)
             if (findData > 0)then{
                 file.data := findData
-                return true;
+                return true
             }
+            return false;
         }
-        var req := curl.easy
-        req.url := file.address
-        print("Searching for import: "++file.address)
-        print(" Connecting...")
-        req.onReceive {d->
-            print(" Response received")   
-            file.data := d.decode("utf-8")
-            return true;
-        }
-        req.perform
-        if(req.responseCode != 200)then{
-            print(" Could not locate import: Error {req.responseCode} for import {file.address}");
-            return false
-        }
+        return performCurlFetch(file)
+        
     }
-    if (findExisting(file.address) != false)then{
-        print("Now searching in find existing");
+    elseif (findExisting(file.address) != false)then{
+        print("Now searching in find existing")
         var findData := findExisting(file.address)
         if (findData != false)then{
             file.data := findData
-            return true;
+            return true
         }
     }
-    return false;
+    elseif (baseUrl != "")then{
+
+        file.address := baseUrl++file.address
+        return performCurlFetch(file)
+
+    }
+    return false
 }
 
 method findExisting(fileName){
     if(io.exists(fileName))then{
-        var open := io.open(fileName,"r");
-        var ret := open.read;
+        var open := io.open(fileName,"r")
+        var ret := open.read
         return ret; 
     }   
     if(io.exists("/usr/lib/grace/modules/"++fileName))then{
@@ -229,11 +244,11 @@ method findExisting(fileName){
         return io.open("{sys.execPath}/"++fileName,"r").read 
     }   
     if(io.exists("{getBuildPath()}/{fileName}"))then{
-        print("YES IT DOES");
+        print("YES IT DOES")
         return io.open("{getBuildPath()}/{fileName}","r").read 
     } 
     if(bundlePath != "")then{
-        return io.open("{bundlePath}/{fileName}","r").read;
+        return io.open("{bundlePath}/{fileName}","r").read
     }
 
     return false
@@ -242,7 +257,7 @@ method findExisting(fileName){
 method validateFile(file) -> Boolean{
     if ((file.data.size)>1)then{
         if(file.data[1]=="<")then{
-            print("Not a valid grace file");
+            print("Not a valid grace file")
             return false
         }
     }
@@ -259,8 +274,8 @@ method write(file) -> Boolean{
     }
     var fileDir := createDirectory(usrDir++file.address)
     var toWrite := io.open(fileDir[1]++fileDir[2], "w")
-    toWrite.write(file.data);
-    toWrite.close;
+    toWrite.write(file.data)
+    toWrite.close
     
  }
 
@@ -278,7 +293,7 @@ method getBuildPath() -> String{
             buildPath :=  buildPath++paths[t]
         }
     }
-    return buildPath;
+    return buildPath
 }
 
 method compile(file){
@@ -291,9 +306,9 @@ method compile(file){
     }
     var paths := sys.environ["PATH"]
     print("PATHS = "++paths)
-    var buildPath := getBuildPath();
+    var buildPath := getBuildPath()
     io.system(buildPath++"/minigrace "++usrDir++file.address)
-    return true;
+    return true
 
 }
 
@@ -309,9 +324,9 @@ method createDirectory(address) -> List{
             toMake := toMake ++ nextPath 
             nextPath := ""   
         }
-        count := count+1;
+        count := count+1
     }
-    print("Creating directory "++toMake);
+    print("Creating directory "++toMake)
     if (!io.exists(toMake))then{
         io.system("mkdir -p "++toMake)
         print("made directory {toMake}")
@@ -323,12 +338,12 @@ method createDirectory(address) -> List{
 
 method parseFile(file){
     var data := file.data
-    var curPos := 1;
+    var curPos := 1
     var startPos := curPos
     while{curPos <= data.size}do{
         startPos := curPos
         while {(curPos <= data.size) && (data[curPos] != "\n")}do{
-            curPos := curPos+1;
+            curPos := curPos+1
         }
         var line := data.substringFrom(startPos)to(curPos-1)
         if (!processLine(line))then{
@@ -347,7 +362,7 @@ method processLine(line) -> Boolean {
             return true
         }
         elseif ((line.size > 6) && (line.substringFrom(1)to(7) == "import "))then{
-            parseImport(line.substringFrom(8)to(line.size));
+            parseImport(line.substringFrom(8)to(line.size))
             return true
         }
         elseif ((line.size > 7) && (line.substringFrom(1)to(8) == "dialect "))then{
@@ -399,15 +414,15 @@ method printMessage(message){
 //Name is the name of the package passed into the compiler
 method bundle(toBundle,name){
     imported := []
-    bundlePath := getContainingDirectory(toBundle);
+    bundlePath := getContainingDirectory(toBundle)
     var newDir := createDirectory("{name}/")
-    var newFileName := removeContainingDir(toBundle);
-    var toOpen := io.open("{toBundle}","r");
+    var newFileName := removeContainingDir(toBundle)
+    var toOpen := io.open("{toBundle}","r")
     var openData := toOpen.read
     var toWrite := io.open("{name}/{newFileName}", "w")
-    toWrite.write(openData);
+    toWrite.write(openData)
     fetchImports(toBundle)
-    print("Imported size = "++imported.size);
+    print("Imported size = "++imported.size)
     while{imported.size > 0 }do{
         var curImport := imported.pop
         toWrite := io.open("{name}/{removeContainingDir(curImport.address)}","w")
@@ -416,19 +431,20 @@ method bundle(toBundle,name){
 }
 
 method setImportDest(address,prefix){
-    var folder := io.getdir(address);
+    var folder := io.getdir(address)
+    print("Setting import dest");
     for(folder) do { file-> 
         if (file.size > 4)then{
             if (file.substringFrom(file.size-5)to(file.size) == ".grace")then{
-                var open := io.open(address++"/"++file,"r");
-                var readFile := open.read;
-                var toWrite := parseAndPrefix(readFile,address,prefix);
-                open.close;
+                var open := io.open(address++"/"++file,"r")
+                var readFile := open.read
+                var toWrite := parseAndPrefix(readFile,address,prefix)
+                open.close
 
                 io.system("rm "++address++"/"++file)
-                var out := io.open(address++"/"++file,"w");
+                var out := io.open(address++"/"++file,"w")
                 for (toWrite) do { d-> 
-                    out.write(d);
+                    out.write(d)
                 }
             }
         }
@@ -440,107 +456,132 @@ method setImportDest(address,prefix){
 
 
 method parseAndPrefix (readFile: String, address : String,  prefix : String){ 
-    var curPos := 1;
+    var curPos := 1
     var startPos := curPos
-    var outFile := [];
+    var outFile := []
     for (0..readFile.size) do { t-> 
         while{curPos <= readFile.size}do{
             startPos := curPos
             while {(curPos <= readFile.size) && (readFile[curPos] != "\n")}do{
-                curPos := curPos+1;
+                curPos := curPos+1
             }
             var data := readFile.substringFrom(startPos)to(curPos-1)
-            var line := "";
-            var count := 1;
+            var line := ""
+            var count := 1
             for (startPos..(curPos-1)) do { b-> 
-                line := line++readFile[b];
+                line := line++readFile[b]
             }
-            print(line);
+            print(line)
             if ((line.size > 6) && (line.substringFrom(1)to(7) == "import "))then{
                 var pos := 1
                 var start := pos
                 var nextImport := ""
                 pos := skipWhiteSpace(line,pos)
                 pos:= pos +1 
-                print("LINE = "++line);
+                print("LINE = "++line)
                 while{((pos < line.size) && !((line[pos] == "\"")||(line[pos] == " ")))} do {
                     pos := pos+1
                 }
-                pos:= pos+1;
-                var remainder := removeExistingUrls(line.substringFrom(pos+1)to(line.size));
-                line := "import \""++prefix++"/"++remainder;
-                print(line);
+                pos:= pos+1
+                var remainder := removeExistingUrls(line.substringFrom(pos+1)to(line.size))
+                line := "import \""++prefix++"/"++remainder
+                print(line)
                 for (line) do{ d->
-                    outFile.push(d);
+                    outFile.push(d)
                 }
+                outFile.push("\n")
             }
             else{
                 for (line) do{ d->
-                    outFile.push(d);
+                    outFile.push(d)
                 }
+                outFile.push("\n")
             }
             curPos := curPos + 1
         }
     }
+    outFile.push("\n")
 
 
     print ("OUTFILE "++outFile)
-    return outFile;
+    return outFile
 
 }
 
 method removeExistingUrls(importStatement : String) -> String{
 
     if (importStatement.size < 7)then{
-        return importStatement;
+        return importStatement
     }
     if (importStatement.substringFrom(1)to(7) == "http://" )then{
-        var lastIndex := 7;
-        var curPos := 7;
+        var lastIndex := 7
+        var curPos := 7
         while {curPos <= importStatement.size}do{
             if (importStatement[curPos] == "/")then{
-                lastIndex := curPos;
+                lastIndex := curPos
             }
-            curPos := curPos +1;
+            curPos := curPos +1
         }
-        var res := importStatement.substringFrom(lastIndex+1)to(importStatement.size);
-        return res;
+        var res := importStatement.substringFrom(lastIndex+1)to(importStatement.size)
+        return res
     }
     else{
-        return importStatement;
+        return importStatement
     }
 
+}
+
+method getBaseUrl(importStatement : String) -> String{
+
+    if (importStatement.size < 7)then{
+        return importStatement
+    }
+    if (importStatement.substringFrom(1)to(7) == "http://" )then{
+        var lastIndex := 7
+        var curPos := 7
+        while {curPos <= importStatement.size}do{
+            if (importStatement[curPos] == "/")then{
+                lastIndex := curPos
+            }
+            curPos := curPos +1
+        }
+        var res := importStatement.substringFrom(1)to(lastIndex)
+        return res
+    }
+    else{
+        return importStatement
+    }
 
 }
 
 method removeContainingDir(st:String) -> String{
-    var count := 1;
-    var lastIndex := -1;
+    var count := 1
+    var lastIndex := -1
     while{count <= st.size}do{
         if (st[count] == "/") then{
-            lastIndex := count;
+            lastIndex := count
         }
-        count := count+1;
+        count := count+1
     }
     if(lastIndex == -1)then{
-        return st;
+        return st
     }
     return st.substringFrom(lastIndex+1)to(st.size); 
 }
 
 method getContainingDirectory(st : String) -> String{
-    var count := 1;
-    var last := -1;
+    var count := 1
+    var last := -1
     while {count <= st.size}do{
         if (st[count] == "/")then{
-            last := count;
+            last := count
         }
-        count := count+1;
+        count := count+1
     }
     if (last == -1)then{
-        return getBuildPath()++"/";
+        return getBuildPath()++"/"
     }
-    return st.substringFrom(0)to(last-1);
+    return st.substringFrom(0)to(last-1)
 
 }
 

@@ -2,13 +2,11 @@ modules:
  sys
  io
 fresh:forArgs()do:
- option()shortHand()do
- flag()shortHand()do
+ flag()do
  doubleValue()do
  option()do
- flag()do
 path:
- PackageManager
+ grace-pkg
 classes:
 public:
  imported

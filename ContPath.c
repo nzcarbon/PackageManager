@@ -33,8 +33,8 @@ static char *originalSourceLines[] = {
   "import \"sys\" as sys",
   "import \"io\" as io",
   "",
-  "print(getContPath(\"wow/hello/good/morning.grace\"));",
-  "print(getContPath(\"wow\"));",
+  "print(getBaseUrl(\"http://wow/hello/good/morning.grace\"));",
+  "print(getBaseUrl(\"http://\"));",
   "",
   "method getContPath(st : String) -> String{",
   "",
@@ -73,6 +73,30 @@ static char *originalSourceLines[] = {
   "    print({buildPath});",
   "    return buildPath;",
   "}",
+  "",
+  "",
+  "method getBaseUrl(importStatement : String) -> String{",
+  "",
+  "    if (importStatement.size < 7)then{",
+  "        return importStatement",
+  "    }",
+  "    if (importStatement.substringFrom(1)to(7) == \"http://\" )then{",
+  "        var lastIndex := 7",
+  "        var curPos := 7",
+  "        while {curPos <= importStatement.size}do{",
+  "            if (importStatement[curPos] == \"/\")then{",
+  "                lastIndex := curPos",
+  "            }",
+  "            curPos := curPos +1",
+  "        }",
+  "        var res := importStatement.substringFrom(1)to(lastIndex)",
+  "        return res",
+  "    }",
+  "    else{",
+  "        return importStatement",
+  "    }",
+  "",
+  "}",
   NULL
 };
 static Object strlit19;
@@ -82,12 +106,14 @@ static Object strlit55;
 static Object strlit69;
 static Object strlit75;
 static Object strlit79;
+static Object strlit106;
+static Object strlit125;
 Object module_sys;
 Object module_sys_init();
 Object module_io;
 Object module_io_init();
-static Object strlit93;
-static Object strlit97;
+static Object strlit140;
+static Object strlit144;
 Object meth_ContPath__apply7(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
   struct UserObject *uo = (struct UserObject*)realself;
   Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
@@ -291,7 +317,7 @@ setclosureframe(closure7, stackframe);
 int argcv_meth_ContPath__apply7[] = {0};
 meth_meth_ContPath__apply7->type = alloc_MethodType(1, argcv_meth_ContPath__apply7);
   meth_meth_ContPath__apply7->definitionModule = modulename;
-  meth_meth_ContPath__apply7->definitionLine = 42;
+  meth_meth_ContPath__apply7->definitionLine = 64;
 // compilenode returning block6
   gc_frame_newslot(block6);
 // Begin line 20
@@ -757,10 +783,395 @@ meth_meth_ContPath__apply89->type = alloc_MethodType(1, argcv_meth_ContPath__app
   gc_frame_end(frame);
   return undefined;
 }
+Object meth_ContPath__apply113(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+  struct UserObject *uo = (struct UserObject*)realself;
+  Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
+  struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
+  pushclosure(closure);
+  pushstackframe(stackframe, "_apply");
+  int frame = gc_frame_new();
+  gc_frame_newslot((Object)stackframe);
+  Object methodInheritingObject = NULL;
+  Object params[1];
+  int partcv[1];
+  Object *var_curPos = getfromclosure(closure, 0);
+  Object *var_importStatement = getfromclosure(closure, 1);
+  Object self = *(getfromclosure(closure, 2));
+  sourceObject = self;
+  int i;
+  int curarg = 0;
+  int pushcv[] = {1};
+  Object *selfslot = &(stackframe->slots[0]);
+  *selfslot = self;
+  setframeelementname(stackframe, 0, "self");
+  if (methodInheritingObject) curarg++;
+// compilenode returning *var_curPos
+  int op_slot_left_114 = gc_frame_newslot(*var_curPos);
+  int callframe115 = gc_frame_new();
+// compilenode returning *var_importStatement
+  partcv[0] = 0;
+  Object call116 = callmethod(*var_importStatement, "size",
+    1, partcv, params);
+  gc_frame_end(callframe115);
+// compilenode returning call116
+// compilenode returning call116
+  int op_slot_right_114 = gc_frame_newslot(call116);
+  params[0] = call116;
+  partcv[0] = 1;
+  Object opresult118 = callmethod(*var_curPos, "<=", 1, partcv, params);
+// compilenode returning opresult118
+  gc_frame_end(frame);
+  return opresult118;
+}
+Object meth_ContPath__apply121(Object realself, int nparts, int *argcv, Object *args, int32_t flags) {
+  struct UserObject *uo = (struct UserObject*)realself;
+  Object closure = getdatum((Object)uo, 0, (flags>>24)&0xff);
+  struct StackFrameObject *stackframe = alloc_StackFrame(1, getclosureframe(closure));
+  pushclosure(closure);
+  pushstackframe(stackframe, "_apply");
+  int frame = gc_frame_new();
+  gc_frame_newslot((Object)stackframe);
+  Object methodInheritingObject = NULL;
+  Object params[1];
+  int partcv[1];
+  Object *var_importStatement = getfromclosure(closure, 0);
+  Object *var_curPos = getfromclosure(closure, 1);
+  Object *var_lastIndex = getfromclosure(closure, 2);
+  Object self = *(getfromclosure(closure, 3));
+  sourceObject = self;
+  int i;
+  int curarg = 0;
+  int pushcv[] = {1};
+  Object *selfslot = &(stackframe->slots[0]);
+  *selfslot = self;
+  setframeelementname(stackframe, 0, "self");
+  if (methodInheritingObject) curarg++;
+// Begin line 58
+  setline(58);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 55
+  setline(55);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_importStatement
+// compilenode returning *var_curPos
+  params[0] = *var_curPos;
+  gc_frame_newslot(params[0]);
+  partcv[0] = 1;
+  Object idxres124 = callmethod(*var_importStatement, "[]", 1, partcv, params);
+// compilenode returning idxres124
+  int op_slot_left_123 = gc_frame_newslot(idxres124);
+  if (strlit125 == NULL) {
+    strlit125 = alloc_String("/");
+    gc_root(strlit125);
+  }
+// compilenode returning strlit125
+  int op_slot_right_123 = gc_frame_newslot(strlit125);
+  params[0] = strlit125;
+  partcv[0] = 1;
+  Object opresult127 = callmethod(idxres124, "==", 1, partcv, params);
+// compilenode returning opresult127
+  Object if122 = done;
+  if (istrue(opresult127)) {
+// Begin line 57
+  setline(57);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 56
+  setline(56);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_curPos
+  *var_lastIndex = *var_curPos;
+  if (*var_curPos == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+    gc_frame_newslot(done);
+    if122 = done;
+  } else {
+  }
+// compilenode returning if122
+// Begin line 59
+  setline(59);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 58
+  setline(58);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_curPos
+  int op_slot_left_129 = gc_frame_newslot(*var_curPos);
+  Object num130 = alloc_Float64(1);
+// compilenode returning num130
+  int op_slot_right_129 = gc_frame_newslot(num130);
+  params[0] = num130;
+  partcv[0] = 1;
+  Object sum132 = callmethod(*var_curPos, "+", 1, partcv, params);
+// compilenode returning sum132
+  *var_curPos = sum132;
+  if (sum132 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+  gc_frame_end(frame);
+  return done;
+}
+Object meth_ContPath_getBaseUrl92(Object self, int nparts, int *argcv, Object *args, int32_t flags) {
+  struct StackFrameObject *stackframe = alloc_StackFrame(5, NULL);
+  pushclosure(NULL);
+  pushstackframe(stackframe, "getBaseUrl");
+  int frame = gc_frame_new();
+  gc_frame_newslot((Object)stackframe);
+  Object methodInheritingObject = NULL;
+  if (nparts > 0 && argcv[0] < 1)
+    gracedie("insufficient arguments to method");
+  Object params[2];
+  int partcv[2];
+  int i;
+  int curarg = 0;
+  int pushcv[] = {1};
+  if (nparts < 1 && args)
+    gracedie("missing argument list for getBaseUrl (probably reflection error): got %i lists, expected 1.", nparts);
+  Object *var_importStatement = &(stackframe->slots[0]);
+  *var_importStatement = args[curarg];
+  curarg++;
+if (argcv && argcv[0] > 1)
+  gracedie("too many arguments for getBaseUrl");
+  Object *selfslot = &(stackframe->slots[1]);
+  *selfslot = self;
+  setframeelementname(stackframe, 0, "self");
+  if (methodInheritingObject) curarg++;
+  Object *var_lastIndex = &(stackframe->slots[2]);
+  setframeelementname(stackframe, 2, "lastIndex");
+  Object *var_curPos = &(stackframe->slots[3]);
+  setframeelementname(stackframe, 3, "curPos");
+  Object *var_res = &(stackframe->slots[4]);
+  setframeelementname(stackframe, 4, "res");
+// Begin line 51
+  setline(51);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 48
+  setline(48);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe95 = gc_frame_new();
+// compilenode returning *var_importStatement
+  partcv[0] = 0;
+  Object call96 = callmethod(*var_importStatement, "size",
+    1, partcv, params);
+  gc_frame_end(callframe95);
+// compilenode returning call96
+// compilenode returning call96
+  int op_slot_left_94 = gc_frame_newslot(call96);
+  Object num97 = alloc_Float64(7);
+// compilenode returning num97
+  int op_slot_right_94 = gc_frame_newslot(num97);
+  params[0] = num97;
+  partcv[0] = 1;
+  Object opresult99 = callmethod(call96, "<", 1, partcv, params);
+// compilenode returning opresult99
+  Object if93 = done;
+  if (istrue(opresult99)) {
+// Begin line 50
+  setline(50);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 49
+  setline(49);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_importStatement
+  return *var_importStatement;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if93 = undefined;
+  } else {
+  }
+// compilenode returning if93
+// Begin line 67
+  setline(67);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 51
+  setline(51);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe102 = gc_frame_new();
+  Object num103 = alloc_Float64(1);
+// compilenode returning num103
+  gc_frame_newslot(num103);
+  Object num104 = alloc_Float64(7);
+// compilenode returning num104
+  gc_frame_newslot(num104);
+// compilenode returning *var_importStatement
+  params[0] = num103;
+  params[1] = num104;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call105 = callmethod(*var_importStatement, "substringFrom()to",
+    2, partcv, params);
+  gc_frame_end(callframe102);
+// compilenode returning call105
+  int op_slot_left_101 = gc_frame_newslot(call105);
+  if (strlit106 == NULL) {
+    strlit106 = alloc_String("http://");
+    gc_root(strlit106);
+  }
+// compilenode returning strlit106
+  int op_slot_right_101 = gc_frame_newslot(strlit106);
+  params[0] = strlit106;
+  partcv[0] = 1;
+  Object opresult108 = callmethod(call105, "==", 1, partcv, params);
+// compilenode returning opresult108
+  Object if100 = done;
+  if (istrue(opresult108)) {
+// Begin line 53
+  setline(53);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 52
+  setline(52);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object num109 = alloc_Float64(7);
+// compilenode returning num109
+  *var_lastIndex = num109;
+  if (num109 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 54
+  setline(54);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 53
+  setline(53);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object num110 = alloc_Float64(7);
+// compilenode returning num110
+  *var_curPos = num110;
+  if (num110 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 60
+  setline(60);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe111 = gc_frame_new();
+// Begin line 54
+  setline(54);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block112 = alloc_Block(NULL, NULL, "ContPath", 54);
+  gc_frame_newslot(block112);
+  block_savedest(block112);
+  Object closure113 = createclosure(3, "_apply");
+setclosureframe(closure113, stackframe);
+  addtoclosure(closure113, var_curPos);
+  addtoclosure(closure113, var_importStatement);
+  addtoclosure(closure113, selfslot);
+  struct UserObject *uo113 = (struct UserObject*)block112;
+  uo113->data[0] = (Object)closure113;
+  Method *meth_meth_ContPath__apply113 = addmethod2pos(block112, "_apply", &meth_ContPath__apply113, 0);
+int argcv_meth_ContPath__apply113[] = {0};
+meth_meth_ContPath__apply113->type = alloc_MethodType(1, argcv_meth_ContPath__apply113);
+  meth_meth_ContPath__apply113->definitionModule = modulename;
+  meth_meth_ContPath__apply113->definitionLine = 48;
+// compilenode returning block112
+  gc_frame_newslot(block112);
+// Begin line 60
+  setline(60);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object block120 = alloc_Block(NULL, NULL, "ContPath", 60);
+  gc_frame_newslot(block120);
+  block_savedest(block120);
+  Object closure121 = createclosure(4, "_apply");
+setclosureframe(closure121, stackframe);
+  addtoclosure(closure121, var_importStatement);
+  addtoclosure(closure121, var_curPos);
+  addtoclosure(closure121, var_lastIndex);
+  addtoclosure(closure121, selfslot);
+  struct UserObject *uo121 = (struct UserObject*)block120;
+  uo121->data[0] = (Object)closure121;
+  Method *meth_meth_ContPath__apply121 = addmethod2pos(block120, "_apply", &meth_ContPath__apply121, 0);
+int argcv_meth_ContPath__apply121[] = {0};
+meth_meth_ContPath__apply121->type = alloc_MethodType(1, argcv_meth_ContPath__apply121);
+  meth_meth_ContPath__apply121->definitionModule = modulename;
+  meth_meth_ContPath__apply121->definitionLine = 54;
+// compilenode returning block120
+  gc_frame_newslot(block120);
+  params[0] = block112;
+  params[1] = block120;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call135 = callmethodflags(prelude, "while()do", 2, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe111);
+// compilenode returning call135
+// Begin line 61
+  setline(61);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  int callframe136 = gc_frame_new();
+// Begin line 60
+  setline(60);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  Object num137 = alloc_Float64(1);
+// compilenode returning num137
+  gc_frame_newslot(num137);
+// compilenode returning *var_lastIndex
+  gc_frame_newslot(*var_lastIndex);
+// compilenode returning *var_importStatement
+  params[0] = num137;
+  params[1] = *var_lastIndex;
+  partcv[0] = 1;
+  partcv[1] = 1;
+  Object call138 = callmethod(*var_importStatement, "substringFrom()to",
+    2, partcv, params);
+  gc_frame_end(callframe136);
+// compilenode returning call138
+  *var_res = call138;
+  if (call138 == undefined)
+    callmethod(done, "assignment", 0, NULL, NULL);
+// compilenode returning done
+// Begin line 62
+  setline(62);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 61
+  setline(61);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_res
+  return *var_res;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if100 = undefined;
+  } else {
+// Begin line 65
+  setline(65);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// Begin line 64
+  setline(64);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+// compilenode returning *var_importStatement
+  return *var_importStatement;
+// compilenode returning undefined
+    gc_frame_newslot(undefined);
+    if100 = undefined;
+  }
+// compilenode returning if100
+  gc_frame_end(frame);
+  return if100;
+}
 Object module_ContPath_init() {
   int flags = 0;
   int frame = gc_frame_new();
-  Object self = alloc_obj2(4, 4);
+  Object self = alloc_obj2(5, 5);
   self->class->definitionModule = modulename;
   gc_root(self);
   prelude = module_StandardPrelude_init();
@@ -802,7 +1213,7 @@ Object module_ContPath_init() {
   gc_root(*var_MatchFailed);
   emptyclosure = createclosure(0, "empty");
   gc_root(emptyclosure);
-  struct StackFrameObject *stackframe = alloc_StackFrame(4, NULL);
+  struct StackFrameObject *stackframe = alloc_StackFrame(5, NULL);
   gc_root((Object)stackframe);
   pushstackframe(stackframe, "module scope");
   Object *selfslot = &(stackframe->slots[0]);
@@ -843,6 +1254,20 @@ meth_meth_ContPath_getBuildPath50->type = alloc_MethodType(1, argcv_meth_ContPat
   meth_meth_ContPath_getBuildPath50->definitionModule = modulename;
   meth_meth_ContPath_getBuildPath50->definitionLine = 27;
 // compilenode returning 
+// Begin line 46
+  setline(46);
+  setmodule(modulename);
+  setsource(originalSourceLines);
+  struct UserObject *uo92 = (struct UserObject*)self;
+  uo92->data[3] = emptyclosure;
+  Method *meth_meth_ContPath_getBaseUrl92 = addmethod2pos(self, "getBaseUrl", &meth_ContPath_getBaseUrl92, 3);
+int argcv_meth_ContPath_getBaseUrl92[] = {1};
+meth_meth_ContPath_getBaseUrl92->type = alloc_MethodType(1, argcv_meth_ContPath_getBaseUrl92);
+meth_meth_ContPath_getBaseUrl92->type->types[0] = type_String;
+meth_meth_ContPath_getBaseUrl92->type->names[0] = "importStatement";
+  meth_meth_ContPath_getBaseUrl92->definitionModule = modulename;
+  meth_meth_ContPath_getBaseUrl92->definitionLine = 46;
+// compilenode returning 
 // Begin line 1
   setline(1);
   setmodule(modulename);
@@ -866,45 +1291,50 @@ meth_meth_ContPath_getBuildPath50->type = alloc_MethodType(1, argcv_meth_ContPat
   setline(4);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe92 = gc_frame_new();
-  if (strlit93 == NULL) {
-    strlit93 = alloc_String("wow/hello/good/morning.grace");
-    gc_root(strlit93);
+  int callframe139 = gc_frame_new();
+  if (strlit140 == NULL) {
+    strlit140 = alloc_String("http://wow/hello/good/morning.grace");
+    gc_root(strlit140);
   }
-// compilenode returning strlit93
-  gc_frame_newslot(strlit93);
-  params[0] = strlit93;
+// compilenode returning strlit140
+  gc_frame_newslot(strlit140);
+  params[0] = strlit140;
   partcv[0] = 1;
-  Object call94 = callmethodflags(self, "getContPath", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe92);
-// compilenode returning call94
-  params[0] = call94;
-  Object call95 = gracelib_print(NULL, 1,  params);
-// compilenode returning call95
+  Object call141 = callmethodflags(self, "getBaseUrl", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe139);
+// compilenode returning call141
+  params[0] = call141;
+  Object call142 = gracelib_print(NULL, 1,  params);
+// compilenode returning call142
 // Begin line 5
   setline(5);
   setmodule(modulename);
   setsource(originalSourceLines);
-  int callframe96 = gc_frame_new();
-  if (strlit97 == NULL) {
-    strlit97 = alloc_String("wow");
-    gc_root(strlit97);
+  int callframe143 = gc_frame_new();
+  if (strlit144 == NULL) {
+    strlit144 = alloc_String("http://");
+    gc_root(strlit144);
   }
-// compilenode returning strlit97
-  gc_frame_newslot(strlit97);
-  params[0] = strlit97;
+// compilenode returning strlit144
+  gc_frame_newslot(strlit144);
+  params[0] = strlit144;
   partcv[0] = 1;
-  Object call98 = callmethodflags(self, "getContPath", 1, partcv, params, CFLAG_SELF);
-  gc_frame_end(callframe96);
-// compilenode returning call98
-  params[0] = call98;
-  Object call99 = gracelib_print(NULL, 1,  params);
-// compilenode returning call99
+  Object call145 = callmethodflags(self, "getBaseUrl", 1, partcv, params, CFLAG_SELF);
+  gc_frame_end(callframe143);
+// compilenode returning call145
+  params[0] = call145;
+  Object call146 = gracelib_print(NULL, 1,  params);
+// compilenode returning call146
 // Begin line 7
   setline(7);
   setmodule(modulename);
   setsource(originalSourceLines);
 // compilenode returning 
+// compilenode returning 
+// Begin line 27
+  setline(27);
+  setmodule(modulename);
+  setsource(originalSourceLines);
 // compilenode returning 
   gc_frame_end(frame);
   return self;
