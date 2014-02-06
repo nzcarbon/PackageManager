@@ -1,0 +1,10 @@
+
+import "io" as io
+
+
+public method callSetup(buildPath, setupFile){
+   print("build path = {buildPath} ++ minigrace")
+   io.system("cat {setupFile} | {buildPath}/minigrace")
+
+}
+

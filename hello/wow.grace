@@ -1,1 +1,0 @@
-import "http://google.com/wow" as wow

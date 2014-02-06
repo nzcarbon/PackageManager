@@ -1,12 +1,3 @@
-modules:
- sys
- io
-fresh:forArgs()do:
- option()shortHand()do
- flag()shortHand()do
- doubleValue()do
- option()do
- flag()do
 path:
  PackageManager
 classes:
@@ -54,7 +45,16 @@ public:
  getBaseUrl
  removeContainingDir
  getContainingDirectory
+ package
 confidential:
  forArgs()do
 fresh-methods:
  forArgs()do
+modules:
+ SetupCall
+ sys
+ io
+fresh:forArgs()do:
+ doubleValue()do
+ option()do
+ flag()do

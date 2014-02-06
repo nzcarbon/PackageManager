@@ -1,8 +1,12 @@
-modules:
- io
-fresh-methods:
-path:
- stdin_minigrace
 classes:
 public:
 confidential:
+fresh-methods:
+modules:
+ sys
+ __pkg-temp
+ PackageManager
+ io
+ SetupCall
+path:
+ stdin_minigrace

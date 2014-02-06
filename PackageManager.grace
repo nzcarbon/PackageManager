@@ -1,6 +1,7 @@
 import "sys" as sys
 import "io" as io
 import "curl" as curl
+import "SetupCall" as setup
 
 var imported
 var toProcess := []
@@ -29,6 +30,11 @@ method parseArgs(args : List<String>) {
         on.doubleValue "set-address" do { address, prefix ->
             setImportDest(address,prefix)
         }
+
+        on.option "package" do { folder ->
+            package(folder)
+        }
+
         on.flag "--verbose" do { 
             verbose := true
         }
@@ -414,19 +420,29 @@ method printMessage(message){
 //Name is the name of the package passed into the compiler
 method bundle(toBundle,name){
     imported := []
-    bundlePath := getContainingDirectory(toBundle)
-    var newDir := createDirectory("{name}/")
-    var newFileName := removeContainingDir(toBundle)
-    var toOpen := io.open("{toBundle}","r")
-    var openData := toOpen.read
-    var toWrite := io.open("{name}/{newFileName}", "w")
-    toWrite.write(openData)
-    fetchImports(toBundle)
-    print("Imported size = "++imported.size)
-    while{imported.size > 0 }do{
-        var curImport := imported.pop
-        toWrite := io.open("{name}/{removeContainingDir(curImport.address)}","w")
-        toWrite.write(curImport.data)   
+   // bundlePath := getContainingDirectory(toBundle)
+    print("In bundle. toBundle = {toBundle}")
+    var newDir := createDirectory("{getContainingDirectory(toBundle)}../{name}/")[1]
+    var folder := io.listdir(toBundle)
+    for(folder) do { file-> 
+        if (file.size > 4)then{
+            if (file.substringFrom(file.size-5)to(file.size) == ".grace")then{
+                print("FILE = {file}")
+                var open := io.open("{toBundle}{file}","r")
+                var openData := open.read
+                var toWrite := io.open("{newDir}{file}", "w")
+                toWrite.write(openData)
+                toWrite.close
+                fetchImports(newDir++file)
+                print("Imported size = "++imported.size)
+                while{imported.size > 0 }do{
+                    var curImport := imported.pop
+                    toWrite := io.open("{newDir}/{removeContainingDir(curImport.address)}","w")
+                    toWrite.write(curImport.data)   
+                    toWrite.close
+                }
+            }
+        }
     }
 }
 
@@ -582,6 +598,32 @@ method getContainingDirectory(st : String) -> String{
         return getBuildPath()++"/"
     }
     return st.substringFrom(0)to(last-1)
+
+}
+
+method package (folder : String){
+    var setupFile := "~/Packagemanager/setup.grace"
+    var buildPath := getBuildPath()
+    if (!io.exists(folder++"/pkg.grace"))then{
+        print("Folder must contain pkg.grace file in order to create package")
+    }
+    var open := io.open("{folder}/pkg.grace","r")
+    var pkgData := open.read
+    open.close
+    var loc := "{buildPath}/__pkg-temp"
+    var create := io.open("{loc}","w")
+    pkgData := pkgData++"\ndef __bundle = true"
+    pkgData := pkgData++"\ndef __loc = \"{folder}\""
+    create.write(pkgData) 
+    create.close
+    io.system("mv {loc} {loc}.grace")
+    print("build path = {buildPath} ++ minigrace")
+    io.system("cat {setupFile} | {buildPath}/minigrace")
+
+    var suffix := [".grace",".gct",".gcn",".c"];
+    for (suffix) do {s->
+        io.system("rm {buildPath}/__pkg-temp{s}")
+    }
 
 }
 
