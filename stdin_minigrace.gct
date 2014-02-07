@@ -1,12 +1,11 @@
+path:
+ stdin_minigrace
 classes:
 public:
 confidential:
 fresh-methods:
 modules:
- sys
  __pkg-temp
+ sys
  PackageManager
  io
- SetupCall
-path:
- stdin_minigrace

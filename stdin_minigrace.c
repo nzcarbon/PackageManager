@@ -42,7 +42,7 @@ static char *originalSourceLines[] = {
   "if (pkg.__bundle)then{",
   "",
   "    pm.bundle(pkg.__loc,pkg.name)",
-  "    var cmd := \"tar cvzf {pkg.__loc}../{pkg.name}.tar.gz {pkg.__loc}../{pkg.name}\"",
+  "    var cmd := \"tar -cvzf {pkg.__loc}../{pkg.name}.tar.gz {pkg.__loc}../{pkg.name}\"",
   "    print(cmd)",
   "    io.system(cmd)",
   "",
@@ -51,8 +51,7 @@ static char *originalSourceLines[] = {
   "else{",
   "",
   "",
-  "",
-  "",
+  "  ",
   "",
   "",
   "}",
@@ -226,8 +225,8 @@ Object *var_pm = alloc_var();
   Object call16 = gracelib_print(NULL, 1,  params);
 // compilenode returning call16
 // compilenode returning 
-// Begin line 26
-  setline(26);
+// Begin line 25
+  setline(25);
   setmodule(modulename);
   setsource(originalSourceLines);
 // Begin line 10
@@ -344,7 +343,7 @@ Object *var_pm = alloc_var();
 // compilenode returning call52
   int op_slot_right_50 = gc_frame_newslot(call52);
   if (strlit54 == NULL) {
-    strlit54 = alloc_String("tar cvzf ");
+    strlit54 = alloc_String("tar -cvzf ");
     gc_root(strlit54);
   }
 // compilenode returning strlit54

@@ -1,5 +1,0 @@
-if (!io.exists("packages/"))then{
-        io.system("mkdir packages")
-    }
-    file := io.open("packages/"++name, "w")
-    file.write(fileData);prefix

@@ -1,7 +1,6 @@
 import "sys" as sys
 import "io" as io
 import "curl" as curl
-import "SetupCall" as setup
 
 var imported
 var toProcess := []
@@ -10,6 +9,8 @@ var global := false
 var bundlePath := ""
 var baseUrl := ""
 var curFile
+var build := false
+var install := false
 
 parseArgs(sys.argv)
 
@@ -40,6 +41,14 @@ method parseArgs(args : List<String>) {
         }
         on.flag "--global" do {
             global := true
+        }
+
+        on.flag "--build" do {
+            build := true;
+        }
+
+        on.flag "--install" do {
+            install := true;
         }
     }
 } 
@@ -129,8 +138,14 @@ method recurseDirectory(path,padding){
 
 method doGet(impAddress){
     imported := []
+
     if ((impAddress.size >= 7) && (impAddress.substringFrom(1)to(7) == "http://"))then{
         setBaseUrl(impAddress)
+        if (impAddress.substringFrom(impAddress.size-6)to(impAddress.size) == ".tar.gz")then{
+            getPackage(impAddress)
+            return
+        }
+        
     }
     fetchImports(impAddress)
     for(imported)do { im->
@@ -139,6 +154,13 @@ method doGet(impAddress){
     for(imported)do { im->
         compile(im)
     }
+}
+
+method getPackage(impAddress){
+
+
+
+
 }
 
 method setBaseUrl(baseAddress: String){
@@ -250,7 +272,6 @@ method findExisting(fileName){
         return io.open("{sys.execPath}/"++fileName,"r").read 
     }   
     if(io.exists("{getBuildPath()}/{fileName}"))then{
-        print("YES IT DOES")
         return io.open("{getBuildPath()}/{fileName}","r").read 
     } 
     if(bundlePath != "")then{
@@ -415,9 +436,6 @@ method printMessage(message){
     }
 }
 
-//ToBundle is the name of the file that needs to be compiled. The compiler
-//must be in the directory of the file to bundle in order for this to run 
-//Name is the name of the package passed into the compiler
 method bundle(toBundle,name){
     imported := []
    // bundlePath := getContainingDirectory(toBundle)
@@ -456,7 +474,6 @@ method setImportDest(address,prefix){
                 var readFile := open.read
                 var toWrite := parseAndPrefix(readFile,address,prefix)
                 open.close
-
                 io.system("rm "++address++"/"++file)
                 var out := io.open(address++"/"++file,"w")
                 for (toWrite) do { d-> 
@@ -465,9 +482,6 @@ method setImportDest(address,prefix){
             }
         }
     }
-    //go through directory looking at each file with a .grace suffix.
-    //process each file and look at each import statement
-    //prepend 
 }
 
 
@@ -525,7 +539,6 @@ method parseAndPrefix (readFile: String, address : String,  prefix : String){
 }
 
 method removeExistingUrls(importStatement : String) -> String{
-
     if (importStatement.size < 7)then{
         return importStatement
     }
